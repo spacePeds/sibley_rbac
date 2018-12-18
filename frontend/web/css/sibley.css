@@ -1,0 +1,164 @@
+.navbar {
+    box-shadow: 2px 2px 5px #b8c5d6;
+    opacity: 0.9;
+    background: #fff;
+    /*background-color: #23ce6b; */
+}
+.navbarA {
+    z-index: 2;
+}
+.navbarB {
+    z-index: 1;
+}
+.navbar-brand img {
+    position: absolute;
+    top: -1px;
+    left: 20px;
+}
+.nav-link {
+    color: #000;
+}
+.navbar-dark {
+    background:url('../img/bg_base.png');
+    background-position: 0 -100px;
+    background-size: cover;
+}
+.adminFloater {
+    position:fixed;
+    top:100px;
+    right:20px;
+}
+/*yii2 and bootrap 4 quirk where when use template errors dont highlight*/
+.form-control-invalid-feedback {
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 80%;
+    color: #dc3545;
+}
+/*ckeditor likes to overlay error messages. This hacks around that*/
+.invalidFix .invalid-feedback {
+    display:block !important;
+    left: 0;
+    top: 2.5em;
+  }
+/*Adding this back as aparently it was in bootstrap 3 but not in bootstrap 4*/
+.breadcrumb > li + li:before {
+    color: #ccc;
+    content: "/ ";
+    padding: 0 5px;
+}
+/*Calendar formatting*/
+.out-of-range{
+    opacity: .4;
+  }
+  .out-of-range-before{
+    background: repeating-linear-gradient(
+      -45deg,
+      #606dbc,
+      #606dbc 10px,
+      #465298 10px,
+      #465298 20px
+    );
+  }
+  .out-of-range-after{
+    background: repeating-linear-gradient(
+      45deg,
+      #606dbc,
+      #606dbc 10px,
+      #465298 10px,
+      #465298 20px
+    );
+}
+
+.staffImg .carousel-indicators {
+	left: 0;
+	top: auto;
+    bottom: -40px;
+
+}
+
+/* The colour of the indicators */
+.staffImg .carousel-indicators li {
+    background: #a3a3a3;
+    border-radius: 50%;
+    width: 8px;
+    height: 8px;
+}
+
+.staffImg .carousel-indicators .active {
+background: #707070;
+}
+.staffEdit {
+    position: absolute;
+    top: 0px;
+    right: 15px;
+    z-index: 4;
+}
+
+/*
+.card {
+  -moz-box-direction: normal;
+  -moz-box-orient: vertical;
+  background-color: #fff;
+  border-radius: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin-bottom:1px;
+  border:none;
+}
+.card-header:first-child {
+  border-radius: 0;
+}
+.card-header {
+  background-color: #f7f7f9;
+  margin-bottom: 0;
+  padding: 20px 1.25rem;
+  border:none;
+  
+}
+.card-header a i{
+  float:left;
+  font-size:25px;
+  padding:5px 0;
+  margin:0 25px 0 0px;
+  color:#195C9D;
+}
+.card-header i{
+  float:right;        
+  font-size:30px;
+  width:1%;
+  margin-top:8px;
+  margin-right:10px;
+}
+.card-header a{
+  width:97%;
+  float:left;
+  color:#565656;
+}
+.card-header p{
+  margin:0;
+}
+
+.card-header h3{
+  margin:0 0 0px;
+  font-size:20px;
+  font-family: 'Slabo 27px', serif;
+  font-weight:bold;
+  color:#3fc199;
+}
+.card-block {
+  -moz-box-flex: 1;
+  flex: 1 1 auto;
+  padding: 20px;
+  color:#232323;
+  box-shadow:inset 0px 4px 5px rgba(0,0,0,0.1);
+  border-top:1px soild #000;
+  border-radius:0;
+}
+
+h2{float:left; width:100%; color:#fff; margin-bottom:30px; font-size: 14px;}
+h2 span{font-family: 'Libre Baskerville', serif; display:block; font-size:45px; text-transform:none; margin-bottom:20px; margin-top:30px; font-weight:700}
+h2 a{color:#fff; font-weight:bold;}
+*/
+
