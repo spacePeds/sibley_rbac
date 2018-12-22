@@ -10,3 +10,7 @@ ALTER TABLE `staff` ADD `image_asset` INT AFTER `phone`, ADD INDEX `staff_image_
 /*do not run*/
 CREATE TABLE `sibley_rbac`.`option_value` ( `id` INT UNSIGNED NOT NULL AUTO_INCREMENT , `catalog_option_id` INT NOT NULL , `name` VARCHAR(128) NOT NULL , `sort_order` SMALLINT NOT NULL , `image_id` INT NOT NULL, PRIMARY KEY (`id`)) ENGINE = InnoDB;
 CREATE TABLE `sibley_rbac`. `catalog_option` ( `id` INT UNSIGNED NOT NULL AUTO_INCREMENT , `name` VARCHAR(128) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+
+/*rbac migrations*/
+yii migrate --migrationPath=@yii/rbac/migrations/

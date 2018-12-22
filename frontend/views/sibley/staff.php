@@ -32,7 +32,7 @@ foreach($staff as $key=>$value) {
 
 
 <header id="page-paralex" class="city-paralex">
-    <?= $model->body ?>
+    <?= $model['body'] ?>
 
 </header>
 

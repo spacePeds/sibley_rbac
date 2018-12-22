@@ -23,6 +23,7 @@ class m181014_225653_create_table_staff extends Migration
             'elected' => "ENUM('1', '0')",
             'email' =>  $this->string(255),
             'phone' =>  $this->string(10),
+            'image_asset' => $this->integer(),
             
         ], $tableOptions);
 
@@ -31,6 +32,12 @@ class m181014_225653_create_table_staff extends Migration
             'idx-staff-elected',
             'staff',
             'elected'
+        );
+
+        $this->createIndex(
+            'idx-staff-image_asset',
+            'staff',
+            'image_asset'
         );
     }
 
@@ -42,6 +49,10 @@ class m181014_225653_create_table_staff extends Migration
         // drops index for column `elected`
         $this->dropIndex(
             'idx-staff-elected',
+            'staff'
+        );
+        $this->dropIndex(
+            'idx-staff-image_asset',
             'staff'
         );
         $this->dropTable('{{%staff}}');

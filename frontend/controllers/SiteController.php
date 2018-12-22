@@ -162,7 +162,8 @@ class SiteController extends Controller
      */
     public function actionSignup()
     {
-        if (Yii::$app->user->can('create_user')) {
+        //un comment on production
+        //if (Yii::$app->user->can('create_user')) {
 
             $model = new SignupForm();
             if ($model->load(Yii::$app->request->post())) {
@@ -176,9 +177,9 @@ class SiteController extends Controller
             return $this->render('signup', [
                 'model' => $model,
             ]);
-        } else {
-            throw new ForbiddenHttpException('You are not allowed to access this page.');
-        }
+        //} else {
+        //    throw new ForbiddenHttpException('You are not allowed to access this page.');
+        //}
         
     }
 

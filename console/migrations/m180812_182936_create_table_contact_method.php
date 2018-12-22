@@ -18,7 +18,7 @@ class m180812_182936_create_table_contact_method extends Migration
         $this->createTable('{{%contact_method}}', [
             'id' => $this->primaryKey(),
             'business_id' => $this->integer()->notNull(),
-            'method' => "ENUM('1', '0') NOT NULL",
+            'method' => "ENUM('email','phone','fax') NOT NULL",
             'contact' =>  $this->string(100)->notNull(),
             'description' =>  $this->string(255),
             'created_dt' => $this->dateTime(),
@@ -26,6 +26,7 @@ class m180812_182936_create_table_contact_method extends Migration
         ], $tableOptions);
         $this->addForeignKey('fk_business_contact', '{{%contact_method}}', 'business_id', '{{%business}}', 'id', 'CASCADE', 'CASCADE');
     }
+
 
     /**
      * {@inheritdoc}

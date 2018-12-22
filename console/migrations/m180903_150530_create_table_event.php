@@ -22,10 +22,14 @@ class m180903_150530_create_table_event extends Migration
             'group' =>  "ENUM('city', 'chamber', 'rec') NOT NULL",
             'start_dt' =>  $this->dateTime()->notNull(),
             'end_dt' =>  $this->dateTime()->notNull(),
+            'all_day' =>  $this->integer()->notNull(),
+            'repeat_interval' =>  $this->integer()->notNull(),
             'last_edit_dt' =>  $this->dateTime()->notNull(),
             'user_id' =>  $this->integer()->notNull()
             
         ], $tableOptions);
+        $this->addCommentOnColumn('{{%event}}','repeat_interval','0-no, 1-weekly, 2=monthly, 3-annualy');
+
         $this->addForeignKey('fk_user_event', '{{%event}}', 'user_id', '{{%user}}', 'id', 'CASCADE', 'CASCADE');
     }
 
@@ -36,19 +40,4 @@ class m180903_150530_create_table_event extends Migration
     {
         $this->dropTable('{{%event}}');
     }
-
-    /*
-    // Use up()/down() to run migration code without a transaction.
-    public function up()
-    {
-
-    }
-
-    public function down()
-    {
-        echo "m180903_150530_create_table_event cannot be reverted.\n";
-
-        return false;
-    }
-    */
 }

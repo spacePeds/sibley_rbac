@@ -4,6 +4,7 @@ namespace frontend\models;
 
 use Yii;
 use yii\db\Query;
+use yii\helpers\Url;
 
 /**
  * This is the model class for table "image_asset".
