@@ -14,6 +14,7 @@ use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
 use frontend\models\Alert;
+use frontend\models\Link;
 use yii\db\Expression;
 
 /**
@@ -81,9 +82,33 @@ class SiteController extends Controller
         $alertModel = Alert::find()
             ->where(['between', 'NOW()', $sd, $ed ])->asArray()->all();
         $alerts = [];
+        $linkModel = Link::find()->asArray()->all();
+        $localInterest = [];
+        //print_r($linkModel);
+        foreach ($linkModel as $idx => $link) {
+            if ($link['group'] == 'Links of Local Interest') {
+                $attInfo = [];
+                $localInterest['group'] = $link['group'];
+                if ($link['type'] == 'file') {
+                    $attInfo = Link::getAttachment($link['id']);
+                }
+                $localInterest['links'][] = [
+                    'type' => $link['type'],
+                    'name' => $link['name'],
+                    'label' => empty($link['label']) ? $link['name'] : $link['label'],
+                    'desc' => $link['description'],
+                    'id' => $link['id'],
+                    'att' => $attInfo
+                ];
+            }
+        }
+        //print_r($localInterest);
+        //return;
+        
         return $this->render('index', [
             //'model' => $model,
-            'alerts' => $alertModel
+            'alerts' => $alertModel,
+            'localInterest' => $localInterest
         ]);
     }
 

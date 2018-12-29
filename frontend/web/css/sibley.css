@@ -27,6 +27,16 @@
     position:fixed;
     top:100px;
     right:20px;
+    /*z-index: 5; interfears with nav menu*/
+}
+.carousel-item {
+    height: 65vh;
+    min-height: 300px;
+    background: no-repeat center center scroll;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }
 /*yii2 and bootrap 4 quirk where when use template errors dont highlight*/
 .form-control-invalid-feedback {
@@ -88,7 +98,7 @@
 .staffImg .carousel-indicators .active {
 background: #707070;
 }
-.staffEdit {
+.cardEdit {
     position: absolute;
     top: 0px;
     right: 15px;

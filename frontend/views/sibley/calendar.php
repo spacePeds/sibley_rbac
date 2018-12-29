@@ -8,7 +8,7 @@ use yii\helpers\Url;
 use frontend\assets\CalendarAdminAsset;
 use frontend\assets\CalendarStandardAsset;
 
-$siteRoot = Url::to('@web');
+$siteRoot = ''; //Url::to('@web');
 if (Yii::$app->user->can('update_event')) {
     CalendarAdminAsset::register($this);
     $clickEventAction = $siteRoot . "/event/update";

@@ -84,25 +84,25 @@ AppAsset::register($this);
     <nav class="navbar navbarB navbar-expand-md bg-light navbar-light p-0">
         <div class="container">
             
-        <div class="navbar-collapse collapse pt-2 pt-md-0" id="navbar2">
-            
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item d-lg-none d-md-none d-sm-block">
-                    <a class="nav-link px-2" href="#">Home</a>
-                </li>
-                <li class="nav-item dropdown mr-3">
-                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                        I would Like to...
-                    </a>
-                    <div class="dropdown-menu">
-                        <a href="<?= Url::to(['/sibley/calendar']) ?>" class="dropdown-item">View Local Events</a>
-                        <a href="profile.html" class="dropdown-item"> Find Campground Information</a>
-                        <a href="<?= Url::to(['/sibley/council']) ?>" class="dropdown-item"> View Council Meeting Agendas</a>
-                        <a href="settings.html" class="dropdown-item"> Pay A Utility Bill</a>
-                    </div>
-                </li>
-            </ul>
-        </div>
+            <div class="navbar-collapse collapse pt-2 pt-md-0" id="navbar2">
+                
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item d-lg-none d-md-none d-sm-block">
+                        <a class="nav-link px-2" href="#">Home</a>
+                    </li>
+                    <li class="nav-item dropdown mr-3">
+                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                            I would Like to...
+                        </a>
+                        <div class="dropdown-menu">
+                            <a href="<?= Url::to(['/sibley/calendar']) ?>" class="dropdown-item">View Local Events</a>
+                            <a href="profile.html" class="dropdown-item"> Find Campground Information</a>
+                            <a href="<?= Url::to(['/sibley/council']) ?>" class="dropdown-item"> View Council Meeting Agendas</a>
+                            <a href="settings.html" class="dropdown-item"> Pay A Utility Bill</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
 

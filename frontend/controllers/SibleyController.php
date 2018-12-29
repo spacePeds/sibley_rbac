@@ -65,7 +65,7 @@ class SibleyController extends Controller
         //link up any set images
         foreach ($staff as $idx => $person) {
             foreach ($imgAssets as $imgAsset) {
-                if ($person['image_asset'] == $imgAsset['id']) {
+                if ($person['image_asset'] == $imgAsset['id'] && $person['image_asset'] != 0) {
                     $staff[$idx]['image'] = $imgAsset;
                 }
             }

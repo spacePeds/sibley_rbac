@@ -21,7 +21,7 @@ foreach($staff as $key=>$value) {
 ?>
 <?php if (Yii::$app->user->can('update_staff')) : ?>
     <div class="adminFloater shadow-sm p-3 mb-5 bg-white rounded">
-        <a href="<?= Url::to(['/page/update']) . '/'.$model->id ?>" role="button" class="btn btn-primary">Edit City Page</a>
+        <a href="<?= Url::to(['/page/update']) . '/'.$model['id'] ?>" role="button" class="btn btn-primary">Edit City Page</a>
         <?php if (Yii::$app->user->can('create_staff')): ?>
             <?= Html::a('Create Staff', ['staff/create'], ['class' => 'btn btn-success']) ?>
         <?php endif; ?>
@@ -60,11 +60,11 @@ foreach($staff as $key=>$value) {
                             <div class="col-md-4 mb-1">
                                 
                                 <?php if (Yii::$app->user->can('update_staff')) : ?>
-                                    <div class="staffEdit">
+                                    <div class="cardEdit">
                                         <a class="btn btn-outline-primary" href="<?= Url::to(['/staff/update/' . $staff[$key]['id']]) ?>" title="Update" aria-label="Update"><i class="fas fa-edit"></i></a>
 
                                         <?php if (Yii::$app->user->can('delete_staff')): ?>
-                                            <?= Html::a('<i class="fas fa-trash"></i>', ['delete', 'id' => $model->id], [
+                                            <?= Html::a('<i class="fas fa-trash"></i>', ['delete', 'id' => $staff[$key]['id']], [
                                                 'class' => 'btn btn-outline-danger',
                                                 'data' => [
                                                     'confirm' => 'Are you sure you want to delete this item?',
@@ -116,7 +116,7 @@ foreach($staff as $key=>$value) {
                                     <a class="btn btn-outline-primary" href="<?= Url::to(['/staff/update/' . $staff[$key]['id']]) ?>" title="Update" aria-label="Update"><i class="fas fa-edit"></i></a>
 
                                     <?php if (Yii::$app->user->can('delete_staff')): ?>
-                                        <?= Html::a('<i class="fas fa-trash"></i>', ['delete', 'id' => $model->id], [
+                                        <?= Html::a('<i class="fas fa-trash"></i>', ['delete', 'id' => $model['id']], [
                                             'class' => 'btn btn-outline-danger',
                                             'data' => [
                                                 'confirm' => 'Are you sure you want to delete this item?',

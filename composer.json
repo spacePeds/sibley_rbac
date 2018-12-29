@@ -26,7 +26,8 @@
         "philippfrenzel/yii2fullcalendar":"*",
         "2amigos/yii2-ckeditor-widget": "^2.1",
         "mottie/tablesorter": "^2.31",
-        "tebazil/yii2-db-seeder": "^0.0.0"
+        "tebazil/yii2-db-seeder": "^0.0.0",
+        "davidjeddy/yii2-rss-reader": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

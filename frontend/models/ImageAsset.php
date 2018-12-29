@@ -73,7 +73,7 @@ class ImageAsset extends \yii\db\ActiveRecord
             $assets = [
                 0 => [
                     'id' => 0,
-                    'name' => 'N/A',
+                    'name' => '',
                     'path' => Url::to('@web/img/assets/') . 'placeholder-image.jpg',
                     'size' => '',
                     'type' => '',
