@@ -5,7 +5,6 @@ use yii\bootstrap4\ActiveForm;
 use wbraganca\dynamicform\DynamicFormWidget;
 use frontend\assets\BootstrapSelectAsset;
 use yii\helpers\Url;
-use yii\bootstrap4\Modal;
 use frontend\assets\BusinessAsset;
 
 BusinessAsset::register($this);
@@ -16,7 +15,7 @@ BootstrapSelectAsset::register($this);
 /* @var $model common\models\BusinessWithCategory */
 /* @var $modelsContactMethod common\models\BusinessWithCategory */
 /* @var $form yii\widgets\ActiveForm */
-$js = '
+$js = <<<EOF
 jQuery(".dynamicform_wrapper").on("afterInsert", function(e, item) {
     jQuery(".dynamicform_wrapper .panel-title-contact").each(function(index) {
         jQuery(this).html("Contact: " + (index + 1))
@@ -28,15 +27,24 @@ jQuery(".dynamicform_wrapper").on("afterDelete", function(e) {
         jQuery(this).html("Contact: " + (index + 1))
     });
 });
+
+$('#businesswithcategories-imgfile').change();
+jQuery('#businesswithcategories-imgfile').on('change',function(){
+    //get the file name
+    var fileName = $(this).val();
+    //replace the "Choose a file" label
+    $(this).next('.custom-file-label').html(fileName);
+})
+
 $(".selectpicker").selectpicker(
     {"BootstrapVersion":3}
 );
-';
+EOF;
 $this->registerJs($js);
 ?>
 
 
-<div class="business-form">
+<div class="business-form container">
 
     <?php 
     $form = ActiveForm::begin([
@@ -58,31 +66,55 @@ $this->registerJs($js);
 
     <?= $form->field($model, 'zip')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'url')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'url')->textInput(['maxlength' => true, 'placeholder' => "Example: http://www.website.com"]) ?>
 
     <?= $form->field($model, 'note')->textarea(['rows' => 6]) ?>
 
     <?= $form->field($model, 'member')->dropDownList([ 1 => 'Yes', 0 => 'No', ], ['prompt' => 'Is this entity a chamber member?']) ?>
 
-    <div class="row mb-2">
-        <div class="col-md-6">
-        <?= $form->field($model, 'category_ids')
-            ->listBox($categories, [
-                'multiple' => true,
-                'class' => 'form-control selectpicker',
-                'data-live-search' => 'true',
-                'data-max-options' => 4,
-                'data-size' => 6,
-                'title' => 'Choose up to 4 categories'
-            ])
-            /* or, you may use a checkbox list instead */
-            /* ->checkboxList($categories) */
-            ->hint('Select any of the following categories which best describe this business.');?>
+    <?= $form->field($model, 'imgFile', [
+        'errorOptions'  => [
+            'class' => 'form-control-invalid-feedback',
+        ],
+        'inputOptions'  => [
+            'class' => 'custom-file-input',
+        ],
+        'labelOptions'  => [
+            'class' => 'custom-file-label',
+        ],
+        'template' => '<label>Organization Image (optional)</label><div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Upload</span>
         </div>
-        <div class="col-md-6">
-            <div class="card h-100">
-                <div class="card-header">Category not in list?</div>
-                <div class="card-body">
+        <div class="custom-file">{input}{label}
+        </div></div>
+        {error}'
+    ])->fileInput(); ?>
+    
+    <?php if (isset($model->imgFileUrl)): ?>
+        <div><img src="/<?=$model['imgFileUrl']?>" class="rounded mb-3 ml-3 shadow-sm" height="100px"></div>
+    <?php endif; ?>
+
+    <div class="card h-100 mb-3">
+        <div class="card-header">Category Selection</div>
+        <div class="card-body row">
+            <div class="col-md-6">
+            <?= $form->field($model, 'category_ids')
+                ->listBox($categories, [
+                    'multiple' => true,
+                    'class' => 'form-control selectpicker',
+                    'data-live-search' => 'true',
+                    'data-max-options' => 4,
+                    'data-size' => 6,
+                    'title' => 'Choose up to 4 categories'
+                ])
+                /* or, you may use a checkbox list instead */
+                /* ->checkboxList($categories) */
+                ->hint('Select any of the following categories which best describe this business.');?>
+            </div>
+            <div class="col-md-6 border border-light rounded text-center">
+                <h6 class="mt-2">Category not in list?</h6>
+                <div class="card-text">
                     <?= Html::button('Add Category', [
                         'value' => Url::to('@web/category/create'), 
                         'class' => 'btn btn-primary',
@@ -91,6 +123,9 @@ $this->registerJs($js);
             </div>
         </div>
     </div>
+
+
+    
     
 
 
@@ -141,7 +176,7 @@ $this->registerJs($js);
                                 ], ['prompt' => 'Pick a contact method']) ?>
                             </div>
                             <div class="col-sm-4">
-                                <?= $form->field($modelContact, "[{$index}]contact")->textInput(['maxlength' => true]) ?>
+                                <?= $form->field($modelContact, "[{$index}]contact")->textInput(['maxlength' => true])->hint('Phone example: 1234567890<br/>Email Example: person@domain.com') ?>
                             </div>
                             <div class="col-sm-4">
                                 <?= $form->field($modelContact, "[{$index}]description")->textInput(['maxlength' => true, 'placeholder' => '(Optional)']) ?>
@@ -165,12 +200,3 @@ $this->registerJs($js);
     <?php ActiveForm::end(); ?>
 
 </div>
-<?php
-    Modal::begin([
-        
-        'id' => 'genericModal'
-    ]);
-    echo '<div id="modalContent"></div>';
-    Modal::end();
-
-?>

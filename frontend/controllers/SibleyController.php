@@ -6,6 +6,7 @@ use Yii;
 use frontend\models\Staff;
 use common\models\User;
 use frontend\models\Page;
+use frontend\models\Business;
 use frontend\models\Event;
 use frontend\models\Agenda;
 use yii\base\InvalidParamException;
@@ -96,6 +97,19 @@ class SibleyController extends Controller
         ]);
     }
     /**
+     * Displays City map.
+     *
+     * @return mixed
+     * @param integer
+     */
+    public function actionMap()
+    {
+        
+        return $this->render('map', [
+            
+        ]);
+    }
+    /**
      * Displays City wide calendar.
      *
      * @return mixed
@@ -177,13 +191,187 @@ class SibleyController extends Controller
      */
     public function actionLocation()
     {
+        //define semantic url for page
+        $slug = '';
+        $pageKey = 2;
+        $page = Page::find()->where(['id'=>$pageKey])->one();
+        if (empty($page)) {
 
+        }
         return $this->render('location', [
-            'details' => Page::find()->where(['id'=>2])->one()
+            'details' => $page,
+            'key' => $pageKey
         ]);
     }
     /**
+     * Displays sibley generic restaurant page.
+     *
+     * @return mixed
+     */
+    public function actionFood()
+    {
+        //define semantic url for page
+        $slug = '';
+        $pageKey = 6;
+        $page = $this->getGenericPage($pageKey);
+        return $this->render('generic', [
+            'details' => $page,
+            'key' => $pageKey
+        ]);
+    }
+    /**
+     * Displays sibley generic lodging page.
+     *
+     * @return mixed
+     */
+    public function actionLodging()
+    {
+        //define semantic url for page
+        $slug = '';
+        $pageKey = 5;
+        $page = $this->getGenericPage($pageKey);
+
+        //echo '<pre>' . print_r($page, true) . '</pre>';
+        //echo '<pre>' . print_r($organizations, true) . '</pre>';
+        return $this->render('lodging', [
+            'details' => $page,
+            'key' => $pageKey
+        ]);
+    }
+
+    /**
+     * Displays sibley generic chamber page.
+     *
+     * @return mixed
+     */
+    public function actionChamber()
+    {
+        //define semantic url for page
+        $slug = '';
+        $pageKey = 7;
+        $page = $this->getGenericPage($pageKey);
+
+        //echo '<pre>' . print_r($page, true) . '</pre>';
+        //echo '<pre>' . print_r($organizations, true) . '</pre>';
+        return $this->render('generic', [
+            'details' => $page,
+            'key' => $pageKey
+        ]);
+    }
+    /**
+     * Displays sibley recreation department page.
+     *
+     * @return mixed
+     */
+    public function actionRecreation()
+    {
+        //define semantic url for page
+        $slug = '';
+        $pageKey = 9;
+        $page = $this->getGenericPage($pageKey);
+
+        $dayOfWeek = date('w');
+        if ($dayOfWeek == 0) {
+            $sunday = strtotime("today");
+            $saturday = strtotime("next Saturday");
+        } else if ($dayOfWeek == 6){    
+            $sunday = strtotime("last sunday");
+            $saturday = strtotime("today");
+        } else {
+            $sunday = strtotime("last sunday");
+            $saturday = strtotime("next saturday");
+        }
+        $recEvents = Event::find()
+            ->orderBy(['start_dt' => SORT_ASC])
+            ->where(['group' => 'rec'])
+            ->andWhere(['>=', 'start_dt', strftime('%Y-%m-%d', $sunday)])
+            ->andWhere(['<=','start_dt', strftime('%Y-%m-%d', $saturday)])
+            ->asArray()->all();
+        $enhancedEvents = $this->injectRepeatingEvents($recEvents);
+        
+        //echo '<pre>Last Sunday:' . strftime('%Y-%m-%d', $sunday) . '</pre>';
+        //echo '<pre>This Saturday:' . strftime('%Y-%m-%d', $saturday) . '</pre>';
+        //echo '<pre>:' . print_r($enhancedEvents, true) . '</pre>';
+        return $this->render('rec', [
+            'details' => $page,
+            'key' => $pageKey,
+            'events' =>$enhancedEvents 
+        ]);
+    }
+
+    /**
+     * Displays sibley generic chamber member benefits page.
+     *
+     * @return mixed
+     */
+    public function actionChamberBenefits()
+    {
+        //define semantic url for page
+        $slug = '';
+        $pageKey = 8;
+        $page = $this->getGenericPage($pageKey);
+
+        //echo '<pre>' . print_r($page, true) . '</pre>';
+        //echo '<pre>' . print_r($organizations, true) . '</pre>';
+        return $this->render('generic', [
+            'details' => $page,
+            'key' => $pageKey
+        ]);
+    }
+
+    /**
+     * Construct array of retrieved page elements
+     * @param integer $pageKey
+     * @return array
+     */
+    protected function getGenericPage($pageKey) {
+        //$page = Page::find()->joinWith('page_category')->where(['page_category.page_id'=>$pageKey])->all();   //should work :(
+        $page = Page::find()
+            ->select('page.*, page_category.*')
+            ->leftJoin('page_category', '`page_category`.`page_id` = `page`.`id`')
+            ->where(['page.id'=>$pageKey])->asArray()
+            ->one();
+        
+        if (isset($page['last_edit_dt'])) {
+            $page['last_edit_dt'] = date("m/d/Y @ g:ia", strtotime($page['last_edit_dt']));
+            $page['linkedOrganizations'] = [];
+        }    
+        //load all business with found categories
+        //$business = Business::find()->joinWith(['business_category','contact_method'])->where(['business_category.category_id' => $page['category_id']])->asArray()->all();
+        $organizations = [];
+        if (!empty($page['category_id'])) {
+            $organizations = Business::find()
+                ->select('business.id as bid, business.*, business_category.*, contact_method.*')
+                ->leftJoin('business_category', '`business_category`.`business_id` = `business`.`id`')
+                ->leftJoin('contact_method', '`contact_method`.`business_id` = `business`.`id`')
+                ->where(['business_category.category_id' => $page['category_id']])->asArray()->all();
+        }
+        
+
+        
+        foreach ($organizations as $organization) {
+            $bid = $organization['bid'];
+            $page['linkedOrganizations'][$bid]['name'] = $organization['name'];
+            $page['linkedOrganizations'][$bid]['address1'] = $organization['address1'];
+            $page['linkedOrganizations'][$bid]['address2'] = $organization['address2'];
+            $page['linkedOrganizations'][$bid]['city'] = $organization['city'];
+            $page['linkedOrganizations'][$bid]['state'] = $organization['state'];
+            $page['linkedOrganizations'][$bid]['zip'] = $organization['zip'];
+            $page['linkedOrganizations'][$bid]['url'] = $organization['url'];
+            $page['linkedOrganizations'][$bid]['note'] = $organization['note'];
+            $page['linkedOrganizations'][$bid]['member'] = $organization['member'];
+            $page['linkedOrganizations'][$bid]['contact'][] = [
+                'method' => $organization['method'],
+                'contact'=> $organization['contact'],
+                'description' => $organization['description']
+            ];
+        }
+        return $page;
+    }
+
+    /**
      * Generate additional events based on repeating parameter
+     * REMOVE THIS and move reference to components/frontedncontroller
      * @param array $events
      * @return array
      */

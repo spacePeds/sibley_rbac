@@ -1,9 +1,10 @@
 <?php
 return [
-    'adminEmail' => 'admin@example.com',
-    'supportEmail' => 'support@example.com',
+    'adminEmail' => 'webmaster@sibleyiowa.net',
+    'supportEmail' => 'support@sibleyiowa.net',
     'user.passwordResetTokenExpire' => 3600,
     'media' => 'media/',
+    'orgImagePath' => 'img/org/',
     'eventGroups' => [
         'city' => 'City of Sibley',
         'chamber' => 'Sibley Chamber of Commerce',

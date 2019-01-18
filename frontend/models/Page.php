@@ -3,6 +3,7 @@
 namespace frontend\models;
 
 use Yii;
+use yii\behaviors\SluggableBehavior;
 
 /**
  * This is the model class for table "page".
@@ -52,6 +53,19 @@ class Page extends \yii\db\ActiveRecord
             'body' => Yii::t('app', 'Body'),
             'last_edit_dt' => Yii::t('app', 'Last Edit Dt'),
             'user_id' => Yii::t('app', 'User ID'),
+        ];
+    }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => SluggableBehavior::className(),
+                'attribute' => 'title',
+                // 'slugAttribute' => 'slug',   //don't need because default is 'slug'
+                'immutable' => true,            //dont update the slug since search engines may depend on it
+                'ensureUnique'=>true,           //auto append like slugs
+            ],
         ];
     }
 

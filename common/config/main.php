@@ -31,6 +31,9 @@ return [
             'dateFormat' => 'MM/dd/yyyy',
             'datetimeFormat' => 'php:m.d.Y H:i:s',
         ],
+        'feed' =>[
+            'class' => 'yii\feed\FeedDriver',
+        ],
     ],
     //'modules' => [
     //    'rbac' => [

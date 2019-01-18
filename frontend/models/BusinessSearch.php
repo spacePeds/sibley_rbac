@@ -19,7 +19,7 @@ class BusinessSearch extends Business
     {
         return [
             [['id'], 'integer'],
-            [['name', 'address1', 'address2', 'city', 'state', 'zip', 'url', 'note', 'member', 'created_dt'], 'safe'],
+            [['name', 'address1', 'address2', 'city', 'state', 'zip', 'url', 'note', 'member', 'image', 'created_dt'], 'safe'],
         ];
     }
 
@@ -71,6 +71,7 @@ class BusinessSearch extends Business
             ->andFilterWhere(['like', 'zip', $this->zip])
             ->andFilterWhere(['like', 'url', $this->url])
             ->andFilterWhere(['like', 'note', $this->note])
+            ->andFilterWhere(['like', 'image', $this->image])
             ->andFilterWhere(['like', 'member', $this->member]);
 
         return $dataProvider;

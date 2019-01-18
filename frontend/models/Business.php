@@ -2,6 +2,7 @@
 
 namespace frontend\models;
 
+use yii\helpers\Url;
 use Yii;
 
 /**
@@ -24,6 +25,10 @@ use Yii;
  */
 class Business extends \yii\db\ActiveRecord
 {
+    //img to upload
+    public $imgFile;
+    public $imgFileUrl;
+
     /**
      * {@inheritdoc}
      */
@@ -40,7 +45,8 @@ class Business extends \yii\db\ActiveRecord
         return [
             [['name', 'address1', 'city', 'state', 'zip', 'member'], 'required'],
             [['note', 'member'], 'string'],
-            [['created_dt'], 'safe'],
+            [['created_dt','image'], 'safe'],
+            [['imgFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, gif, JPG'],
             [['name', 'address1', 'address2', 'city'], 'string', 'max' => 100],
             [['state'], 'string', 'max' => 2],
             [['zip'], 'string', 'max' => 10],
@@ -55,17 +61,15 @@ class Business extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
             'name' => Yii::t('app', 'Name'),
             'address1' => Yii::t('app', 'Address1'),
-            'address2' => Yii::t('app', 'Address2'),
+            'address2' => Yii::t('app', 'Address2 (optional)'),
             'city' => Yii::t('app', 'City'),
             'state' => Yii::t('app', 'State'),
             'zip' => Yii::t('app', 'Zip'),
             'url' => Yii::t('app', 'Url'),
-            'note' => Yii::t('app', 'Note'),
-            'member' => Yii::t('app', 'Member'),
-            'created_dt' => Yii::t('app', 'Created Dt'),
+            'note' => Yii::t('app', 'Notes (business hours or additional details)'),
+            'member' => Yii::t('app', 'Chamber Member'),
         ];
     }
 
@@ -92,5 +96,31 @@ class Business extends \yii\db\ActiveRecord
     public function getCategories() {
         return $this->hasMany(Category::className(), ['id' => 'category_id'])
           ->viaTable('business_category', ['business_id' => 'id']);
+    }
+
+    /**
+     * Needs to occur here to make sure validation occurs correctly
+     * @param integer $businessRecordId
+     */
+    public function upload($businessRecordId)
+    {
+        if (!empty($this->imgFile)) { 
+            
+            $type = $this->imgFile->extension;
+            $size = $this->imgFile->size;
+            $name = $businessRecordId.'.'.$this->imgFile->extension; 
+            $sysPath = Url::to('@frontend/web/') . Yii::$app->params['orgImagePath'];
+            $path = Yii::$app->params['orgImagePath'];
+            //Yii::$app->session->setFlash('success', 'DEBUG: path exist? url webroot:' . Url::to('@webroot/web/') . 'url frontend: ' .Url::to('@frontend/web/') . ', param: ' . Yii::$app->params['orgImagePath']);
+                         
+            if (!is_dir($sysPath)) {
+                mkdir($sysPath, 0777, true); 
+            }
+            if (!$this->imgFile->saveAs($sysPath . $name)) {
+                return false;
+            }
+            $this->image = $name;
+        }
+        return true;
     }
 }

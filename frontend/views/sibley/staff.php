@@ -30,8 +30,19 @@ foreach($staff as $key=>$value) {
 
 <?php endif; ?>
 
+<!-- paralex calendar -->
+<section id="city-heading" class="p-5">
+    
+        <div class="row">
+            <div class="col">
+                <div class="container pt-5 text-left"><h2>City of Sibley</h2></div>
+            </div>
+        </div>
+    
+</section>
 
-<header id="page-paralex" class="city-paralex">
+
+<header >
     <?= $model['body'] ?>
 
 </header>
@@ -41,10 +52,10 @@ foreach($staff as $key=>$value) {
 
 <section id="elected" class="">
     <div class="container bg-white">
-    
-        
 
-        <?php echo '<pre>' . print_r($staff,true) . '</pre>' ?>
+        <p>Sibley's real pride is in its people. The dedicated, professional, caring individuals who create the growth and spirit of opportunity make the community a great place to live</p>
+
+        <?php //echo '<pre>' . print_r($staff,true) . '</pre>' ?>
 
         <div class="card mb-2">
             <div class="card-body">

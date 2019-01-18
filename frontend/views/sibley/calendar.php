@@ -35,6 +35,12 @@ $eventDrop = <<<EOF
     }
 EOF;
 Html::encode($eventDrop);
+$eventResize = <<<EOF
+    function(event, delta, revertFunc) {
+        Cal.eventResize(event, delta, revertFunc, '$siteRoot');
+    }
+EOF;
+Html::encode($eventResize);
 
 $eventRender = <<<EOF
 function(event, element, view){
@@ -69,7 +75,19 @@ $this->params['breadcrumbs'][] = $this->title;
 //    echo '<div class="flash-' . $key . '">' . $message . "</div>\n";
 //}
 ?>
-<div class="section mb-2">
+<!-- paralex calendar -->
+<section id="calendar-heading" class="p-5">
+    <div class="dark-overlay">
+        <div class="row">
+        <div class="col">
+            <div class="container pt-5">
+            </div>
+        </div>
+        </div>
+    </div>
+</section>
+
+<div class="section m-2">
 
     <h1><?= Html::encode($this->title) ?></h1>
     
@@ -101,6 +119,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'eventClick' => new JSExpression($eventClick),
                 'dayRender' => new JSExpression($dayRender),
                 'eventRender' => new JSExpression($eventRender),
+                'eventResize' => new JSExpression($eventResize),
             ],
             'header' => [
                 'center'=>'title',
@@ -112,15 +131,3 @@ $this->params['breadcrumbs'][] = $this->title;
     ?>
     <div id="eventCalendar2"></div>
 </div>
-
-
-
-<?php
-Modal::begin([
-    'title'     => '<h4></h4>',
-    'id'        => 'genericModal',
-    'size'      => 'modal-lg',
-    
-]);
-echo '<div id="modalContent"></div>';
-Modal::end();

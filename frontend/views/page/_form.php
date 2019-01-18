@@ -27,7 +27,7 @@ BootstrapSelectAsset::register($this);
         <div class="p-2"><?= Html::a(Yii::t('app', 'Add / Remove Image Assets'), [Url::to('multiple')], ['class' => 'btn btn-primary']) ?></div>
     <?php endif; ?>
 </div>
-<div class="page-form">
+<div class="page-form container">
 
     <?php 
     $form = ActiveForm::begin([
@@ -45,7 +45,8 @@ BootstrapSelectAsset::register($this);
 
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
     
-    <?= $form->field($model, 'body')->widget(CKEditor::className(), [
+    <div class="invalidFix">
+        <?= $form->field($model, 'body')->widget(CKEditor::className(), [
         'options' => ['rows' => '6'],
         'preset' => 'custom',
         'clientOptions' => [
@@ -65,7 +66,9 @@ BootstrapSelectAsset::register($this);
 		        ['name' => 'others', 'groups' => [ 'others' ]],
 		        ['name' => 'about', 'groups' => [ 'about' ]]
             ],
-            'removeButtons' => 'Flash,Iframe,Language,Save,NewPage'
+            'removeButtons' => 'Flash,Iframe,Language,Save,NewPage',
+            //'contentsCss' => ['http://sibleyfront.test/assets/7a577269/js/bootstrap.bundle.js'],
+            'allowedContent' => true
         ]
         /*
         'clientOptions' => [
@@ -78,6 +81,7 @@ BootstrapSelectAsset::register($this);
         ]
         */
     ]) ?>
+    </div>
 
     <?= $form->field($model, 'category_ids')->listBox($categories, [
         'multiple' => true,

@@ -13,9 +13,11 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
-
+use yii\web\UploadedFile;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
+use yii\helpers\Url;
+use yii\data\ArrayDataProvider;
 
 /**
  * BusinessController implements the CRUD actions for Business model.
@@ -73,6 +75,10 @@ class BusinessController extends Controller
         $contactMethods = $model->contactMethods;
         $model->loadCategories();
 
+        if (!empty($model->image)) {    
+            $model->imgFileUrl = Yii::$app->params['orgImagePath'] . $model->image;        
+        }
+
         return $this->render('view', [
             'model' => $model,
             'contactMethods' => $contactMethods,
@@ -102,6 +108,8 @@ class BusinessController extends Controller
             if ($valid) {
                 Yii::debug('data is valid, beginning transaction', __METHOD__);
                 $transaction = \Yii::$app->db->beginTransaction();
+                $model->imgFile = UploadedFile::getInstance($model, 'imgFile');
+                $model->created_dt = date('Y-m-d H:i:s');
 
                 try {
                     if ($flag = $model->save(false)) {
@@ -112,6 +120,12 @@ class BusinessController extends Controller
                                 $transaction->rollBack();
                                 break;
                             }
+                        }
+                        if (!$model->upload($model->id)) {
+                            Yii::$app->session->setFlash('error', "Organization image failed to save.");
+                        } else {
+                            //save teh image name
+                            $model->updateAttributes(['image' => $model->image]);
                         }
                     }
 
@@ -168,6 +182,14 @@ class BusinessController extends Controller
 
             if ($valid) {
                 $transaction = \Yii::$app->db->beginTransaction();
+                $model->imgFile = UploadedFile::getInstance($model, 'imgFile');
+                if (!$model->upload($model->id)) {
+                    Yii::$app->session->setFlash('error', "An error occured while updating the organization image.");
+                } else {
+                    //save teh image name
+                    $model->updateAttributes(['image' => $model->image]);
+                }
+                
                 try {
                     if ($flag = $model->save(false)) {
                         if (!empty($deletedIDs)) {
@@ -192,6 +214,11 @@ class BusinessController extends Controller
             }
         }
         
+         
+        $sysPath = Url::to('@frontend/web/') . Yii::$app->params['orgImagePath'];
+        if (file_exists($sysPath . $model->image)) {
+            $model->imgFileUrl = Yii::$app->params['orgImagePath'] . $model->image;
+        }
 
         return $this->render('update', [
             'model' => $model,
@@ -211,9 +238,15 @@ class BusinessController extends Controller
     {
         $model = $this->findModel($id);
         $businessName = $model->name;
+        $sysPath = Url::to('@frontend/web/') . Yii::$app->params['orgImagePath'] . $model->image;
 
         if ($model->delete()) {
-            Yii::$app->session->setFlash('success', 'Record  <strong>"' . $businessName . '"</strong> deleted successfully.');
+            Yii::$app->session->setFlash('success', 'Record  <strong>"' . $businessName . '"</strong> deleted successfully. ');
+            
+            
+            if(file_exists($sysPath) && !empty($model->image)) {
+                unlink($sysPath);
+            } 
         }
 
         return $this->redirect(['index']);
@@ -233,5 +266,41 @@ class BusinessController extends Controller
         }
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+    }
+
+    public function actionTest()
+    {
+        // Get page size from query strings
+        $page_size = Yii::$app->request->get('per-page');
+        $page_size = isset( $page_size ) ? intval($page_size) : 4;
+
+
+        $provider = new ArrayDataProvider([
+            'allModels' => $this->getFakedModels(),
+            'pagination' => [
+                // Should not hard coded
+                'pageSize' => $page_size,
+            ],
+            'sort' => [
+                'attributes' => ['id'],
+            ],
+        ]);
+
+        return $this->render('test', ['listDataProvider' => $provider]);
+    }
+    private function getFakedModels()
+    {
+        $rawData = [];
+
+        for ($i=1; $i < 18; $i++) {
+            $item = [
+                'id' => $i,
+                'title' => 'Title ' . $i,
+            ];
+
+            $rawData[] = $item;
+        }
+
+        return $rawData;
     }
 }

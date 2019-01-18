@@ -5,18 +5,27 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-$this->title = $details->title;
+if (count($details) < 1) {
+    $this->title = 'Page not found.';
+    $body = '<p>This page is currently unconfigured.</p>';
+} else {
+    $this->title = $details->title;
+    $body = $details->body;
+}
+
+
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <?php //echo '<pre>' . print_r($details,true) . '</pre>' ?>
-<?php if (Yii::$app->user->can('update_location')) : ?>
-    <div class="adminFloater shadow-sm p-3 mb-5 bg-white rounded">
-        <a href="<?= Url::to(['/page/update']) . '/'.$details->id ?>" role="button" class="btn btn-primary">Edit Location Page</a>
-    </div>
-<?php endif; ?>
+
 
 <section id="location">
-    <div class="container bg-white">
-        <?= $details->body ?>
+    <div class="container bg-white clearfix">
+        <?php if (Yii::$app->user->can('update_location')) : ?>
+            <div class="float-right adminFloaterRev2 shadow-sm p-1 mb-2 bg-white rounded">
+                <a href="<?= Url::to(['/page/update']) . '/'.$key ?>" role="button" class="btn btn-primary">Edit Location Page</a>
+            </div>
+        <?php endif; ?>
+        <?= $body ?>
     </div>
 </section>

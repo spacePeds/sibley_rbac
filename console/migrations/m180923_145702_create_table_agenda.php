@@ -20,6 +20,7 @@ class m180923_145702_create_table_agenda extends Migration
             'type' =>  $this->string(100)->notNull(),
             'date' =>  $this->dateTime()->notNull(),
             'body' =>  $this->text()->notNull(),
+            'slug' =>  $this->text()->notNull(),
             'create_dt' =>  $this->dateTime()->notNull(),
             
         ], $tableOptions);

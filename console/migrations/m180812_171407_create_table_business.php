@@ -27,6 +27,7 @@ class m180812_171407_create_table_business extends Migration
             'url' =>  $this->string(255),
             'note' => $this->text(),
             'member' => "ENUM('1', '0')",
+            'image' =>  $this->string(100),
             'created_dt' => $this->dateTime(),
             
         ], $tableOptions);

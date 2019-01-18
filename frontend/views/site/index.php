@@ -5,65 +5,85 @@ use yii\helpers\Url;
 use yii\helpers\Html;
 use davidjeddy\RssFeed\RssReader;
 
-$this->title = 'My Yii Application';
-?>
-<div class="site-index">
-
-    <?php if (Yii::$app->user->can('update_alert')) : ?>
+/*
+<?php if (Yii::$app->user->can('update_alert')) : ?>
         <div class="adminFloater shadow-sm p-3 mb-5 bg-white rounded">
             <a href="<?= Url::to(['/alert/index']) ?>" role="button" class="btn btn-primary">Edit City Alert</a>
         </div>
     <?php endif; ?>
+*/
+
+$this->title = 'Sibley: Highlight of Iowa!';
+?>
+<div class="site-index">
+
+    
 
     <?php if (count($alerts) > 0): ?>
         <?php //echo '<pre>' . print_r($alerts,true) . '</pre>' ?>
         <?php foreach ($alerts as $idx=>$alert): ?>
-            <div class="alert alert-<?= $alert['type']?>" role="alert"><?= $alert['message']?></div>
+            <div class="alert alert-<?= $alert['type']?> mb-0 p-2" role="alert"><?= $alert['message']?>
+                <a href="/alert/update/<?= $alert['id']?>" title="Update" aria-label="Update" class="float-right"><i class="fas fa-edit"></i></a>
+            </div>
+            <!--<div class="alert alert-danger mb-0 p-2" role="alert"><span class="border border-secondary rounded p-1 m-1"><strong>City Notice:</strong></span>i am an alert</div>-->
         <?php endforeach; ?>
     <?php endif; ?>
 
-    <header>
-      <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-        <ol class="carousel-indicators">
-          <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-          <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-          <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-        </ol>
-        <div class="carousel-inner" role="listbox">
-          <!-- Slide One - Set the background image for this slide in the line below -->
-          <div class="carousel-item active" style="background-image: url('http://placehold.it/1900x1080')">
-            <div class="carousel-caption d-none d-md-block">
-              <h3>First Slide</h3>
-              <p>This is a description for the first slide.</p>
-            </div>
-          </div>
-          <!-- Slide Two - Set the background image for this slide in the line below -->
-          <div class="carousel-item" style="background-image: url('http://placehold.it/1900x1080')">
-            <div class="carousel-caption d-none d-md-block">
-              <h3>Second Slide</h3>
-              <p>This is a description for the second slide.</p>
-            </div>
-          </div>
-          <!-- Slide Three - Set the background image for this slide in the line below -->
-          <div class="carousel-item" style="background-image: url('http://placehold.it/1900x1080')">
-            <div class="carousel-caption d-none d-md-block">
-              <h3>Third Slide</h3>
-              <p>This is a description for the third slide.</p>
-            </div>
-          </div>
-        </div>
-        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="sr-only">Previous</span>
-        </a>
-        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="sr-only">Next</span>
-        </a>
-      </div>
-    </header>
+    <section id="showcase">
+        <div id="myCarousel" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#myCarousel" data-slide-to="1" class=""></li>
+            <li data-target="#myCarousel" data-slide-to="2" class=""></li>
+            <li data-target="#myCarousel" data-slide-to="3" class=""></li>
+            <li data-target="#myCarousel" data-slide-to="4" class=""></li>
+            </ol>
 
-    <div class="body-content">
+            <div class="carousel-inner">
+            <div class="carousel-item carousel-image-1 active">
+            <div class="container">
+            <div class="carousel-caption d-none d-sm-block text-right pr-4">
+            <h1 class="display-4">Osceola County Courthouse</h1>
+            <p class="lead">Built in 1902, this landmark dominates Sibley's center.</p>
+            <a target="blank" href="http://www.osceolacountyia.org/" class="btn btn-success">Visit Courthouse</a>
+            </div>
+            </div>
+            </div>
+
+            <div class="carousel-item carousel-image-2">
+            <div class="container">
+            <div class="carousel-caption d-none d-sm-block pl-4">
+            <h1 class="display-4">Downtown Sibley</h1>
+            <p class="lead">Several unique storefronts dot Sibley's downtown.</p>
+            </div>
+            </div>
+            </div>
+
+            <div class="carousel-item carousel-image-3">
+            <div class="container">
+            <div class="carousel-caption d-none d-sm-block text-right mb-5">
+            <h1 class="display-4">Sibley Golf and Country Club</h1>
+            <p class="lead">Spend several hours relaxing at our beautiful golf course.</p>
+            <a href="https://www.facebook.com/SibleyGolfCountryClub/" class="btn btn-success btn-lg">Learn More</a>
+            </div>
+            </div>
+            </div>
+
+            <!--Sibley's real pride is in its people. The dedicated, professional, caring individuals who create the growth and spirit of opportunity make the community a great place to live-->
+
+            </div>
+<!--
+            <a href="#myCarousel" class="carousel-control-prev" data-slide="prev" >
+            <span class="carousel-control-prev-icon"></span>
+            </a>
+            <a href="#myCarousel" class="carousel-control-next" data-slide="next" >
+            <span class="carousel-control-next-icon"></span>
+            </a>
+-->
+        </div>
+    </section>
+
+    <section>
 
         <div class="row">
             <div class="col-lg-3">
@@ -74,29 +94,24 @@ $this->title = 'My Yii Application';
                     </li>
                 </ul>
                 
-                <?php 
-                /*
-                //https://www.yiiframework.com/extension/davidjeddy/yii2-rss-reader
-                echo RssReader::widget([
-                    'channel'   => 'https://www.feedspot.com/infiniterss.php?q=site:http%3A%2F%2Fwww.cinemablend.com%2Frss-all.xml',
-                    'itemView'  => 'item',
-                    'pageSize'  => 5,
-                    'wrapClass' => 'rss-wrap',
-                    'wrapTag'   => 'div',
-                ]);
-                */
-                ?>
+                <h3>KIWA Regional News</h3>
+                <ul class="list-group list-group-flush">
+                <?php foreach($feed['entries'] as $record): ?>
+                    <li class="list-group-item small">
+                        <a href="<?=$record['link']?>" target="_blank"><?=$record['title']?></a>
+                    </li>
+                <?php endforeach; ?>
+                </ul>
+                <?php //echo '<pre>' . print_r($feed,true) . '</pre>'; ?>
                 
             </div>
             <div class="col-lg-6">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
+                <div class="card">
+                    <div class="card-body">
+                        <?php echo '<pre>' . print_r($events, true) . '</pre>'; ?>
+                    </div>
+                </div>
+            
             </div>
             <div class="col-lg-3">
                 <?php if (Yii::$app->user->can('create_link')) : ?>
@@ -134,10 +149,12 @@ $this->title = 'My Yii Application';
                         </li>
                         <?php endforeach; ?>
                     </ul>
+                <?php else: ?>
+                    <p>There are currently no relevant links of interest</p>
                 <?php endif; ?>    
             
             </div>
         </div>
 
-    </div>
+                        </section>
 </div>

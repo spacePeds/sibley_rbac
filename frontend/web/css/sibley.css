@@ -1,3 +1,10 @@
+body {
+    background-color: #f8f8f8;
+}
+.body-content {
+    background: #fff;
+}
+
 .navbar {
     box-shadow: 2px 2px 5px #b8c5d6;
     opacity: 0.9;
@@ -5,10 +12,10 @@
     /*background-color: #23ce6b; */
 }
 .navbarA {
-    z-index: 2;
+    z-index: 20;
 }
 .navbarB {
-    z-index: 1;
+    z-index: 19;
 }
 .navbar-brand img {
     position: absolute;
@@ -23,21 +30,49 @@
     background-position: 0 -100px;
     background-size: cover;
 }
-.adminFloater {
-    position:fixed;
-    top:100px;
-    right:20px;
-    /*z-index: 5; interfears with nav menu*/
-}
+
 .carousel-item {
-    height: 65vh;
-    min-height: 300px;
-    background: no-repeat center center scroll;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
+    height: 450px;
+}
+.carousel-image-1 {
+    background:url('../img/carousel/courthouse.jpg');
     background-size: cover;
 }
+.carousel-image-2 {
+    background:url('../img/carousel/downtown.jpg');
+    background-size: cover;
+}
+.carousel-image-3 {
+    background:url('../img/carousel/golfCourse.jpg');
+    background-size: cover;
+}
+.carousel-image-4 {
+    background:url('../img/carousel/schools.jpg');
+    background-size: cover;
+}
+.carousel-image-5 {
+    background:url('../img/carousel/golf.jpg');
+    background-size: cover;
+}
+.carousel-item:after {
+    content:"";
+    display:block;
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    background:rgba(0,0,0,0.3);
+}
+.carousel-caption{
+    width:100%;
+    height:100%;
+    left:0;
+    right:0;
+    bottom:0;
+    background-color:rgba(0,0,0,0.2);
+  }
+
 /*yii2 and bootrap 4 quirk where when use template errors dont highlight*/
 .form-control-invalid-feedback {
     width: 100%;
@@ -60,8 +95,8 @@
 /*Calendar formatting*/
 .out-of-range{
     opacity: .4;
-  }
-  .out-of-range-before{
+}
+.out-of-range-before{
     background: repeating-linear-gradient(
       -45deg,
       #606dbc,
@@ -69,8 +104,8 @@
       #465298 10px,
       #465298 20px
     );
-  }
-  .out-of-range-after{
+}
+.out-of-range-after{
     background: repeating-linear-gradient(
       45deg,
       #606dbc,
@@ -104,6 +139,81 @@ background: #707070;
     right: 15px;
     z-index: 4;
 }
+/*Admin menu formatting*/
+.adminFloater {
+    position:fixed;
+    top:100px;
+    right:20px;
+    /*z-index: 5; interfears with nav menu*/
+}
+.adminFloaterRev2 {
+    background: rgba(0,0,0,.2);
+}
+/*paralex effects*/
+#calendar-heading {
+    position: relative;
+    min-height:175px;
+    background: url('../img/calendar_1280x520.png');
+    background-attachment:fixed;
+    background-position: 250px 0;
+    width:100%;
+    background-repeat: no-repeat;
+    text-align:center;
+    color:#fff;
+}
+#city-heading {
+    position: relative;
+    min-height:175px;
+    background: url('../img/downtown.jpg');
+    background-attachment:fixed;
+    background-position: 0 -200px;
+    background-repeat: no-repeat;
+    text-align:center;
+    color:#fff;
+}
+#food-heading {
+    position: relative;
+    min-height:175px;
+    background: url('../img/assets/1546706911987.jpg');
+    background-attachment:fixed;
+    background-position: 0 -200px;
+    background-repeat: no-repeat;
+    text-align:center;
+    color:#fff;
+}
+
+#rec-heading {
+    position: relative;
+    min-height:175px;
+    background: url('../img/assets/1547328212579.jpg');
+    background-attachment:fixed;
+    background-position: 0 -700px;
+    background-repeat: no-repeat;
+    text-align:center;
+    color:#fff;
+}
+/*Sidebar color scheme*/
+.bg-recSidebar {
+    background-color: #385c65 !important;
+}
+.headerTextShadow {
+    text-shadow: 2px 4px 3px rgba(0,0,0,0.3);
+}
+
+.dark-overlay {
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background: rgba(0,0,0,.4);
+}
+/*featured page image*/
+.featured-img {
+    margin-top:-50px;
+}
+
+/*Footer formatting*/
 
 /*
 .card {

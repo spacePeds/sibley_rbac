@@ -6,6 +6,7 @@ use yii\base\Model;
 use yii\web\UploadedFile;
 use frontend\models\ImageAsset;
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 class UploadForm extends Model
 {
@@ -49,4 +50,5 @@ class UploadForm extends Model
             return false;
         }
     }
+    
 }

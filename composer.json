@@ -27,7 +27,9 @@
         "2amigos/yii2-ckeditor-widget": "^2.1",
         "mottie/tablesorter": "^2.31",
         "tebazil/yii2-db-seeder": "^0.0.0",
-        "davidjeddy/yii2-rss-reader": "*"
+        "grekts/rss-parser": ">=1.0.1",
+        "davidjeddy/yii2-rss-reader": "*",
+        "yurkinx/yii2-rss": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

@@ -42,7 +42,7 @@ class m180903_211845_create_table_document extends Migration
         // drops index for column `table_record`
         $this->dropIndex(
             'idx-document-table-record',
-            'post'
+            'document'
         );
         
         $this->dropTable('{{%document}}');

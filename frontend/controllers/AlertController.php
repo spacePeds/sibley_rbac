@@ -70,11 +70,19 @@ class AlertController extends Controller
             $model = new Alert();          
 
             if ($model->load(Yii::$app->request->post())) {
-                $model->start_dt = date("Y-m-d", strtotime($model->start_dt));
-                $model->end_dt = date("Y-m-d 23:59:59", strtotime($model->end_dt));
+                
                 $model->created_dt = date('Y-m-d H:i:s');
-                $model->save();
-                return $this->redirect(['view', 'id' => $model->id]);
+                if ($model->validate()) {
+                    //format dates for DB
+                    $model->start_dt = date("Y-m-d", strtotime($model->start_dt));
+                    $model->end_dt = date("Y-m-d 23:59:59", strtotime($model->end_dt));
+                    if ($model->save(false)) {
+                        Yii::$app->session->setFlash('success', 'Site-wide notification successfully created.');
+                    } else {
+                        Yii::$app->session->setFlash('error', 'An error occured while creating the Site-wide notification.' . print_r($model, true));
+                    }
+                    return $this->redirect(['/']);
+                }
             }
 
             return $this->render('create', [
@@ -98,12 +106,21 @@ class AlertController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post())) {
-            $model->start_dt = date("Y-m-d", strtotime($model->start_dt));
-            $model->end_dt = date("Y-m-d 23:59:59", strtotime($model->end_dt));
-            $model->save();
-            return $this->redirect(['view', 'id' => $model->id]);
+            if ($model->validate()) {
+                $model->start_dt = date("Y-m-d", strtotime($model->start_dt));
+                $model->end_dt = date("Y-m-d 23:59:59", strtotime($model->end_dt));
+                if ($model->save(false)) {
+                    Yii::$app->session->setFlash('success', 'Notification successfully updated.');
+                } else {
+                    Yii::$app->session->setFlash('error', 'An error occured while modifying the notification.');
+                }
+                return $this->redirect(['/']);
+            }
         }
 
+        //format the dates for Merika
+        $model->start_dt = date("m/d/Y", strtotime($model->start_dt));
+        $model->end_dt = date("m/d/Y", strtotime($model->end_dt));
         return $this->render('update', [
             'model' => $model,
             'group'  => $this->getGroup()
@@ -121,7 +138,7 @@ class AlertController extends Controller
     {
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['/']);
     }
 
     /**

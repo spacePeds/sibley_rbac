@@ -15,6 +15,9 @@ $('.date').datepicker({
     format: 'mm/dd/yyyy',
     todayHighlight: true
 });
+$('option[value="danger"]').addClass('bg-danger');
+$('option[value="info"]').addClass('bg-info');
+$('option[value="secondary"]').addClass('bg-secondary');
 EOF;
 $this->registerJs($js);
 ?>

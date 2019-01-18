@@ -3,6 +3,7 @@
 namespace frontend\models;
 
 use Yii;
+use yii\behaviors\SluggableBehavior;
 
 /**
  * This is the model class for table "agenda".
@@ -45,7 +46,9 @@ class Agenda extends \yii\db\ActiveRecord
             [['date'], 'compareMeetingDates', 'on' => 'create']
         ];
     }
-/**/
+    /**
+     * {@inheritdoc}
+     */
     public function scenarios()
     {   
         $scenarios = parent::scenarios();
@@ -53,6 +56,19 @@ class Agenda extends \yii\db\ActiveRecord
         return $scenarios;
 
         
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => SluggableBehavior::className(),
+                'attribute' => 'body',
+                // 'slugAttribute' => 'slug',
+            ],
+        ];
     }
 
     /**

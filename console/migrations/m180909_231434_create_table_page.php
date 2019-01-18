@@ -20,10 +20,17 @@ class m180909_231434_create_table_page extends Migration
             'route' =>  $this->string(255)->notNull(),
             'title' =>  $this->string(255)->notNull(),
             'body' =>  $this->text()->notNull(),
+            'slug' => $this->string(255)->notNull(),
             'last_edit_dt' =>  $this->dateTime()->notNull(),
             'user_id' =>  $this->integer()->notNull()
             
         ], $tableOptions);
+
+        $this->createIndex(
+            'idx_slug',
+            'page',
+            'slug'
+        );
     }
 
     /**
@@ -31,6 +38,11 @@ class m180909_231434_create_table_page extends Migration
      */
     public function safeDown()
     {
+        $this->dropIndex(
+            'idx-slug',
+            'page'
+        );
+        
         $this->dropTable('{{%page}}');
     }
 

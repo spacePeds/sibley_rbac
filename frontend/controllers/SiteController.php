@@ -16,11 +16,14 @@ use frontend\models\ContactForm;
 use frontend\models\Alert;
 use frontend\models\Link;
 use yii\db\Expression;
+use frontend\models\Event;
+use frontend\components\FrontendController;
+//use grekts\rssParser\rssParser;
 
 /**
  * Site controller
  */
-class SiteController extends Controller
+class SiteController extends FrontendController
 {
     /**
      * {@inheritdoc}
@@ -76,17 +79,20 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        //load alerts
         //SELECT * FROM `alert` WHERE NOW() <= end_dt and NOW() >= start_dt;
         $sd = new Expression('start_dt');
         $ed = new Expression('end_dt');
         $alertModel = Alert::find()
             ->where(['between', 'NOW()', $sd, $ed ])->asArray()->all();
         $alerts = [];
+        
+        //load links
         $linkModel = Link::find()->asArray()->all();
         $localInterest = [];
         //print_r($linkModel);
         foreach ($linkModel as $idx => $link) {
-            if ($link['group'] == 'Links of Local Interest') {
+            //if ($link['group'] == 'Links of Local Interest') {
                 $attInfo = [];
                 $localInterest['group'] = $link['group'];
                 if ($link['type'] == 'file') {
@@ -100,15 +106,57 @@ class SiteController extends Controller
                     'id' => $link['id'],
                     'att' => $attInfo
                 ];
-            }
+            //}
         }
+
+        //load rss
+        //https://github.com/yurkinx/yii2-rss
+        //http://framework.zend.com/manual/2.2/en/modules/zend.feed.reader.html
+        $feed=Yii::$app->feed->reader()->import('http://kiwaradio.com/feed');
+        $data = array(
+            'title'        => $feed->getTitle(),
+            'link'         => $feed->getLink(),
+            'dateModified' => $feed->getDateModified(),
+            'description'  => $feed->getDescription(),
+            'language'     => $feed->getLanguage(),
+            'entries'      => array(),
+        );
+        foreach ($feed as $entry) {
+            $edata = array(
+                'title'        => $entry->getTitle(),
+                'description'  => $entry->getDescription(),
+                'dateModified' => $entry->getDateModified(),
+                'authors'      => $entry->getAuthors(),
+                'link'         => $entry->getLink(),
+                'content'      => $entry->getContent()
+            );
+            $data['entries'][] = $edata;
+        }
+
+        $yesterday = date('Y-m-d', mktime(0, 0, 0, date('m'), date('d')-1, date('Y')));
+        $twoMoFut = date('Y-m-d', mktime(0, 0, 0, date('m')+2, date('d'), date('Y')));
+        $events = Event::find()->
+        orderBy(['start_dt' => SORT_ASC])->    
+        andFilterWhere(['and',
+                ['>=', 'start_dt', $yesterday],
+                ['<=','start_dt', $twoMoFut]
+            ])->
+            orFilterWhere(['and',
+                ['>=', 'end_dt', $yesterday],
+                ['<=','end_dt', $twoMoFut]
+            ])->asArray()->all();
+        $enhancedEvents = $this->injectRepeatingEvents($events);
+            
+
         //print_r($localInterest);
         //return;
         
         return $this->render('index', [
             //'model' => $model,
             'alerts' => $alertModel,
-            'localInterest' => $localInterest
+            'localInterest' => $localInterest,
+            'feed' => $data,
+            'events' => $enhancedEvents
         ]);
     }
 

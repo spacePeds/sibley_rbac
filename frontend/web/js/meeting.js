@@ -84,6 +84,7 @@ var Meeting = new function() {
     this.generateMeetingMenu = function(yr) {
         var self = this;
         var ajaxPath = self.basePath + '/agenda/generate-menu';
+        console.log('generateMeetingMenu',ajaxPath);
 
         $.get(ajaxPath,{'yr':yr})
             .done(function(data){

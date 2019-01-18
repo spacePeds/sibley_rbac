@@ -21,20 +21,59 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 <?php endif; ?>
 
-<div class="business-index">
+<div class="business-index container">
 
     <h1><?= Html::encode($this->title) ?></h1>
     
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'pager' => [
+            // Customzing options for pager container tag
+            //'options' => [
+            //    'tag' => 'div',
+            //    'class' => 'pager-wrapper',
+            //    'id' => 'pager-container',
+            //],
+            'disabledListItemSubTagOptions' => [
+                'tag' => 'a',
+                'class' => 'page-link'
+            ],
+            // Customzing CSS class for pager link
+            'linkOptions' => [
+                'class' => 'page-link',
+                
+            ],
+            'activePageCssClass' => 'page-item active',
+            'disabledPageCssClass' => 'page-item disabled',
+            
+            // Customzing CSS class for navigating link
+            'prevPageCssClass' => 'page-item',
+            'nextPageCssClass' => 'page-item',
+            'firstPageCssClass' => 'page-item',
+            'lastPageCssClass' => 'page-item',
+            //labels
+            //'firstPageLabel' => '&nbsp;',
+            //'lastPageLabel' => '&nbsp;',
+        ],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
+            [
+                'format' => 'image',
+                //'value' => function($data) { return '/'.Yii::$app->params['orgImagePath'] . $data->image; },
+                'content' => function($data){
+                    $url = '/'.Yii::$app->params['orgImagePath'] . $data->image;
+                    if (!empty($data->image)) {
+                        return Html::img($url, ['alt'=>'yii','height'=>'100']);
+                    }
+                    return '';
+                }
+                
+            ],
+            //'id',
             'name',
             'address1',
-            'address2',
+            //'address2',
             'city',
             //'state',
             //'zip',
@@ -42,7 +81,6 @@ $this->params['breadcrumbs'][] = $this->title;
             //'note:ntext',
             //'member',
             //'created_dt',
-
             ['class' => 'frontend\views\MyActionColumn'],
         ],
     ]); ?>

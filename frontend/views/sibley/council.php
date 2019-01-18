@@ -22,7 +22,7 @@ if (Yii::$app->user->can('update_meeting')) {
 $this->title = 'Sibley City Council Meetings';
 $this->params['breadcrumbs'][] = $this->title;
 
-$siteRoot = Url::to('@web');
+$siteRoot = ''; //Url::to('@web');
 $script = <<<EOF
 $(function(){
     defaultMeeting = $model->dfltAgenda;
@@ -30,15 +30,23 @@ $(function(){
     //initilize on load
     console.log('meeting JS Init');
     Meeting.getBasePath('$siteRoot');
-
-    if (MeetingAdmin) {
-        console.log('meetingadmin exists');
-        MeetingAdmin.init();
-    }
     
 });
 EOF;
 Html::encode($script);
+
+if (Yii::$app->user->can('update_meeting')) {
+    $adminScript = <<<EOF
+$(function(){   
+    if (MeetingAdmin !== undefined) {
+        console.log('meetingadmin exists');
+        MeetingAdmin.init();
+    }
+});
+EOF;
+    Html::encode($adminScript);
+}
+
 
 //echo '<pre>' . print_r($model,true) . '</pre>';
 ?>
@@ -48,46 +56,46 @@ Html::encode($script);
     </div>
 <?php endif; ?>
 
-<div class="row">
-    <div class="col-lg-3 mb-4">
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3 mb-4">
 
-        <div id="meetingMenuContainer">
-            
-            <div class="row">
-                <div class="col-md-3 m-0">
-                    <button class="btn btn-outline-secondary" id="previousYear"><i class="fas fa-angle-left"></i></button>
+            <div id="meetingMenuContainer">
+                
+                <div class="row">
+                    <div class="col-md-3 m-0">
+                        <button class="btn btn-outline-secondary" id="previousYear"><i class="fas fa-angle-left"></i></button>
+                    </div>
+                    <div class="col-md-6 m-0">
+                        <?php $form = ActiveForm::begin([ 'id' => 'meetingYearForm']); ?>
+                        <?php echo $form->field($model, 'yearToggle')->dropDownList($model->yearList )->label(false); ?>
+                        <?php ActiveForm::end(); ?>
+                    </div>
+                    <div class="col-md-3 m-0">
+                        <button class="btn btn-outline-secondary" id="nextYear"><i class="fas fa-angle-right"></i></button>
+                    </div>
                 </div>
-                <div class="col-md-6 m-0">
-                    <?php $form = ActiveForm::begin([ 'id' => 'meetingYearForm']); ?>
-                    <?php echo $form->field($model, 'yearToggle')->dropDownList($model->yearList )->label(false); ?>
-                    <?php ActiveForm::end(); ?>
-                </div>
-                <div class="col-md-3 m-0">
-                    <button class="btn btn-outline-secondary" id="nextYear"><i class="fas fa-angle-right"></i></button>
-                </div>
-            </div>
 
-            <div class="accordion" id="meetingNavigation" role="tablist">
-                <div class="text-center"><i class="fas fa-spinner fa-pulse"></i></div>
-            </div>
-        </div><!--end meetingmenuContainer-->
-    </div>
-    
-    <div class="col-lg-9 mb-4">
-        <h2><?= Html::encode($this->title) ?></h2>
-
-        <div id="meetingContainer">
+                <div class="accordion" id="meetingNavigation" role="tablist">
+                    <div class="text-center"><i class="fas fa-spinner fa-pulse"></i></div>
+                </div>
+            </div><!--end meetingmenuContainer-->
+        </div>
         
-            <div class="alert alert-info" role="alert" id="instructionsContainer">
-                <h4 class="alert-heading">Please choose a meeting from the provided menu.</h4>
-            </div>
+        <div class="col-lg-9 mb-4">
+            <h2><?= Html::encode($this->title) ?></h2>
 
+            <div id="meetingContainer">
+            
+                <div class="alert alert-info" role="alert" id="instructionsContainer">
+                    <h4 class="alert-heading">Please choose a meeting from the provided menu.</h4>
+                </div>
+
+            </div>
         </div>
     </div>
-    
-
-    
 </div>
+
 
 
 

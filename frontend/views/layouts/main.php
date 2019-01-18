@@ -11,6 +11,7 @@ use frontend\assets\AppAsset;
 use common\widgets\Alert;
 use yii\helpers\Url;
 use \yii\web\Request;
+use yii\bootstrap4\Modal;
 
 AppAsset::register($this);
 ?>
@@ -45,23 +46,23 @@ AppAsset::register($this);
                     <div class="dropdown-menu">
                     <a href="<?= Url::to(['/sibley/staff']) ?>" class="dropdown-item">City Government</a>
                     <a href="<?= Url::to(['/sibley/location']) ?>" class="dropdown-item">Location</a>
-                    <a href="/sibley/lodging" class="dropdown-item">Lodging</a>
-                    <a href="/sibley/food" class="dropdown-item">Eating Establishments</a>
-                    <a href="/sibley/map" class="dropdown-item">Interactive Map</a>
+                    <a href="<?= Url::to(['/sibley/lodging']) ?>" class="dropdown-item">Lodging</a>
+                    <a href="<?= Url::to(['/sibley/food']) ?>" class="dropdown-item">Eating Establishments</a>
+                    <a href="<?= Url::to(['/sibley/map']) ?>" class="dropdown-item">Interactive Map</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link px-2 dropdown-toggle" data-toggle="dropdown" href="#">Chamber Of Commerce</a>
                     <div class="dropdown-menu">
-                        <a href="/business/chamber" class="dropdown-item">Chamber of Commerce</a>
+                        <a href="<?= Url::to(['/sibley/chamber']) ?>" class="dropdown-item">About Sibley Chamber</a>
                         <a href="<?= Url::to(['/business/list']) ?>" class="dropdown-item">Chamber Member List</a>
-                        <a href="/business/benefits" class="dropdown-item">Chamber Member Benefits</a>  
+                        <a href="<?= Url::to(['/sibley/chamber-benefits']) ?>" class="dropdown-item">Chamber Member Benefits</a>  
                     </div>
                 </li>
                 <li class="nav-item dropdown">
                 <a class="nav-link px-2 dropdown-toggle" data-toggle="dropdown" href="#">Recreation</a>
                     <div class="dropdown-menu">
-                        <a href="/recreation" class="dropdown-item">Recreation Department</a>
+                        <a href="<?= Url::to(['/sibley/recreation']) ?>" class="dropdown-item">Recreation Department</a>
                         <a href="/recreation/parks" class="dropdown-item">Community Parks</a>
                         <a href="/recreation/golf" class="dropdown-item">Sibley Golf and Country Club</a>
                         <a href="/recreation/camping" class="dropdown-item">Camping Facilities</a>
@@ -106,16 +107,22 @@ AppAsset::register($this);
         </div>
     </nav>
 
-    <div class="container">
-        <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        ]) ?>
-        <?= Alert::widget() ?>
-        <?= $content ?>
-    </div>
+    
 </div>
 
-<footer class="footer bg-dark py-2">
+<div class="container px-0 body-content">
+    <?= Breadcrumbs::widget([
+        'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+    ]) ?>
+    <div class="container">
+        <?= Alert::widget() ?>
+    </div>
+
+    <?= $content ?>
+</div>
+     
+
+<footer class="footer bg-dark py-2 text-white text-center">
     <div class="container">
         <p class="pull-left">&copy; <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?></p>
 
@@ -136,7 +143,15 @@ AppAsset::register($this);
         ?>
     </div>
 </footer>
+<?php
+    Modal::begin([
+        
+        'id' => 'genericModal'
+    ]);
+    echo '<div id="modalContent"></div>';
+    Modal::end();
 
+?>
 <?php $this->endBody() ?>
 </body>
 </html>

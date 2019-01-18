@@ -27,7 +27,7 @@ var Cal = new function() {
         }).done(function(data) {
             console.log(data);
             $('#genericModal').modal('show').find('#modalContent').html(data);
-            $('#genericModal').find('.modal-title').html('Updating Event: '+calEvent.id);
+            $('#genericModal').find('.modal-title').html('Updating Event: ' + calEvent.id);
         }).fail(function( jqXHR, textStatus ) {
             alert( "Request failed: " + textStatus );
             console.log(jqXHR);
@@ -66,12 +66,24 @@ var Cal = new function() {
             });
         }
 
-    }
+    };
 
+    this.eventResize = function(event, delta, revertFunc, path) {
+        var self = this;
+        alert(event.title + " end is now " + event.end.format());
+
+        if (!confirm("is this okay?")) {
+            revertFunc();
+        }
+
+    };
 };
 $(function(){
     console.log('calendar admin JS');
 
-    
-
+    //modal default to large modal-lg
+    $('#genericModal').find('.modal-dialog').addClass('modal-lg');
+    //append title to header
+    $('#genericModal').find('.modal-header')
+        .prepend('<h5 class="modal-title"></h5>');
 });

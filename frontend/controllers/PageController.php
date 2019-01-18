@@ -161,8 +161,6 @@ class PageController extends Controller
     public function actionUpdate($id)
     {
         $user_id = User::findByUsername(Yii::$app->user->identity->username)->getId();
-        
-        //$model = $this->findModel($id);
         $model = PageWithCategories::findOne($id);
 
         if ($model->load(Yii::$app->request->post())) {
@@ -170,12 +168,12 @@ class PageController extends Controller
             $model->user_id = $user_id;    //($model->getUser()) ? $model->getUser()->id :
             if ($model->save()) {
                 $model->saveCategories();
-                Yii::$app->session->setFlash('success', 'Update of '.Yii::$app->request->post('title').' successful.');
-                return $this->redirect([Yii::$app->request->post('route')]);
+                Yii::$app->session->setFlash('success', 'Update of "'.Yii::$app->request->post('PageWithCategories')['title'].'" successful.');
+                //echo '<pre>' . print_r($_POST, true) . '</pre>';
+                return $this->redirect(Yii::$app->request->post('PageWithCategories')['route']);
             }
-            
+            Yii::$app->session->setFlash('error', 'Update of "'.$_POST['PageWithCategories']['title'].'" failed.');
         }
-        
         
         $model->loadCategories();
         return $this->render('update', [
@@ -262,14 +260,53 @@ class PageController extends Controller
                 0 => [
                     'id' => 0,
                     'name' => 'N/A',
-                    'path' => Url::to('@web/img/assets/') . 'placeholder-image.jpg',
-                    'size' => '',
+                    'path' => 'img/assets/placeholder-image.jpg',    //Url::to('@web/img/assets/')
+                    'size' => 0,
                     'type' => '',
                     'upldDt' => ''
                 ]
             ];
         }
+        //foreach ($assets as $idx => $asset) {
+        //    //echo $asset . '<br>';
+        //    if ($asset == 'size') {
+        //        $assets[$idx]['size'] = $this->formatSizeUnits($asset['size']);
+        //    }           
+        //}
 
         return $assets;
+    }
+    /**
+     * Helper function to provide user friendly fiel siZe
+     * Snippet from PHP Share: http://www.phpshare.org
+     */
+    protected function formatSizeUnits($bytes)
+    {
+        if ($bytes >= 1073741824)
+        {
+            $bytes = number_format($bytes / 1073741824, 2) . ' GB';
+        }
+        elseif ($bytes >= 1048576)
+        {
+            $bytes = number_format($bytes / 1048576, 2) . ' MB';
+        }
+        elseif ($bytes >= 1024)
+        {
+            $bytes = number_format($bytes / 1024, 2) . ' KB';
+        }
+        elseif ($bytes > 1)
+        {
+            $bytes = $bytes . ' bytes';
+        }
+        elseif ($bytes == 1)
+        {
+            $bytes = $bytes . ' byte';
+        }
+        else
+        {
+            $bytes = '0 bytes';
+        }
+
+        return $bytes;
     }
 }

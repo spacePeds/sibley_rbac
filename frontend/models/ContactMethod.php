@@ -37,6 +37,12 @@ class ContactMethod extends \yii\db\ActiveRecord
             [['method'], 'string'],
             [['created_dt'], 'safe'],
             [['contact'], 'string', 'max' => 100],
+            //['contact','email', 'when' => function($model){
+            //    return ($model->method == "email" ? true : false);
+            //}],
+            //['contact','number', 'when' => function($model){
+            //    return ($model->method == "phone" ? true : false);
+            //}],
             [['description'], 'string', 'max' => 255],
             [['business_id'], 'exist', 'skipOnError' => true, 'targetClass' => Business::className(), 'targetAttribute' => ['business_id' => 'id']],
         ];

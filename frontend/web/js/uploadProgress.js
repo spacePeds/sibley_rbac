@@ -106,4 +106,14 @@ $(function() {
         })
     }
 
+    $('.imgLink').on('click',function() {
+        var $myDiv = $(this).find('div');
+        if (($myDiv).hasClass('text-truncate')) {
+            $myDiv.removeClass('text-truncate');
+        } else {
+            $myDiv.addClass('text-truncate');
+        }
+
+    });
+
 });
