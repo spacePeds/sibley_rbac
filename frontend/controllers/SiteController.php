@@ -18,6 +18,7 @@ use frontend\models\Link;
 use yii\db\Expression;
 use frontend\models\Event;
 use frontend\components\FrontendController;
+use frontend\models\Agenda;
 //use grekts\rssParser\rssParser;
 
 /**
@@ -133,20 +134,42 @@ class SiteController extends FrontendController
             $data['entries'][] = $edata;
         }
 
+        //load events in range
+        //$where = "NOW() BETWEEN start_date AND end_date";
+        //$where .= " OR (start_date BETWEEN NOW() AND date_add(NOW(), INTERVAL $days DAY))";
+        
         $yesterday = date('Y-m-d', mktime(0, 0, 0, date('m'), date('d')-1, date('Y')));
-        $twoMoFut = date('Y-m-d', mktime(0, 0, 0, date('m')+2, date('d'), date('Y')));
+        $twoMoFut = date('Y-m-d', mktime(0, 0, 0, date('m')+1, date('d'), date('Y')));
         $events = Event::find()->
         orderBy(['start_dt' => SORT_ASC])->    
         andFilterWhere(['and',
-                ['>=', 'start_dt', $yesterday],
-                ['<=','start_dt', $twoMoFut]
-            ])->
-            orFilterWhere(['and',
-                ['>=', 'end_dt', $yesterday],
-                ['<=','end_dt', $twoMoFut]
-            ])->asArray()->all();
+            ['>=', 'start_dt', $yesterday],
+            ['<=','start_dt', $twoMoFut]
+        ])->
+        orFilterWhere(['and',
+            ['>=', 'end_dt', $yesterday],
+            ['<=','end_dt', $twoMoFut]
+        ])->
+        orFilterWhere(['and',
+            ['<=', 'start_dt', date('Y-m-d')],
+            ['>=', 'end_dt', date('Y-m-d')]
+        ])-> 
+        //andFilterWhere(
+        //    ['between', 'NOW()', 'start_dt', 'end_dt']
+        //)->   
+        //orFilterWhere(
+        //    ['between', 'start_dt', 'NOW()', 'date_add(NOW(), INTERVAL 30 DAY)']
+        //)->
+        asArray()->all();
         $enhancedEvents = $this->injectRepeatingEvents($events);
-            
+        $orderedEvents = $this->groupEventsByDate($enhancedEvents);
+        ksort($orderedEvents);
+
+        //load council agendas within range
+        $yesterday = date('Y-m-d', mktime(0, 0, 0, date('m'), date('d')-1, date('Y')));
+        $oneMoFut = date('Y-m-d', mktime(0, 0, 0, date('m')+1, date('d'), date('Y')));
+        $meetings = Agenda::find()->select(['id','type','DATE_FORMAT(date, "%W %M %D") as fmtdDt'])->where(
+            ['between', 'date', $yesterday, $oneMoFut ])->orderBy('date')->asArray()->all();
 
         //print_r($localInterest);
         //return;
@@ -156,7 +179,8 @@ class SiteController extends FrontendController
             'alerts' => $alertModel,
             'localInterest' => $localInterest,
             'feed' => $data,
-            'events' => $enhancedEvents
+            'events' => $orderedEvents,
+            'meetings' => $meetings
         ]);
     }
 

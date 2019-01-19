@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $title;
 <section id="genericPage" class="container">
     <div class="container bg-white clearfix">
         <?php if (Yii::$app->user->can('update_location')) : ?>
-            <div class="float-right adminFloaterRev2 shadow-sm p-1 mb-2 bg-white rounded">
+            <div class="text-right adminFloaterRev2 shadow-sm p-1 mb-2 bg-white rounded">
                 <a href="<?= $url ?>" role="button" class="btn btn-primary"><?=$linkText?></a>
             </div>
         <?php endif; ?>

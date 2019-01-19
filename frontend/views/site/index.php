@@ -37,39 +37,59 @@ $this->title = 'Sibley: Highlight of Iowa!';
             <li data-target="#myCarousel" data-slide-to="2" class=""></li>
             <li data-target="#myCarousel" data-slide-to="3" class=""></li>
             <li data-target="#myCarousel" data-slide-to="4" class=""></li>
-            </ol>
+            </ol>          
 
             <div class="carousel-inner">
-            <div class="carousel-item carousel-image-1 active">
-            <div class="container">
-            <div class="carousel-caption d-none d-sm-block text-right pr-4">
-            <h1 class="display-4">Osceola County Courthouse</h1>
-            <p class="lead">Built in 1902, this landmark dominates Sibley's center.</p>
-            <a target="blank" href="http://www.osceolacountyia.org/" class="btn btn-success">Visit Courthouse</a>
-            </div>
-            </div>
-            </div>
 
-            <div class="carousel-item carousel-image-2">
-            <div class="container">
-            <div class="carousel-caption d-none d-sm-block pl-4">
-            <h1 class="display-4">Downtown Sibley</h1>
-            <p class="lead">Several unique storefronts dot Sibley's downtown.</p>
-            </div>
-            </div>
-            </div>
+                <div class="carousel-item carousel-image-1 active">
+                <div class="container">
+                <div class="carousel-caption d-none d-sm-block text-right pr-4">
+                <h1 class="display-4">Osceola County Courthouse</h1>
+                <p class="lead">Built in 1902, this landmark dominates Sibley's center.</p>
+                <a target="blank" href="http://www.osceolacountyia.org/" class="btn btn-success">Visit Courthouse</a>
+                </div>
+                </div>
+                </div>
 
-            <div class="carousel-item carousel-image-3">
-            <div class="container">
-            <div class="carousel-caption d-none d-sm-block text-right mb-5">
-            <h1 class="display-4">Sibley Golf and Country Club</h1>
-            <p class="lead">Spend several hours relaxing at our beautiful golf course.</p>
-            <a href="https://www.facebook.com/SibleyGolfCountryClub/" class="btn btn-success btn-lg">Learn More</a>
-            </div>
-            </div>
-            </div>
+                <div class="carousel-item carousel-image-2">
+                <div class="container">
+                <div class="carousel-caption d-none d-sm-block text-left pl-4">
+                <h1 class="display-4">Downtown Sibley</h1>
+                <p class="lead">Several unique storefronts dot Sibley's downtown.</p>
+                </div>
+                </div>
+                </div>
 
-            <!--Sibley's real pride is in its people. The dedicated, professional, caring individuals who create the growth and spirit of opportunity make the community a great place to live-->
+                <div class="carousel-item carousel-image-3">
+                <div class="container">
+                <div class="carousel-caption d-none d-sm-block text-left pl-4">
+                <h1 class="display-4">Sibley Golf and Country Club</h1>
+                <p class="lead">Spend several hours relaxing at our beautiful golf course.</p>
+                <a href="https://www.facebook.com/SibleyGolfCountryClub/" class="btn btn-success btn-lg">Learn More</a>
+                </div>
+                </div>
+                </div>
+
+                
+                <div class="carousel-item carousel-image-4">
+                <div class="container">
+                <div class="carousel-caption d-none d-sm-block text-right pr-4">
+                <h1 class="display-4">Sibley-Ocheyedan Campus</h1>
+                <p class="lead">Sibley takes great pride in its schools.</p>
+                <a href="http://thegenerals2.socsdit.org/" class="btn btn-success btn-lg">Learn More</a>
+                </div>
+                </div>
+                </div>
+
+                <div class="carousel-item carousel-image-5">
+                <div class="container">
+                <div class="carousel-caption d-none d-sm-block text-right pr-4">
+                <h1 class="display-4">Why not stay a while?</h1>
+                <p class="lead">Learn more about housing and employment options.</p>
+                <a href="https://www.osceolacountyia.com/" class="btn btn-success btn-lg">Learn More</a>
+                </div>
+                </div>
+                </div>
 
             </div>
 <!--
@@ -83,7 +103,7 @@ $this->title = 'Sibley: Highlight of Iowa!';
         </div>
     </section>
 
-    <section>
+    <section class="container">
 
         <div class="row">
             <div class="col-lg-3">
@@ -106,17 +126,42 @@ $this->title = 'Sibley: Highlight of Iowa!';
                 
             </div>
             <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-body">
-                        <?php echo '<pre>' . print_r($events, true) . '</pre>'; ?>
-                    </div>
-                </div>
+                <p class="lead p-3">Sibley's real pride is in its people. The dedicated, professional, caring individuals who create the growth and spirit of opportunity make the community a great place to live</p>
+                
+                        <h3>Upcoming Events</h3>
+                        <ul class="list-group list-group-flush">
+                            <?php if (count($events) < 1): ?>
+                                <li class="list-group-item">There are currently no upcoming events on the calendar.</li>
+                            <?php endif; ?>
+                            <?php foreach ($events as $eventDate => $dayGroup): ?>
+
+                                <?php if(strtotime($eventDate) < time()) { continue; } ?>
+
+                                <li class="list-group-item">
+                                    <h4><?=date('l F jS', strtotime($eventDate))?></h4>
+                                    <div class="list-group">
+                                        <?php foreach ($dayGroup as $event): ?>
+                                            <div class="list-group-item list-group-item-action">
+                                                <div class="d-flex w-100 justify-content-between">
+                                                    <h5 class="mb-1"><?=$event['subject']?></h5>
+                                                    <small><span style="color:<?=$event['color']?>"><?=$event['icon']?></span></small>
+                                                </div>
+                                                <?=$event['description']?>
+                                                <?php if (!empty($event['attachment'])): ?>
+                                                    <small><a target="_blank" href="<?=$event['attachment']?>" class=""><i class="far fa-file-pdf"></i> View Document</a></small>
+                                                <?php endif; ?>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                        <?php //echo '<pre>' . print_r($events, true) . '</pre>'; ?>
+                   
             
             </div>
             <div class="col-lg-3">
-                <?php if (Yii::$app->user->can('create_link')) : ?>
-                    <a class="btn btn-outline-success btn-sm" href="<?= Url::to(['/link/create']) ?>" title="Create" aria-label="Create"><i class="fas fa-plus-square"></i></a>                   
-                <?php endif;?>
+                
                 <?php //echo '<pre>' . print_r($localInterest,true) . '</pre>'; ?>
                 <?php if (!empty($localInterest)): ?>
                     <h3><?=$localInterest['group']?></h3>
@@ -148,11 +193,28 @@ $this->title = 'Sibley: Highlight of Iowa!';
                             <a target="_blank" href="<?=$path?>"><?=$link['label']?><?= empty($link['desc']) ? '' : '<p class="mb-1 small">'.$link['desc'].'</p>' ?></a>
                         </li>
                         <?php endforeach; ?>
+                        <?php if (Yii::$app->user->can('create_link')) : ?>
+                            <li class="list-group-item text-right">
+                                <a class="btn btn-outline-success btn-sm" href="<?= Url::to(['/link/create']) ?>" title="Create" aria-label="Create"><i class="fas fa-plus-square"></i></a>
+                            </li>                  
+                        <?php endif;?>
                     </ul>
                 <?php else: ?>
                     <p>There are currently no relevant links of interest</p>
-                <?php endif; ?>    
-            
+                <?php endif; ?> 
+                
+                <h3>Upcoming City Council Meetings</h3>
+                <ul class="list-group list-group-flush">
+                    <?php if (count($meetings) < 1): ?>
+                        <li class="list-group-item small text-muted">There are currently no meetings scheduled.</li>
+                    <?php endif; ?>
+                    <?php foreach ($meetings as $meeting): ?>
+                        <li class="list-group-item small text-muted">
+                            <a href="<?= Url::to(['/sibley/council']) ?>/<?=$meeting['id']?>">Agenda: <?=$meeting['fmtdDt']?></a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+                <?php //echo '<pre>' . print_r($meetings, true) . '</pre>'; ?>
             </div>
         </div>
 

@@ -44,7 +44,7 @@ $(function(){
     }
 });
 EOF;
-    Html::encode($adminScript);
+Html::encode($adminScript);
 }
 
 
@@ -119,3 +119,4 @@ echo '<div id="modalContent"></div>';
 Modal::end();
 
 $this->registerJs($script);
+$this->registerJs($adminScript);

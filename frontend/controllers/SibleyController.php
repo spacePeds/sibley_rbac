@@ -16,11 +16,12 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 use frontend\models\ImageAsset;
+use frontend\components\FrontendController;
 
 /**
  * SibleyController implements the CRUD actions for Sibley model.
  */
-class SibleyController extends Controller
+class SibleyController extends FrontendController
 {
     /**
      * {@inheritdoc}
@@ -167,13 +168,13 @@ class SibleyController extends Controller
                 'description' => $event['description']
             ];
             if ($event['group'] == 'city') {
-                $e->backgroundColor = 'green';
+                $e->backgroundColor = Yii::$app->params['eventGroupColor']['city'];
             }
             if ($event['group'] == 'rec') {
-                $e->backgroundColor = 'gray';
+                $e->backgroundColor = Yii::$app->params['eventGroupColor']['rec'];
             }
             if ($event['group'] == 'chamber') {
-                $e->backgroundColor = 'pink';
+                $e->backgroundColor = Yii::$app->params['eventGroupColor']['chamber'];
             }
             $eventArr[] = $e;
             
@@ -289,6 +290,7 @@ class SibleyController extends Controller
             ->asArray()->all();
         $enhancedEvents = $this->injectRepeatingEvents($recEvents);
         
+        
         //echo '<pre>Last Sunday:' . strftime('%Y-%m-%d', $sunday) . '</pre>';
         //echo '<pre>This Saturday:' . strftime('%Y-%m-%d', $saturday) . '</pre>';
         //echo '<pre>:' . print_r($enhancedEvents, true) . '</pre>';
@@ -369,127 +371,8 @@ class SibleyController extends Controller
         return $page;
     }
 
-    /**
-     * Generate additional events based on repeating parameter
-     * REMOVE THIS and move reference to components/frontedncontroller
-     * @param array $events
-     * @return array
-     */
-    protected function injectRepeatingEvents($events) {
-        $eventList = [];
-        foreach ($events as $event) 
-        {
-            //anchor day for recurrance
-            switch ($event['repeat_interval']) {
-                case 1: //weekly
-                    $newEvents =  $this->buildWeeklyEvents($event);
-                    foreach ($newEvents as $newEvent) {
-                        $eventList[] = $newEvent;
-                    }
-                    break;
-                case 2: //bi-weekly
-                    $newEvents =  $this->buildWeeklyEvents($event,true);
-                    foreach ($newEvents as $newEvent) {
-                        $eventList[] = $newEvent;
-                    }
-                    //$eventList[] = $event;
-                    break;
-                case 3: //monthly
-                    $newEvents =  $this->buildRepeatingEvents($event,'P1M');
-                    foreach ($newEvents as $newEvent) {
-                        $eventList[] = $newEvent;
-                    }
-                    break;
-                case 4: //annual
-                    $newEvents =  $this->buildRepeatingEvents($event,'P1Y');
-                    foreach ($newEvents as $newEvent) {
-                        $eventList[] = $newEvent;
-                    }
-                    break;
-                default:
-                $eventList[] = $event;
-            }
-        }
-        return $eventList;
-    }
-    /**
-     * Create array of weekly events
-     * @param array event
-     * @param boolean $isBi
-     * @return array
-     */
-    protected function buildWeeklyEvents($event,$isBi=false) {
-        $eventList = [];
-        $dayOfWeek = date("N", strtotime($event['start_dt']));
-        $begin = new \DateTime( $event['start_dt'] );
-        $end = new \DateTime( $event['end_dt'] );
-        //$end = $end->modify( '+1 day' ); 
-
-        //http://php.net/manual/en/dateinterval.construct.php
-        $interval = new \DateInterval('P1D');   //Period - 1 day
-        $daterange = new \DatePeriod($begin, $interval ,$end);
-        
-        $cnt = 1;
-        foreach($daterange as $date){
-            //echo '<br>dayogweek:' . $dayOfWeek . ', date: ' . $date->format("Y-m-d H:i:s") .', day: ' .$date->format('N');
-            if ($date->format('N') == $dayOfWeek) {
-                if ($isBi && $cnt%2 == 0) {
-                    //skip
-                    $cnt++;
-                    continue;
-                }
-                //create event
-                //$e = new Event();
-                //$e->id = $event->id;
-                //$e->subject = $event->subject;
-                //$e->group = $event->group;
-                //$e->all_day = $event->all_day;
-                //$e->start_dt = $date->format("Y-m-d H:i:s");
-                //$eventList[] = ArrayHelper::toArray($e);
-
-                $eventList[] = [
-                    'id' => $event['id'],
-                    'subject' => $event['subject'],
-                    'description' => $event['description'],
-                    'group' => $event['group'],
-                    'all_day' => $event['all_day'],
-                    'start_dt' => $date->format("Y-m-d H:i:s"),
-                ];
-                $cnt++;
-            }
-        }
-
-        return $eventList;
-    }
-    /**
-     * Create array of repeating events
-     * http://php.net/manual/en/dateinterval.construct.php
-     * @param array $event
-     * @param string $intervalCode
-     */
-    protected function buildRepeatingEvents($event, $intervalCode) {
-        $eventList = [];
-        $dayOfYear = date("md", strtotime($event['start_dt']));
-        $begin = new \DateTime( $event['start_dt'] );
-        $end = new \DateTime( $event['end_dt'] );
-
-        $interval = new \DateInterval($intervalCode);   
-        $daterange = new \DatePeriod($begin, $interval ,$end);
-        
-        $cnt = 0;
-        foreach($daterange as $date){
-            $cnt++;
-            $eventList[] = [
-                'id' => $event['id'],
-                'subject' => $event['subject'],
-                'description' => $event['description'],
-                'group' => $event['group'],
-                'all_day' => $event['all_day'],
-                'start_dt' => $date->format("Y-m-d H:i:s"),
-            ];
-        }
-        return $eventList;
-    }
+    
+    
     /**
      * https://stackoverflow.com/questions/3028491/php-weeks-between-2-dates
      * @param
