@@ -44,6 +44,36 @@ BootstrapSelectAsset::register($this);
     <?php endif; ?>
 
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
+
+    <a id="headerImageToggle" href="#" class="">Prepend Images</a>
+
+    <div id="headerImageContainer" class="card mb-4" style="display:none;">
+        <div class="card-header">
+            Header Images
+            <div class="clearfix small text-muted">Optional. Add any images you would like to prepend your text.</div>
+        </div>
+        <div class="card-body">
+            <div class="uploadedImages d-flex flex-row">
+                <?php //echo print_r($headImages, true); ?>
+                <?php foreach ($headImages as $headImage): ?>
+                    <div class="card" data-id="<?=$headImage['id']?>">
+                        <img class="card-img-top img-thumbnail" style="max-height:100px;object-fit:cover;" src="<?=$headImage['image_path']?>">
+                        <div class="card-body p-0 text-center">
+                            <a href="#" class="small deleteHeaderImage" data-id="<?=$headImage['id']?>">Delete</a>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <button type="button" data-title="<?=$model->title?>" data-id="<?=$model->id?>" id="headerImageFormTrigger" class="btn btn-outline-primary">Add Image</button>
+                </div>
+                
+            </div>
+            
+        </div>
+    </div>
     
     <div class="invalidFix">
         <?= $form->field($model, 'body')->widget(CKEditor::className(), [

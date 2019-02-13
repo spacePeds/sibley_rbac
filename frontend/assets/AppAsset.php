@@ -17,6 +17,7 @@ class AppAsset extends AssetBundle
         YII_ENV_DEV ? 'css/sibley.css' : 'css/sibley.min.css',
     ];
     public $js = [
+        YII_ENV_DEV ? 'js/sibley.js' : 'js/sibley.min.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

@@ -8,12 +8,16 @@ use yii\bootstrap4\Nav;
 use yii\bootstrap4\NavBar;
 use yii\widgets\Breadcrumbs;
 use frontend\assets\AppAsset;
+use frontend\assets\SlickCarouselAsset;
 use common\widgets\Alert;
+use common\widgets\SiteAlert;
 use yii\helpers\Url;
 use \yii\web\Request;
 use yii\bootstrap4\Modal;
 
 AppAsset::register($this);
+SlickCarouselAsset::register($this);
+
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -71,7 +75,7 @@ AppAsset::register($this);
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link px-2" href="#">Contact</a>
+                    <a class="nav-link px-2" href="<?= Url::to(['/site/contact']) ?>">Contact</a>
                 </li>
             </ul>
         </div>
@@ -99,6 +103,7 @@ AppAsset::register($this);
                             <a href="<?= Url::to(['/sibley/calendar']) ?>" class="dropdown-item">View Local Events</a>
                             <a href="profile.html" class="dropdown-item"> Find Campground Information</a>
                             <a href="<?= Url::to(['/sibley/council']) ?>" class="dropdown-item"> View Council Meeting Agendas</a>
+                            <a href="<?= Url::to(['/sibley/spiritual-centers']) ?>" class="dropdown-item"> View Community Spiritual Centers</a>
                             <a href="settings.html" class="dropdown-item"> Pay A Utility Bill</a>
                         </div>
                     </li>
@@ -106,8 +111,10 @@ AppAsset::register($this);
             </div>
         </div>
     </nav>
+</div>
 
-    
+<div class="container px-0">
+    <?= SiteAlert::widget() ?>
 </div>
 
 <div class="container px-0 body-content">
@@ -124,7 +131,10 @@ AppAsset::register($this);
 
 <footer class="footer bg-dark py-2 text-white text-center">
     <div class="container">
-        <p class="pull-left">&copy; <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?></p>
+        <p class="text-center">
+            &copy; <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?>
+            <br/><span class="text-muted small">Information herein deemed reliable but not guaranteed</span>
+        </p>
 
         <?php 
         //$backEndBaseUrl = str_replace('/frontend/web', '/backend/web', (new Request)->getBaseUrl());

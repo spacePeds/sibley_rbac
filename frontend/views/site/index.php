@@ -5,29 +5,21 @@ use yii\helpers\Url;
 use yii\helpers\Html;
 use davidjeddy\RssFeed\RssReader;
 
-/*
-<?php if (Yii::$app->user->can('update_alert')) : ?>
-        <div class="adminFloater shadow-sm p-3 mb-5 bg-white rounded">
-            <a href="<?= Url::to(['/alert/index']) ?>" role="button" class="btn btn-primary">Edit City Alert</a>
-        </div>
-    <?php endif; ?>
-*/
+/**/
+
+
 
 $this->title = 'Sibley: Highlight of Iowa!';
 ?>
 <div class="site-index">
 
-    
-
-    <?php if (count($alerts) > 0): ?>
-        <?php //echo '<pre>' . print_r($alerts,true) . '</pre>' ?>
-        <?php foreach ($alerts as $idx=>$alert): ?>
-            <div class="alert alert-<?= $alert['type']?> mb-0 p-2" role="alert"><?= $alert['message']?>
-                <a href="/alert/update/<?= $alert['id']?>" title="Update" aria-label="Update" class="float-right"><i class="fas fa-edit"></i></a>
-            </div>
-            <!--<div class="alert alert-danger mb-0 p-2" role="alert"><span class="border border-secondary rounded p-1 m-1"><strong>City Notice:</strong></span>i am an alert</div>-->
-        <?php endforeach; ?>
+    <?php if (Yii::$app->user->can('update_alert')) : ?>
+        <div class="adminFloater shadow-sm p-3 mb-5 bg-white rounded">
+            <a href="<?= Url::to(['/alert/index']) ?>" role="button" class="btn btn-primary">Edit City Alert</a>
+        </div>
     <?php endif; ?>
+
+    
 
     <section id="showcase">
         <div id="myCarousel" class="carousel slide" data-ride="carousel">
@@ -163,10 +155,10 @@ $this->title = 'Sibley: Highlight of Iowa!';
             <div class="col-lg-3">
                 
                 <?php //echo '<pre>' . print_r($localInterest,true) . '</pre>'; ?>
-                <?php if (!empty($localInterest)): ?>
-                    <h3><?=$localInterest['group']?></h3>
+                <?php foreach($localInterest as $group => $links): ?>
+                    <h3><?=$group?></h3>
                     <ul class="list-group list-group-flush">
-                        <?php foreach ($localInterest['links'] as $link): ?>
+                        <?php foreach ($links as $link): ?>
                         <li class="list-group-item">
                             <?php if (Yii::$app->user->can('update_link')) : ?>
                                 <div class="cardEdit">
@@ -193,15 +185,14 @@ $this->title = 'Sibley: Highlight of Iowa!';
                             <a target="_blank" href="<?=$path?>"><?=$link['label']?><?= empty($link['desc']) ? '' : '<p class="mb-1 small">'.$link['desc'].'</p>' ?></a>
                         </li>
                         <?php endforeach; ?>
-                        <?php if (Yii::$app->user->can('create_link')) : ?>
-                            <li class="list-group-item text-right">
-                                <a class="btn btn-outline-success btn-sm" href="<?= Url::to(['/link/create']) ?>" title="Create" aria-label="Create"><i class="fas fa-plus-square"></i></a>
-                            </li>                  
-                        <?php endif;?>
+                        
                     </ul>
-                <?php else: ?>
-                    <p>There are currently no relevant links of interest</p>
-                <?php endif; ?> 
+                <?php endforeach; ?> 
+                <?php if (Yii::$app->user->can('create_link')) : ?>
+                    <div class="card">
+                        <a class="btn btn-outline-success btn-sm" href="<?= Url::to(['/link/create']) ?>" title="Create" aria-label="Create"><i class="fas fa-plus-square"></i></a>
+                    </div>                  
+                <?php endif;?>
                 
                 <h3>Upcoming City Council Meetings</h3>
                 <ul class="list-group list-group-flush">

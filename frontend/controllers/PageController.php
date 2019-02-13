@@ -9,6 +9,7 @@ use frontend\models\Page;
 use frontend\models\PageSearch;
 use frontend\models\ImageAsset;
 use frontend\models\UploadForm;
+use frontend\models\HeaderImage;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -176,10 +177,14 @@ class PageController extends Controller
         }
         
         $model->loadCategories();
+        
+        $headImages = HeaderImage::find()->where(['image_idx'=>'page_'.$id])->asArray()->all();
+        
         return $this->render('update', [
             'model' => $model,
             'categories' => Category::getAvailableCategories(),
-            'role' => \Yii::$app->authManager->getRolesByUser($user_id)
+            'role' => \Yii::$app->authManager->getRolesByUser($user_id),
+            'headImages' => $headImages
         ]);
     }
 

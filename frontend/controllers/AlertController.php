@@ -81,11 +81,11 @@ class AlertController extends Controller
                     } else {
                         Yii::$app->session->setFlash('error', 'An error occured while creating the Site-wide notification.' . print_r($model, true));
                     }
-                    return $this->redirect(['/']);
+                    return $this->goBack(Yii::$app->request->referrer);
                 }
             }
 
-            return $this->render('create', [
+            return $this->renderAjax('create', [
                 'model' => $model,
                 'group'  => $this->getGroup()
             ]);
@@ -114,14 +114,14 @@ class AlertController extends Controller
                 } else {
                     Yii::$app->session->setFlash('error', 'An error occured while modifying the notification.');
                 }
-                return $this->redirect(['/']);
+                return $this->goBack(Yii::$app->request->referrer);
             }
         }
 
         //format the dates for Merika
         $model->start_dt = date("m/d/Y", strtotime($model->start_dt));
         $model->end_dt = date("m/d/Y", strtotime($model->end_dt));
-        return $this->render('update', [
+        return $this->renderAjax('update', [
             'model' => $model,
             'group'  => $this->getGroup()
         ]);

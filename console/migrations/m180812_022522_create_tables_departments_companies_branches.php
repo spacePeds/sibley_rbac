@@ -13,6 +13,8 @@ class m180812_022522_create_tables_departments_companies_branches extends Migrat
      */
     public function safeUp()
     {
+        /*
+        //for example only
         $tableOptions = null;
         if ($this->db->driverName === 'mysql') {
             $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE=InnoDB';
@@ -47,6 +49,7 @@ class m180812_022522_create_tables_departments_companies_branches extends Migrat
         ], $tableOptions);
         $this->addForeignKey('fk_branches_departments', '{{%departments}}', 'branches_branch_id', '{{%branches}}', 'branch_id', 'CASCADE', 'CASCADE');
         $this->addForeignKey('fk_companies_departments', '{{%departments}}', 'companies_company_id', '{{%companies}}', 'company_id', 'CASCADE', 'CASCADE');
+        */
     }
 
     /**

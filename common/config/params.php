@@ -29,5 +29,35 @@ return [
         'rec' => '<i class="fas fa-flag-checkered"></i>',
         'chamber' => '<i class="far fa-building"></i>',
         'hol' => '<i class="fas fa-calendar-alt"></i>',
+    ],
+    'contactContacts' => [
+        'city' => [
+            'City Administrator' => [
+                'name' => 'Glenn Anderson',
+                'email' => 'ctysibly@hickorytech.net'
+            ],
+            'City Clerk' => [
+                'name' => 'Susan Sembach',
+                'email' => 'sibleyclerk@premieronline.net'
+            ],
+        ],
+        'rec' => [
+            'Sibley Parks & Recreation Director' => [
+                'name' => 'Sara Berndgen',
+                'email' => 'sibley.rec@gmail.com'
+            ]
+        ],
+        'chamber' => [
+            'Chamber of Commerce Director' => [
+                'name' => 'Ashley Goettig',
+                'email' => 'chamber2@premieronline.net'
+            ]
+        ],
+        'site' => [
+            'Website Administrator' => [
+                'name' => 'Lucas',
+                'email' => 'lpedley@gmail.com'
+            ],
+        ]
     ]
 ];

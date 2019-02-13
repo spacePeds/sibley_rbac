@@ -20,7 +20,7 @@ if (count($details) < 1) {
 
 $this->params['breadcrumbs'][] = $title;
 ?>
-<?php //echo '<pre>' . print_r($details,true) . '</pre>' ?>
+<?php //echo '<pre>' . print_r($details['headerImages'],true) . '</pre>' ?>
 
 
 <section id="genericPage" class="container">
@@ -30,6 +30,49 @@ $this->params['breadcrumbs'][] = $title;
                 <a href="<?= $url ?>" role="button" class="btn btn-primary"><?=$linkText?></a>
             </div>
         <?php endif; ?>
+
+        <?php foreach ($details['headerImages'] as $headerImage) {
+            $imgPath = $headerImage['image_path'];
+            $height = !empty($headerImage['height']) ? $headerImage['height'] : '';
+            $offset = !empty($headerImage['offset']) ? $headerImage['offset'] : '';
+            $class = 'float-left';
+            if ($headerImage['display'] == 'rounded') {
+                $class = 'rounded';
+            }
+            if (!empty($headerImage['position'])) {
+                if ($headerImage['position'] == 'center') {
+                    $class .= ' mx-auto d-block';
+                }
+                if ($headerImage['position'] == 'right') {
+                    $class .= ' float-right';
+                }
+            }
+            if ($headerImage['display'] == 'parallax') {
+                $style = 'min-height:'.$headerImage['height'].'px;';
+                $style .= "background: url('".$imgPath."');";
+                $style .= 'background-position:center;background-size: cover;'; //background-position:'.$offset.',0
+                $style .= 'text-align:center;color:#fff;position: relative;background-attachment: fixed;background-repeat: no-repeat;';
+                ?>
+                <section class="p-3" style="<?=$style?>">
+                    <div class="parallax-overlay" style="background: rgba(0,0,0,<?=$headerImage['brightness']?>);">
+                        <div class="row">
+                            <div class="col">
+                                <div class="container pt-5">
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </section>
+                <?php
+            }
+        
+        if ($headerImage['display'] != 'parallax') {
+        ?>
+        <img src="<?=$imgPath?>" height="<?=$height?>" class="<?=$class?>">
+        <?php
+        }
+        }
+        ?>
         <?= $body ?>
     </div>
 

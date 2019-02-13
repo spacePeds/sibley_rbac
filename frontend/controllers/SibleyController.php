@@ -6,9 +6,11 @@ use Yii;
 use frontend\models\Staff;
 use common\models\User;
 use frontend\models\Page;
+use frontend\models\SubPage;
 use frontend\models\Business;
 use frontend\models\Event;
 use frontend\models\Agenda;
+use frontend\models\Document;
 use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
@@ -271,6 +273,17 @@ class SibleyController extends FrontendController
         $pageKey = 9;
         $page = $this->getGenericPage($pageKey);
 
+        $subSections = SubPage::find()->where(['page_id' => $pageKey])->orderBy(['sort_order' => SORT_ASC])->asArray()->all();
+        
+        //append subsection documents (if any)
+        foreach($subSections as $idx => $subSection) {
+            $subSections[$idx]['documents'] = [];
+            $documents = Document::find()->where(['table_record' => 'subPage_'.$subSection['id']])->asArray()->all();
+            if (!empty($documents)) {
+                $subSections[$idx]['documents'] = $documents;
+            }
+        }
+
         $dayOfWeek = date('w');
         if ($dayOfWeek == 0) {
             $sunday = strtotime("today");
@@ -295,9 +308,10 @@ class SibleyController extends FrontendController
         //echo '<pre>This Saturday:' . strftime('%Y-%m-%d', $saturday) . '</pre>';
         //echo '<pre>:' . print_r($enhancedEvents, true) . '</pre>';
         return $this->render('rec', [
-            'details' => $page,
+            'page' => $page,
             'key' => $pageKey,
-            'events' =>$enhancedEvents 
+            'events' =>$enhancedEvents,
+            'subSections' => $subSections
         ]);
     }
 
@@ -325,7 +339,7 @@ class SibleyController extends FrontendController
      * Construct array of retrieved page elements
      * @param integer $pageKey
      * @return array
-     */
+    
     protected function getGenericPage($pageKey) {
         //$page = Page::find()->joinWith('page_category')->where(['page_category.page_id'=>$pageKey])->all();   //should work :(
         $page = Page::find()
@@ -370,7 +384,7 @@ class SibleyController extends FrontendController
         }
         return $page;
     }
-
+ */
     
     
     /**

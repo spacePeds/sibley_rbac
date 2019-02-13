@@ -32,9 +32,11 @@ $js = <<<EOF
             $('#fileLinkGroup').slideDown();
             $('#link-name').slideUp();
             $('#link-pdffile').change();
+            $('label[for="link-name"]').text('Choose a file');
         } else {
             $('#fileLinkGroup').slideUp();
             $('#link-name').slideDown();
+            $('label[for="link-name"]').text('Link');
         }
         $('#url_exHelp').hide();
         $('#url_inHelp').hide();
@@ -56,7 +58,7 @@ foreach($linkGroups as $group) {
 $slOptions['new'] = 'Specify New Group';
 ?>
 
-<div class="link-form">
+<div class="link-form container">
 
     <?php $form = ActiveForm::begin(); ?>
 

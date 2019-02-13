@@ -85,4 +85,6 @@ class Page extends \yii\db\ActiveRecord
         return $this->hasMany(Category::className(), ['id' => 'category_id'])
           ->viaTable('page_category', ['page_id' => 'id']);
     }
+
+    
 }

@@ -7,6 +7,39 @@ use yii\helpers\Url;
 
 $this->title = 'Sibley Recreation Department';
 $this->params['breadcrumbs'][] = $this->title;
+//echo '<pre>' . print_r($page) . '</pre>';
+//echo '<pre>' . print_r($subSections) . '</pre>';
+$js = <<<JS
+
+    $('a.doDelete').on('click',function(e){
+        e.preventDefault();
+        var url="/sub-page/ajax-delete";
+        var id = $(this).data('id');
+        console.log('delete clicked',url,id);
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: {'docId':id},
+            datatype: 'json'
+        }).done(function(data ) {
+            if (data.status == 'success') {
+                console.log('fadeing out', $('div').find('[data-id="'+id+'"]').length);
+                $('div').find('[data-id="'+id+'"]').remove();
+            } else {
+                $(this).closest('div').append(data.message);
+            }
+            console.log(data);
+        }).fail(function( jqXHR, textStatus, errorThrown ) {
+            console.log(jqXHR, textStatus, errorThrown);
+            alert(errorThrown);
+        }).always(function( data, textStatus, errorThrown ) { 
+            //console.log(data, textStatus, errorThrown);
+        });
+    }); 
+
+
+    
+JS;
 ?>
 <!-- paralex calendar -->
 <section id="rec-heading" class="p-5">    
@@ -29,6 +62,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 <a href="#" class="list-group-item list-group-item-action">Image Gallery</a>
                 <a href="#" class="list-group-item list-group-item-action disabled" tabindex="-1" aria-disabled="true">Get Involved</a>
                 <a href="#contact" class="list-group-item list-group-item-action">Contact</a>
+                <?php foreach ($subSections as $subSection): ?>
+                    <?php if ($subSection['type'] == 'xlink'): ?>
+                        <a href="<?= $subSection['path']?>" target="_blank" class="list-group-item list-group-item-action"><?= $subSection['title']?></a>
+                    <?php else: ?>
+                        <a href="<?= $subSection['path']?>" class="list-group-item list-group-item-action"><?= $subSection['title']?></a>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+                <?php if (Yii::$app->user->can('create_subPage')): ?>
+                    <a href="<?=Url::to('/sub-page/create')?>/<?=$key?>" class="list-group-item btn btn-outline-success btn-sm"><i class="fas fa-plus-square"></i> Create Section</a>
+                <?php endif; ?>
             </div>
             
             <div class="card text-center my-3">
@@ -85,7 +128,61 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
             </div>
             
-            <?= $details['body'] ?>
+            <?= $page['body'] ?>
+
+            <?php foreach ($subSections as $subSection): ?>
+                <?php if ($subSection['type'] == 'section'): ?>
+                    <section id="<?=str_replace('#','',$subSection['path'])?>">
+                        <?php if (Yii::$app->user->can('update_subPage')): ?>
+                            <a href="<?=Url::to('/sub-page/update')?>/<?=$subSection['id']?>" class="float-right btn btn-outline-success btn-sm"><i class="fas fa-plus-square"></i> Update Section</a>
+                            
+                            <?= Html::a('<i class="far fa-trash-alt"></i> ' . Yii::t('app', 'Delete Section'), ['sub-page/delete', 'id' => $subSection['id']], [
+                                'class' => 'float-right btn btn-outline-danger btn-sm',
+                                'data' => [
+                                    'confirm' => Yii::t('app', 'Are you sure you want to delete this Section?'),
+                                    'method' => 'post',
+                                ],
+                            ]) ?>
+                        <?php endif; ?>
+                        <h4><?= $subSection['title'] ?></h4>
+                        <?= $subSection['body'] ?>
+                        <?php //echo '<pre>' . print_r($subSection['documents']) . '</pre>'; ?>
+                        <?php foreach ($subSection['documents'] as $document): ?>
+                            <?php 
+                            $path = '/'.$document['path'] . $document['name'];
+                            $size = $document['size'];
+                            $label = $document['label'];
+                            $pos = strpos($document['type'], 'image');
+                            if ($pos !== false) {
+                                //image
+                                ?>
+
+                                <div data-id="<?=$document['id']?>">
+                                <img class="rounded mx-auto" width="75" src="<?=$path?>">
+                                <?php if (Yii::$app->user->can('update_subPage')): ?><?=$label?>
+                                <a data-id="<?=$document['id']?>" class="small text-muted doDelete" href="#">Delete</a>
+                                <?php endif; ?>
+                                </div>
+
+                                <?php
+                            }
+                            $pos = strpos($document['type'], 'pdf');
+                            if ($pos !== false) {
+                                //pdf 
+                                ?>
+                                <div data-id="<?=$document['id']?>">
+                                <a role="button" class="btn btn-outline-primary mx-auto" target="_blank" href="<?=$path?>"><i class="far fa-file-pdf"></i> <?=$label?></a>
+                                <?php if (Yii::$app->user->can('update_subPage')): ?>
+                                <a data-id="<?=$document['id']?>" class="small text-muted doDelete" href="#">Delete</a>
+                                <?php endif; ?>
+                                </div>
+                                <?php
+                            }
+                            ?>
+                        <?php endforeach; ?>
+                    </section>
+                <?php endif; ?>
+            <?php endforeach; ?>
 
             <section id="membership">
                 <h4>Memberships</h4>
@@ -180,4 +277,6 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
 </div>
-
+<?php if (Yii::$app->user->can('update_subPage')): ?>
+<?= $this->registerJs($js); ?>
+<?php endif; ?>

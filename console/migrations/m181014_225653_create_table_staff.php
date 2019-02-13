@@ -27,7 +27,7 @@ class m181014_225653_create_table_staff extends Migration
             
         ], $tableOptions);
 
-        // creates index for column `group`
+        // creates index for column `elected`
         $this->createIndex(
             'idx-staff-elected',
             'staff',

@@ -1,0 +1,72 @@
+/*
+-- Query: SELECT * FROM sibley_rbac.category
+LIMIT 0, 1000
+
+-- Date: 2019-01-22 20:38
+*/
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (1,'Abstracter & CPA',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (2,'Ag Services',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (3,'Animal Health Services',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (4,'Assisted Living',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (5,'Attorney',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (6,'Bakery',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (7,'Banks',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (8,'Barbers',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (9,'Car Dealers',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (10,'Car Repairs',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (11,'Chamber of Commerce',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (12,'Child Care',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (13,'Chiropractic Services',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (15,'City Services',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (16,'Clothing Stores',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (17,'Construction',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (18,'Convenience Stores',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (19,'Computer Sales & Repair',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (21,'Dental Services',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (22,'Department Stores',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (23,'Dry Cleaning',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (24,'Eating Establishments',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (25,'Electrical',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (26,'Florists',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (27,'Funeral Homes',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (28,'Grocery Stores',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (29,'Hair Salons',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (30,'Hardware',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (31,'Home Decor',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (32,'Insurance',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (33,'Investments',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (34,'Laundry Services',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (35,'Lawn Services',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (36,'Liquor Stores',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (37,'Medical Services',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (38,'Motel',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (40,'Museum',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (41,'Newspaper & Printing',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (42,'Nursery & Landscaping',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (43,'Nursing Homes',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (44,'Optometrist',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (45,'Pharmacies',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (46,'Photographers',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (47,'Plumbing',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (48,'Realtor',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (49,'Recreation & Entertainment',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (50,'Rentals & Storage',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (51,'Satellite & Internet Services',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (52,'Schools',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (53,'Senior & Social Services',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (55,'Travel',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (56,'Utilities',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (57,'Industry',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (58,'Fitness',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (59,'All Categories',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (60,'Gasoline Sales',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (61,'Gifts',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (62,'Specialty',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (63,'Cable TV',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (64,'Auctioneer',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (66,'Catering',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (67,'Individual',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (69,'Auto Body Repair',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (70,'Counseling',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (71,'Motorcycle Accessories',NULL,NULL);
+INSERT INTO `category` (`id`,`category`,`description`,`created_dt`) VALUES (72,'Spiritual',NULL,NULL);

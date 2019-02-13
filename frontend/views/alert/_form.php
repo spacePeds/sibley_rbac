@@ -55,7 +55,9 @@ $this->registerJs($js);
         'secondary' => 'Normal'
     ],['prompt'=>'Choose an Option']) ?>
 
-    <?= $form->field($model, 'message')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'message')->textarea(['rows' => 6]) ?>
 
     
     <?php //echo $form->field($model, 'start_dt')->textInput() ?>

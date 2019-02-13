@@ -12,6 +12,7 @@ use Yii;
  * @property string $type
  * @property int $size
  * @property string $name
+ * @property string $label
  * @property int $sort_order
  */
 class Document extends \yii\db\ActiveRecord
@@ -35,8 +36,8 @@ class Document extends \yii\db\ActiveRecord
         return [
             [['table_record'], 'required'],
             [['size', 'sort_order'], 'integer'],
-            [['path'], 'string', 'max' => 1024],
-            [['asset'], 'file', 'skipOnEmpty' => true, 'extensions' => 'jpg,jpeg,gif,png'],
+            [['path','label'], 'string', 'max' => 1024],
+            [['asset'], 'file', 'skipOnEmpty' => true, 'extensions' => 'jpg,jpeg,gif,png,pdf'],
             [['type', 'name','table_record'], 'string', 'max' => 255],
         ];
     }
@@ -52,6 +53,7 @@ class Document extends \yii\db\ActiveRecord
             'type' => Yii::t('app', 'Type'),
             'size' => Yii::t('app', 'Size'),
             'name' => Yii::t('app', 'Name'),
+            'label' => Yii::t('app', 'Label'),
             'table_record' => Yii::t('app', 'Table Record'),
             'sort_order' => Yii::t('app', 'Sort Order'),
             'asset'  => Yii::t('app', 'Attach an image'),

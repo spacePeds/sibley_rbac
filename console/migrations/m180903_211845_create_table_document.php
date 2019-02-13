@@ -21,6 +21,7 @@ class m180903_211845_create_table_document extends Migration
             'type' =>  $this->string(255)->notNull(),
             'size' =>  $this->integer()->notNull(),
             'name' =>  $this->string(255)->notNull(),
+            'label' =>  $this->string(255)->notNull(),
             'table_record' => $this->string(255)->notNull(),
             'sort_order' =>  $this->integer()->notNull()
             

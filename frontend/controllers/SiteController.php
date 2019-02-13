@@ -82,11 +82,11 @@ class SiteController extends FrontendController
     {
         //load alerts
         //SELECT * FROM `alert` WHERE NOW() <= end_dt and NOW() >= start_dt;
-        $sd = new Expression('start_dt');
-        $ed = new Expression('end_dt');
-        $alertModel = Alert::find()
-            ->where(['between', 'NOW()', $sd, $ed ])->asArray()->all();
-        $alerts = [];
+        // $sd = new Expression('start_dt');
+        // $ed = new Expression('end_dt');
+        // $alertModel = Alert::find()
+        //     ->where(['between', 'NOW()', $sd, $ed ])->asArray()->all();
+        // $alerts = [];
         
         //load links
         $linkModel = Link::find()->asArray()->all();
@@ -95,11 +95,12 @@ class SiteController extends FrontendController
         foreach ($linkModel as $idx => $link) {
             //if ($link['group'] == 'Links of Local Interest') {
                 $attInfo = [];
-                $localInterest['group'] = $link['group'];
+                //$localInterest['group'] = $link['group'];
+                $group = $link['group'];
                 if ($link['type'] == 'file') {
                     $attInfo = Link::getAttachment($link['id']);
                 }
-                $localInterest['links'][] = [
+                $localInterest[$group][] = [
                     'type' => $link['type'],
                     'name' => $link['name'],
                     'label' => empty($link['label']) ? $link['name'] : $link['label'],
@@ -176,7 +177,7 @@ class SiteController extends FrontendController
         
         return $this->render('index', [
             //'model' => $model,
-            'alerts' => $alertModel,
+            //'alerts' => $alertModel,
             'localInterest' => $localInterest,
             'feed' => $data,
             'events' => $orderedEvents,
@@ -228,16 +229,39 @@ class SiteController extends FrontendController
     {
         $model = new ContactForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
-                Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');
+            
+            //find email address of selected recipient from common/config/params
+            $recipient = '';
+            foreach (Yii::$app->params['contactContacts'] as $group => $contacts) {
+                foreach ($contacts as $title => $contact) {
+                    if ($title == $model->recipient) {
+                        $recipient = $contact['email'];
+                        break;
+                    }
+                }
+            }
+            if (empty($recipient)) {
+                Yii::$app->session->setFlash('error', "There was an error determining the recipient's email address. Send was aborted.");
             } else {
-                Yii::$app->session->setFlash('error', 'There was an error sending your message.');
+                if ($model->sendEmail($recipient)) {
+                    Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');
+                } else {
+                    Yii::$app->session->setFlash('error', 'There was an error sending your message.');
+                }
             }
 
             return $this->refresh();
         } else {
+            $recipients = [];
+            foreach (Yii::$app->params['contactContacts'] as $group => $contacts) {
+                foreach ($contacts as $title => $contact) {
+                    $recipients[$title] = $contact['name'];
+                }
+            }
+
             return $this->render('contact', [
                 'model' => $model,
+                'recipients' => $recipients
             ]);
         }
     }
