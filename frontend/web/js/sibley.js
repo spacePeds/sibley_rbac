@@ -124,4 +124,37 @@ $(function(){
         $('#Container-chamber').removeClass().addClass('bg-'+newType);
         $('#Container-chamber').find('.badge').html((nextSlide+1) + ' of ' + slideMax);
     });
+
+    //handle site-wide alert link
+    $('#createSiteWideAlert').on('click', function(e) {
+        e.preventDefault();
+        $.ajax({
+            url: '/alert/create',
+            method: "get",
+        }).done(function(data) {
+            //console.log(data);
+            $('#genericModal').modal('show').find('#modalContent').html(data);
+            $('#genericModal').find('.modal-dialog').addClass('modal-lg');
+            $('#genericModal').find('.modal-title').html('Create Site-Wide Alert');
+        }).fail(function( jqXHR, textStatus ) {
+            alert( "Request failed: " + textStatus );
+            console.log(jqXHR);
+        });
+    });
+    $('.siteAlertEdit').on('click', function(e) {
+        e.preventDefault();
+        var idKey = $(this).data('id');
+        $.ajax({
+            url: '/alert/update/' + idKey,
+            method: "get",
+        }).done(function(data) {
+            //console.log(data);
+            $('#genericModal').modal('show').find('#modalContent').html(data);
+            $('#genericModal').find('.modal-dialog').addClass('modal-lg');
+            $('#genericModal').find('.modal-title').html('Update Site-Wide Alert');
+        }).fail(function( jqXHR, textStatus ) {
+            alert( "Request failed: " + textStatus );
+            console.log(jqXHR);
+        });
+    });
 });

@@ -15,6 +15,8 @@ var Cal = new function() {
         });
     };
 
+    this.calIcs = ics();
+
     this.eventClick = function(calEvent, jsEvent, view, path) {
 
         console.log('Event: ',calEvent.id, "view:", view.name); 

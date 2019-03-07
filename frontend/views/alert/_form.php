@@ -59,35 +59,34 @@ $this->registerJs($js);
 
     <?= $form->field($model, 'message')->textarea(['rows' => 6]) ?>
 
+    <div class="row">
+        <div class="col-md-6">
+            <?php //echo $form->field($model, 'start_dt')->textInput() ?>
+            <?= $form->field($model, 'start_dt', [
+                //https://github.com/yiisoft/yii2-bootstrap4/issues/36
+                'errorOptions'  => [
+                    'class' => 'form-control-invalid-feedback',
+                ],
+                'template' => '{label}<div class="input-group date">{input}<div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" id="button-start_dt"><i class="far fa-calendar-alt"></i></button>
+                    </div></div><small id="start_dtHelpBlock" class="form-text text-muted">Click on the calendar icon to choose a date</small>{error}'
+            ])->textInput(['placeholder' => 'MM/DD/YYYY', 'aria-describedby' => 'start_dtHelpBlock']) ?>
+        </div>
+        <div class="col-md-6">
+            <?= $form->field($model, 'end_dt', [
+                //https://github.com/yiisoft/yii2-bootstrap4/issues/36
+                'errorOptions'  => [
+                    'class' => 'form-control-invalid-feedback',
+                ],
+                'template' => '{label}<div class="input-group date">{input}<div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" id="button-end_dt"><i class="far fa-calendar-alt"></i></button>
+                    </div></div><small id="end_dtHelpBlock" class="form-text text-muted">Click on the calendar icon to choose a date</small>{error}'
+            ])->textInput(['placeholder' => 'MM/DD/YYYY', 'aria-describedby' => 'end_dtHelpBlock']) ?>
+        </div>
+    </div>
     
-    <?php //echo $form->field($model, 'start_dt')->textInput() ?>
-    <?= $form->field($model, 'start_dt', [
-        //https://github.com/yiisoft/yii2-bootstrap4/issues/36
-        'errorOptions'  => [
-            'class' => 'form-control-invalid-feedback',
-        ],
-        'template' => '{label}<div class="input-group date">{input}<div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="button" id="button-start_dt"><i class="far fa-calendar-alt"></i></button>
-            </div></div><small id="start_dtHelpBlock" class="form-text text-muted">Click on the calendar icon to choose a date</small>{error}'
-    ])->textInput(['placeholder' => 'MM/DD/YYYY', 'aria-describedby' => 'start_dtHelpBlock']) ?>
-    
-    
-    
-    <?= $form->field($model, 'end_dt', [
-        //https://github.com/yiisoft/yii2-bootstrap4/issues/36
-        'errorOptions'  => [
-            'class' => 'form-control-invalid-feedback',
-        ],
-        'template' => '{label}<div class="input-group date">{input}<div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="button" id="button-end_dt"><i class="far fa-calendar-alt"></i></button>
-            </div></div><small id="end_dtHelpBlock" class="form-text text-muted">Click on the calendar icon to choose a date</small>{error}'
-    ])->textInput(['placeholder' => 'MM/DD/YYYY', 'aria-describedby' => 'end_dtHelpBlock']) ?>
-
-    <?php //echo $form->field($model, 'end_dt') ?>
-
-    
-
-    <div class="form-group">
+    <div class="form-group text-right">
+        <button type="button" class="btn btn-link" data-dismiss="modal" aria-label="Close">Cancel</button>
         <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
     </div>
 

@@ -51,21 +51,36 @@ class SibleyController extends FrontendController
         ];
     }
     /**
-     * Displays sibley homepage.
+     * Displays city of sibley page.
      *
      * @return mixed
      */
-    public function actionStaff()
-    {
+    public function actionCity() {
+        //define semantic url for page
+        $slug = '';
+        $pageKey = 4;
+        $page = $this->getGenericPage($pageKey);
+        
+        //load sub-sections
+        $subSections = SubPage::find()->where(['page_id' => $pageKey])->orderBy(['sort_order' => SORT_ASC])->asArray()->all();
+        //append subsection documents (if any)
+        foreach($subSections as $idx => $subSection) {
+            $subSections[$idx]['documents'] = [];
+            $documents = Document::find()->where(['table_record' => 'subPage_'.$subSection['id']])->asArray()->all();
+            if (!empty($documents)) {
+                $subSections[$idx]['documents'] = $documents;
+            }
+        }
+
+        //load staff
         $staff = Staff::find()
-        ->select([
-            'staff.id','first_name','last_name','position','elected','email','phone', 'image_asset',
-            'DATE_FORMAT(staff_elected.term_start, "%c/%e/%Y") as termStartFmtd','DATE_FORMAT(staff_elected.term_end, "%c/%e/%Y") as termEndFmtd'
-        ])
-        ->leftJoin('staff_elected', '`staff_elected`.`staff_id` = `staff`.`id`')->asArray()->all();
+            ->select([
+                'staff.id','first_name','last_name','position','elected','email','phone', 'image_asset',
+                'DATE_FORMAT(staff_elected.term_start, "%c/%e/%Y") as termStartFmtd','DATE_FORMAT(staff_elected.term_end, "%c/%e/%Y") as termEndFmtd'
+            ])
+            ->leftJoin('staff_elected', '`staff_elected`.`staff_id` = `staff`.`id`')->asArray()->all();
 
         $imgAssets = ImageAsset::retrieveAssets();
-
         //link up any set images
         foreach ($staff as $idx => $person) {
             foreach ($imgAssets as $imgAsset) {
@@ -75,11 +90,50 @@ class SibleyController extends FrontendController
             }
         }
 
-        return $this->render('staff', [
-            'model' => Page::find()->where(['id'=>4])->one(),
-            'staff' => $staff
+        //load council meeting within the past month
+        $monthAgo = date('Y-m-d', mktime(0, 0, 0, date('m')-1, date('d'), date('Y')));
+        $tomorrow = date('Y-m-d', mktime(0, 0, 0, date('m'), date('d')+1, date('Y')));
+        $meetings = Agenda::find()->select(['id','type','DATE_FORMAT(date, "%W %M %D") as fmtdDt'])->where(
+            ['between', 'date', $monthAgo, $tomorrow ])->orderBy('date')->asArray()->all();
+
+        return $this->render('city', [
+            'page' => $page,
+            'key' => $pageKey,
+            'staff' =>$staff,
+            'subSections' => $subSections,
+            'meetings' => $meetings
         ]);
     }
+    /**
+     * Displays sibley homepage.
+     *
+     * @return mixed
+     */
+    // public function actionStaff()
+    // {
+    //     $staff = Staff::find()
+    //     ->select([
+    //         'staff.id','first_name','last_name','position','elected','email','phone', 'image_asset',
+    //         'DATE_FORMAT(staff_elected.term_start, "%c/%e/%Y") as termStartFmtd','DATE_FORMAT(staff_elected.term_end, "%c/%e/%Y") as termEndFmtd'
+    //     ])
+    //     ->leftJoin('staff_elected', '`staff_elected`.`staff_id` = `staff`.`id`')->asArray()->all();
+
+    //     $imgAssets = ImageAsset::retrieveAssets();
+
+    //     //link up any set images
+    //     foreach ($staff as $idx => $person) {
+    //         foreach ($imgAssets as $imgAsset) {
+    //             if ($person['image_asset'] == $imgAsset['id'] && $person['image_asset'] != 0) {
+    //                 $staff[$idx]['image'] = $imgAsset;
+    //             }
+    //         }
+    //     }
+
+    //     return $this->render('staff', [
+    //         'model' => Page::find()->where(['id'=>4])->one(),
+    //         'staff' => $staff
+    //     ]);
+    // }
     /**
      * Displays City Council Meeting Agendas and Minutes.
      *

@@ -9,17 +9,17 @@ use yii\helpers\Url;
 <div id="Container-<?=$group?>">
     
     <div class="slick row align-items-start">
-        <div class="col-2 p-1">
-            <h3 class="modHeader m-2"><?=$title?></h3>
+        <div class="col-1 col-sm-2 p-1">
+            <h3 class="modHeader m-2 d-none d-sm-block"><?=$title?></h3>
         </div>
-        <div class="col-8 p-1">
+        <div class="col-9 col-sm-8 p-1">
             <div class="SlickCarousel-<?=$group?>"> 
                 
                 <?php foreach ($alerts as $type => $alert): ?>
                     <div class="alert alert-<?=$type?> p-1 mt-2" role="alert" data-type="<?=$type?>">
                         <div><?=$alert['title']?>&nbsp;
                             <?php if (Yii::$app->user->can('update_alert')): ?>
-                                <a href="/alert/update/<?= $alert['id']?>" title="Update" aria-label="Update" class="float-right"><i class="fas fa-edit"></i></a>
+                                <a href="#" data-id="<?= $alert['id']?>" title="Update" aria-label="Update" class="float-right siteAlertEdit"><i class="fas fa-edit"></i></a>
                             <?php endif; ?>
                         </div>
                     </div>

@@ -48,7 +48,7 @@ SlickCarouselAsset::register($this);
                 <li class="nav-item dropdown">
                     <a class="nav-link px-2 dropdown-toggle" data-toggle="dropdown" href="#">City of Sibley</a>
                     <div class="dropdown-menu">
-                    <a href="<?= Url::to(['/sibley/staff']) ?>" class="dropdown-item">City Government</a>
+                    <a href="<?= Url::to(['/sibley/city']) ?>" class="dropdown-item">City Government</a>
                     <a href="<?= Url::to(['/sibley/location']) ?>" class="dropdown-item">Location</a>
                     <a href="<?= Url::to(['/sibley/lodging']) ?>" class="dropdown-item">Lodging</a>
                     <a href="<?= Url::to(['/sibley/food']) ?>" class="dropdown-item">Eating Establishments</a>
@@ -92,9 +92,20 @@ SlickCarouselAsset::register($this);
             <div class="navbar-collapse collapse pt-2 pt-md-0" id="navbar2">
                 
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item d-lg-none d-md-none d-sm-block">
-                        <a class="nav-link px-2" href="#">Home</a>
+                    
+
+                    <li class="nav-item d-lg-none d-md-none d-sm-block dropdown">
+                        <a class="nav-link px-2 dropdown-toggle" data-toggle="dropdown" href="#">City of Sibley</a>
+                        <div class="dropdown-menu">
+                        <a href="<?= Url::to(['/sibley/city']) ?>" class="dropdown-item">City Government</a>
+                        <a href="<?= Url::to(['/sibley/location']) ?>" class="dropdown-item">Location</a>
+                        <a href="<?= Url::to(['/sibley/lodging']) ?>" class="dropdown-item">Lodging</a>
+                        <a href="<?= Url::to(['/sibley/food']) ?>" class="dropdown-item">Eating Establishments</a>
+                        <a href="<?= Url::to(['/sibley/map']) ?>" class="dropdown-item">Interactive Map</a>
+                        </div>
                     </li>
+
+
                     <li class="nav-item dropdown mr-3">
                         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
                             I would Like to...
@@ -105,6 +116,9 @@ SlickCarouselAsset::register($this);
                             <a href="<?= Url::to(['/sibley/council']) ?>" class="dropdown-item"> View Council Meeting Agendas</a>
                             <a href="<?= Url::to(['/sibley/spiritual-centers']) ?>" class="dropdown-item"> View Community Spiritual Centers</a>
                             <a href="settings.html" class="dropdown-item"> Pay A Utility Bill</a>
+                            <?php if (Yii::$app->user->can('update_alert')) : ?>
+                                <a href="#" id="createSiteWideAlert" class="dropdown-item"> Add Site-Wide Alert</a>
+                            <?php endif; ?>
                         </div>
                     </li>
                 </ul>
@@ -155,7 +169,7 @@ SlickCarouselAsset::register($this);
 </footer>
 <?php
     Modal::begin([
-        
+        'title' => '',
         'id' => 'genericModal'
     ]);
     echo '<div id="modalContent"></div>';

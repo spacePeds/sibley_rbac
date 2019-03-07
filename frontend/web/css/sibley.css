@@ -119,7 +119,9 @@ body {
 	left: 0;
 	top: auto;
     bottom: -40px;
-
+}
+.fc-event-container {
+    cursor: pointer;
 }
 
 /* The color of the indicators */
@@ -193,7 +195,7 @@ background: #707070;
     color:#fff;
 }
 /*Sidebar color scheme*/
-.bg-recSidebar {
+.bg-sidebar {
     background-color: #385c65 !important;
 }
 .headerTextShadow {
@@ -357,8 +359,8 @@ img#img_preview {
 .slick .Slick-Next,
 .slick .Slick-Prev {
     display: inline-block;
-    width: 38px;
-    height: 38px;
+    width: 28px;
+    /*height: 38px;*/
     margin-top: 6px;
     background: #2b2b2b;
     color: #FFF;
@@ -375,7 +377,7 @@ img#img_preview {
 }
 
 .slick .modHeader {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     text-align: right;
     text-transform: uppercase;
 }

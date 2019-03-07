@@ -52,7 +52,7 @@ JS;
 
 <div class="container">
     <div class="row">
-        <div class="col-md-3 bg-recSidebar">
+        <div class="col-md-3 bg-sidebar">
 
 
             <div class="list-group my-3">

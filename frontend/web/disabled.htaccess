@@ -1,3 +1,5 @@
+Options +FollowSymLinks
+IndexIgnore */*
 # DocumentRoot "D:/xampp71/htdocs/sibley_rbac/web"
 RewriteEngine on
 # If a directory or a file exists, use it directly

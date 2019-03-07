@@ -44,10 +44,11 @@ class Event extends \yii\db\ActiveRecord
     {
         return [
             [['subject', 'group', 'start_dt'], 'required'],
-            [['description', 'group'], 'string'],
+            [['description', 'group','location'], 'string'],
             [['start_dt', 'end_dt', 'last_edit_dt'], 'safe'],
             [['user_id', 'all_day','repeat_interval'], 'integer'],
             [['subject'], 'string', 'max' => 200],
+            [['location'], 'string', 'max' => 255],
             [['pdfFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['end_dt'], 'compareDates'],
@@ -64,6 +65,7 @@ class Event extends \yii\db\ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'subject' => Yii::t('app', 'Subject'),
             'description' => Yii::t('app', 'Description (optional)'),
+            'location' => Yii::t('app', 'Location (optional)'),
             'group' => Yii::t('app', 'Group'),
             'start_dt' => Yii::t('app', 'Start Date'),
             'end_dt' => Yii::t('app', 'End Date (optional)'),
