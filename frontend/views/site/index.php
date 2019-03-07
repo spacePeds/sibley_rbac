@@ -13,11 +13,7 @@ $this->title = 'Sibley: Highlight of Iowa!';
 ?>
 <div class="site-index">
 
-    <?php if (Yii::$app->user->can('update_alert')) : ?>
-        <div class="adminFloater shadow-sm p-3 mb-5 bg-white rounded">
-            <a href="<?= Url::to(['/alert/index']) ?>" role="button" class="btn btn-primary">Edit City Alert</a>
-        </div>
-    <?php endif; ?>
+   
 
     
 

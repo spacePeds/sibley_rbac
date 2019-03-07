@@ -12,7 +12,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="alert-create">
 
-    <h2><?= Html::encode($this->title) ?></h2>
+    
 
     <?php //echo '<pre>' . print_r($group,true) . '</pre>' ?>
 

@@ -62,7 +62,7 @@ class Business extends \yii\db\ActiveRecord
     {
         return [
             'name' => Yii::t('app', 'Name'),
-            'address1' => Yii::t('app', 'Address1'),
+            'address1' => Yii::t('app', 'Address'),
             'address2' => Yii::t('app', 'Address2 (optional)'),
             'city' => Yii::t('app', 'City'),
             'state' => Yii::t('app', 'State'),
@@ -70,7 +70,24 @@ class Business extends \yii\db\ActiveRecord
             'url' => Yii::t('app', 'Url'),
             'note' => Yii::t('app', 'Notes (business hours or additional details)'),
             'member' => Yii::t('app', 'Chamber Member'),
+            'fullAddress' => Yii::t('app', 'Address'),
+            'nameUrl' => Yii::t('app', 'Name'),
+            'Business.ContactMethods.description' => Yii::t('app', 'Contacts')
         ];
+    }
+
+    /* Getter for organization's full address */
+    public function getFullAddress() {
+        if (!empty($this->address2)) {
+            return $this->address1 . ', ' . $this->address2;
+        }
+        return $this->address1;
+    }
+    public function getNameUrl() {
+        if (!empty($this->url)) {
+            return '<a target="_blank" href="'.$this->url.'">'.$this->name.'</a>';
+        }
+        return $this->name;
     }
 
     /**

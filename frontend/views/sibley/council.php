@@ -119,4 +119,6 @@ echo '<div id="modalContent"></div>';
 Modal::end();
 
 $this->registerJs($script);
-$this->registerJs($adminScript);
+if (Yii::$app->user->can('update_meeting')) {
+    $this->registerJs($adminScript);
+}

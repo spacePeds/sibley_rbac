@@ -60,13 +60,13 @@ class SiteAlert extends \yii\bootstrap4\Widget
             $title = '';
             switch ($group) {
                 case 'rec':
-                    $title = 'Message from: Sibley Recreation Department';
+                    $title = 'Message from: Sibley Rec. Dept.';
                     break;
                 case 'city':
                     $title = 'Message from: City of Sibley';
                     break;
                 case 'chamber':
-                    $title = 'Message from: Sibley Chamber of Commerce';
+                    $title = 'Message from: Sibley Chamber';
                     break;
             }
             echo $this->render('alert/slickAlert', [

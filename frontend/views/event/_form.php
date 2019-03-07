@@ -64,6 +64,8 @@ $this->registerJs($js);
         
     ]) ?>
 
+<?= $form->field($model, 'location')->textInput(['maxlength' => true]) ?>
+
     <?php if (count($group) > 1) : ?>
         <?= $form->field($model, 'group')->dropDownList($group,['prompt'=>'Choose an Option']) ?>
     <?php else: ?>

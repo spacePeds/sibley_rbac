@@ -85,6 +85,9 @@ class EventController extends Controller
     {
         //find event if exists
         $event = $this->findModel($id);
+        
+        //define ics array
+        $jsVars = [];
 
         //duration
         if (!empty($event->end_dt)) {
@@ -98,18 +101,30 @@ class EventController extends Controller
                     $duration = 'Duration: ' . $interval->h . ' hours, ' . $interval->i . ' minutes';
                 }
                 
+                $jsVars['startDt'] = date('m/d/Y h:i a', strtotime($event->start_dt));
+                $jsVars['endDt'] = date('m/d/Y h:i a', strtotime($event->end_dt));
+
                 $event->start_dt = date("M j, Y h:ia", strtotime($event->start_dt));
                 $event->notes = $duration;
+                
             } else {
+                $jsVars['startDt'] = date('m/d/Y h:i a', strtotime($event->start_dt));
+                $jsVars['endDt'] = date('m/d/Y h:i a', strtotime($event->start_dt));
+                
                 $event->start_dt = date("M j, Y", strtotime($event->start_dt)) . ' - ' .  date("M j, Y", strtotime($event->end_dt));
+                
             }  
         }
         
         if($event->all_day == 1) {
-            $event->start_dt = date("F j, Y", strtotime($event->start_dt)) . '(All Day)';
+            //define JS vals first before overwriting start_dt param
+            $jsVars['startDt'] = date('m/d/Y', strtotime($event->start_dt));
+            $jsVars['endDt'] = date('m/d/Y', strtotime($event->end_dt));
+
+            $event->start_dt = date("F j, Y", strtotime($event->start_dt)) . ' (All Day)';
         }
 
-        ////apply user-friendly group label
+        //apply user-friendly group label
         $groups = Yii::$app->params['eventGroups'];
         $event->group = $groups[$event->group];
         
@@ -119,12 +134,40 @@ class EventController extends Controller
             if (file_exists(Url::to('@frontend/web') . $pdfFileInfo['path'] . $pdfFileInfo['name'])) {
                 $event->pdfFile = Yii::getAlias('@web') . $pdfFileInfo['path'] . $pdfFileInfo['name'];
                 $event->pdfFileName = $pdfFileInfo['name'] . ' ('.$this->formatBytes($pdfFileInfo['size']).')';
+                $jsVars['pdf'] = Url::to('@web', true) . $pdfFileInfo['path'] . $pdfFileInfo['name'];
             }
         }
 
+        $jsVars['notes'] = $event->notes;
+        $jsVars['location'] = $event->location;
+        $jsVars['description'] = $event->description;
+        $jsVars['rrule'] = '';
+        
+        switch($event->repeat_interval) {
+            case 1:
+                //weekly
+                //$jsVars['rrule'] = "{'RRULE':'FREQ=WEEKLY;UNTIL=".$jsVars['endDt']."'}";
+                $jsVars['rrule'] = "{rrule: 'RRULE:FREQ=WEEKLY;UNTIL=".$jsVars['endDt']."'}";
+                break;
+            case 2:
+                //bi-weekly
+                $jsVars['rrule'] = "{rrule: 'RRULE:FREQ=WEEKLY;INTERVAL=2,UNTIL=".$jsVars['endDt']."'}";
+                break;
+            case 3:
+                //bi-weekly
+                $jsVars['rrule'] = "{rrule: 'RRULE:RRULE:FREQ=MONTHLY,UNTIL=".$jsVars['endDt']."'}";
+                break;
+            case 4:
+                //annually
+                $jsVars['rrule'] = "{rrule: 'RRULE:RRULE:FREQ=YEARLY,UNTIL=".$jsVars['endDt']."'}";
+                break;
+            default:
+            $jsVars['rrule'] = '';
+        }
         return $this->renderAjax('viewModal', [
             'model' => $event,
-            'pdf' => $pdfFileInfo
+            'pdf' => $pdfFileInfo,
+            'jsVar' => $jsVars
         ]);
     }
 
