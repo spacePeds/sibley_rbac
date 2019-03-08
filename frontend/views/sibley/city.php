@@ -46,7 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="card text-center my-3">
                 <div class="card-body p-2">
                     <p class="card-text">Click on the button below to pay city utility fees. </p>
-                    <a class="btn btn-primary" target="_blank" href="https://www.govpaynow.com/gps/user/plc/a001y8" role="button"><i class="far fa-credit-card"></i> Pay</a>
+                    <a class="btn btn-primary" target="_blank" href="https://www.govpaynow.com/gps/user/cyg/plc/a001y8" role="button"><i class="far fa-credit-card"></i> Pay</a>
                 </div>
                 <div class="card-footer text-muted small">
                     We've partnered with GovPayNet to make paying fees easier!

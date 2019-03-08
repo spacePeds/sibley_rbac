@@ -1,5 +1,0 @@
----
-deployment:
-  tasks:
-    - export DEPLOYPATH=/home/chamber/public_html/2019test/
-    - /bin cp -r frontend/web

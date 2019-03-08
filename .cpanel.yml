@@ -1,5 +1,5 @@
 ---
 deployment:
-  tasks:
+  tasks: 
     - export DEPLOYPATH=/home/cityofsi/public_html/
     - /bin cp -r frontend/public_html $DEPLOYPATH
