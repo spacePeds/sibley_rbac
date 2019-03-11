@@ -8,9 +8,9 @@ var Cal = new function() {
         console.log( 'I clicked on a day', dt, path );
         $.get(createEvent,{'date':dt})
             .done(function(data){
-                $('#genericModal').find('.modal-title').html('Create Event');
-                $('.modal').modal('show')
-                    .find('#modalContent')
+                $('#genericModalLabel').html('Create Event');
+                $('#genericModal').modal('show')
+                    .find('.modal-body')
                     .html(data);
         });
     };
@@ -28,7 +28,7 @@ var Cal = new function() {
             method: "get",
         }).done(function(data) {
             console.log(data);
-            $('#genericModal').modal('show').find('#modalContent').html(data);
+            $('#genericModal').modal('show').find('.modal-body').html(data);
             $('#genericModal').find('.modal-title').html('Updating Event: ' + calEvent.id);
         }).fail(function( jqXHR, textStatus ) {
             alert( "Request failed: " + textStatus );
@@ -37,47 +37,54 @@ var Cal = new function() {
     };
 
     this.eventDrop = function(event, delta, revertFunc, jsEvent, ui, view, path) {
+        var self = this;
         console.log(event);
         if (!confirm("Are you sure about this change?")) {
             revertFunc();
         } else {
-            var startDt = '';
-            var endDt = '';
-            if (event.start !== null) {
-                startDt = event.start.format('YYYY-MM-DD');
-            }
-            if (event.end !== null) {
-                endDt = event.end.format('YYYY-MM-DD');
-            }
-            $.ajax({
-                url: path + "/event/update_ajax",
-                data: {'id':event.id, 'startDate': startDt, 'endDate': endDt },
-                method: "post",
-                dataType: "json"
-            }).done(function(data) {
-                if (data.status !== 'success') {
-                    alert('An error occured during time shift.');
-                    revertFunc();
-                }
-                //$.parseJSON()
-                console.log(data);
-            }).fail(function( jqXHR, textStatus ) {
-                alert( "Request failed: " + textStatus );
-                console.log(jqXHR);
-                revertFunc();
-            });
+            self.updateDates(event, revertFunc, path);
         }
 
     };
 
     this.eventResize = function(event, delta, revertFunc, path) {
         var self = this;
+        console.log(event, delta);
         alert(event.title + " end is now " + event.end.format());
 
         if (!confirm("is this okay?")) {
             revertFunc();
+        } else {
+            self.updateDates(event, revertFunc, path);
         }
-
+    };
+    this.updateDates = function(event, revertFunc, path) {
+        var self = this;
+        var startDt = '';
+        var endDt = '';
+        if (event.start !== null) {
+            startDt = event.start.format('YYYY-MM-DD');
+        }
+        if (event.end !== null) {
+            endDt = event.end.format('YYYY-MM-DD');
+        }
+        $.ajax({
+            url: path + "/event/update_ajax",
+            data: {'id':event.id, 'startDate': startDt, 'endDate': endDt },
+            method: "post",
+            dataType: "json"
+        }).done(function(data) {
+            if (data.status !== 'success') {
+                alert('An error occured during time shift.');
+                revertFunc();
+            }
+            //$.parseJSON()
+            console.log(data);
+        }).fail(function( jqXHR, textStatus ) {
+            alert( "Request failed: " + textStatus );
+            console.log(jqXHR);
+            revertFunc();
+        });
     };
 };
 $(function(){
@@ -86,6 +93,6 @@ $(function(){
     //modal default to large modal-lg
     $('#genericModal').find('.modal-dialog').addClass('modal-lg');
     //append title to header
-    $('#genericModal').find('.modal-header')
-        .prepend('<h5 class="modal-title"></h5>');
+    //$('#genericModal').find('.modal-header')
+    //    .prepend('<h5 class="modal-title"></h5>');
 });

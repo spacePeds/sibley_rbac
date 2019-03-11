@@ -23,7 +23,7 @@ var Cal = new function() {
             method: "get",
         }).done(function(data) {
             //console.log(data);
-            $('#genericModal').modal('show').find('#modalContent').html(data);
+            $('#genericModal').modal('show').find('.modalContent').html(data);
             var subject = $('#genericModal').find('.event-view').data('subject');
             $('#genericModal').find('.modal-title').html('<i class="far fa-calendar-alt"></i> ' + subject);
 

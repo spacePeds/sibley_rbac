@@ -80,7 +80,8 @@ class SibleyController extends FrontendController
             ])
             ->leftJoin('staff_elected', '`staff_elected`.`staff_id` = `staff`.`id`')->asArray()->all();
 
-        $imgAssets = ImageAsset::retrieveAssets();
+        $imageAsset = new ImageAsset();
+        $imgAssets = $imageAsset->retrieveAssets();
         //link up any set images
         foreach ($staff as $idx => $person) {
             foreach ($imgAssets as $imgAsset) {
@@ -308,11 +309,20 @@ class SibleyController extends FrontendController
         $pageKey = 7;
         $page = $this->getGenericPage($pageKey);
 
-        //echo '<pre>' . print_r($page, true) . '</pre>';
-        //echo '<pre>' . print_r($organizations, true) . '</pre>';
-        return $this->render('generic', [
-            'details' => $page,
-            'key' => $pageKey
+        $subSections = SubPage::find()->where(['page_id' => $pageKey])->orderBy(['sort_order' => SORT_ASC])->asArray()->all();
+        //append subsection documents (if any)
+        foreach($subSections as $idx => $subSection) {
+            $subSections[$idx]['documents'] = [];
+            $documents = Document::find()->where(['table_record' => 'subPage_'.$subSection['id']])->asArray()->all();
+            if (!empty($documents)) {
+                $subSections[$idx]['documents'] = $documents;
+            }
+        }
+
+        return $this->render('chamber', [
+            'page' => $page,
+            'key' => $pageKey,
+            'subSections' => $subSections
         ]);
     }
     /**

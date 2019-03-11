@@ -111,17 +111,21 @@ $this->registerJs($js);
         }
     ?>
 
+    
     <div class="form-group text-right">
+        <button type="button" class="btn btn-link" data-dismiss="modal" aria-label="Close">Cancel</button>
         <?php if ($model->id > 0): ?>
             <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
-                'class' => 'btn btn-outline-danger',
+                'class' => 'btn btn-danger',
                 'data' => [
                     'confirm' => Yii::t('app', 'Are you sure you want to delete this event?'),
                     'method' => 'post',
                 ],
             ]) ?>
         <?php endif; ?>
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), [
+            'class' => 'btn btn-success'
+        ]) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

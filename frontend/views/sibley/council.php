@@ -50,6 +50,9 @@ Html::encode($adminScript);
 
 //echo '<pre>' . print_r($model,true) . '</pre>';
 ?>
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.2&appId=106901959404215&autoLogAppEvents=1"></script>
+
 <?php if (Yii::$app->user->can('create_meeting')) : ?>
     <div class="adminFloater shadow-sm p-3 mb-5 bg-white rounded d-flex flex-column text-center">
         <div class="p-2"> <button id="createAgenda" class="btn btn-success">Create Agenda</button></div>

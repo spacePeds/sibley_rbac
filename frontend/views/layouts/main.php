@@ -30,6 +30,7 @@ SlickCarouselAsset::register($this);
     <?php $this->head() ?>
 </head>
 <body>
+
 <?php $this->beginBody() ?>
 
 <div class="wrap">
@@ -167,13 +168,30 @@ SlickCarouselAsset::register($this);
         ?>
     </div>
 </footer>
+<div class="modal fade" id="genericModal" tabindex="-1" role="dialog" aria-labelledby="genericModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="genericModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div id="modalContent" class="modal-body"></div>
+      <div class="modal-footer">
+        <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <?php
-    Modal::begin([
-        'title' => '',
-        'id' => 'genericModal'
-    ]);
-    echo '<div id="modalContent"></div>';
-    Modal::end();
+    // Modal::begin([
+    //     'title' => '',
+    // ]);
+    // echo '<div id="modalContent"></div>';
+    // Modal::end();
 
 ?>
 <?php $this->endBody() ?>

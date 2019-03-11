@@ -114,7 +114,8 @@ $this->title = 'Sibley: Highlight of Iowa!';
                 
             </div>
             <div class="col-lg-6">
-                <p class="lead p-3">Sibley's real pride is in its people. The dedicated, professional, caring individuals who create the growth and spirit of opportunity make the community a great place to live</p>
+                <p class="lead text-info font-weight-bold mt-2">This site is still under construction. Please pardon our mess while we finish putting the pieces together. In the meantime, visit our old site: <a href="http://www.sibleyiowa.net">sibleyiowa.net</a></p>
+                <p class="lead p-2">Sibley's real pride is in its people. The dedicated, professional, caring individuals who create the growth and spirit of opportunity make the community a great place to live</p>
                 
                         <h3>Upcoming Events</h3>
                         <ul class="list-group list-group-flush">

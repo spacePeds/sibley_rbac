@@ -13,6 +13,8 @@ $this->params['breadcrumbs'][] = $this->title;
 //echo '<pre>' . print_r($subSections) . '</pre>';
 
 ?>
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.2&appId=210655332287672&autoLogAppEvents=1"></script>
 
 <!-- paralex image -->
 <section id="city-heading" class="p-5">   
@@ -87,13 +89,11 @@ $this->params['breadcrumbs'][] = $this->title;
 
     
             <section class="text-center">
-                <iframe 
-                    src="http://www.facebook.com/plugins/likebox.php?href=http%3A%2F%2Fwww.facebook.com%2FSibley.Iowa&width=600&colorscheme=light&show_faces=true&border_color&stream=true&header=true&height=435"
-                    scrolling="yes" 
-                    frameborder="0" 
-                    style="border:none; overflow:hidden; width:600px; height:430px; background: white;" 
-                    allowTransparency="true">
-                </iframe>
+            <div class="fb-page" data-href="https://www.facebook.com/Sibley.Iowa" data-tabs="timeline" data-width="500" data-small-header="true" data-adapt-container-width="true" data-hide-cover="true" data-show-facepile="true">
+                <blockquote cite="https://www.facebook.com/Sibley.Iowa" class="fb-xfbml-parse-ignore">
+                    <a href="https://www.facebook.com/Sibley.Iowa">Sibley, Iowa</a>
+                </blockquote>
+            </div>
             </section>
             <?php foreach ($subSections as $subSection): ?>
                 <?php if ($subSection['type'] == 'section'): ?>
