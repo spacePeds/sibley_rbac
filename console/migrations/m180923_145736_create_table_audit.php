@@ -17,11 +17,12 @@ class m180923_145736_create_table_audit extends Migration
         }
         $this->createTable('{{%audit}}', [
             'id' => $this->primaryKey(),
-            'record_id' => $this->integer()->notNull(),
+            'record_id' => $this->integer(),
+            'table' =>  $this->string(145),
             'field' =>  $this->string(255)->notNull(),
-            'old_value' =>  $this->text()->notNull(),
-            'new_value' =>  $this->text()->notNull(),
-            'date' =>  $this->dateTime()->notNull(),
+            'old_value' =>  $this->text(),
+            'new_value' =>  $this->text(),
+            'date' => $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP'),
             'update_user' =>  $this->integer()->notNull(),
             
         ], $tableOptions);

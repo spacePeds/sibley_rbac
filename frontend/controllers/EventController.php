@@ -11,6 +11,7 @@ use yii\web\UploadedFile;
 use yii\helpers\Json;
 use yii\bootstrap4\ActiveForm;  //use yii\widgets\ActiveForm;
 use common\models\User;
+use common\models\Audit;
 use yii\helpers\Url;
 
 /**
@@ -200,6 +201,14 @@ class EventController extends Controller
             if ($model->validate()) {
                 if ($model->save(false)) {
                     //save event before uploading attachment so we have a ID to link to
+                    $audit = new Audit();
+                    $audit->table = 'event';
+                    $audit->record_id = Yii::$app->db->getLastInsertID();
+                    $audit->field = 'subject';
+                    $audit->new_value = $model->subject;
+                    $audit->update_user = $user->id;
+                    $audit->save(false);
+
                     if ($model->pdfFile) {
                         if ($model->upload($model->id)) { 
                             Yii::$app->session->setFlash('success', "Event created successfully with attachment: " . $model->pdfFile->name);

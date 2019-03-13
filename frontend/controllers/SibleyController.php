@@ -205,7 +205,7 @@ class SibleyController extends FrontendController
             if ($event['all_day']) {
                 $e->allDay = 1;
                 //cut off time-stamp
-                $e->start = date("Y-m-d", strtotime($event['start_dt']));
+                $e->start = date('Y-m-d\TH:i:s\Z', strtotime($event['start_dt']));
             }
             if (isset($event['end_dt'])) {
                 //cut off time-stamp before comparison
@@ -215,8 +215,8 @@ class SibleyController extends FrontendController
                 $interval = $date1->diff($date2);
                 if ($date2 > $date1) {
                     //multi day event
-                    $e->start = date("Y-m-d", strtotime($event['start_dt']));
-                    $e->end = date("Y-m-d", strtotime($event['end_dt']));
+                    $e->start = date('Y-m-d\TH:i:s\Z', strtotime($event['start_dt']));
+                    $e->end = date('Y-m-d\TH:i:s\Z', strtotime($event['end_dt']));
                 }
             }
             
@@ -236,6 +236,29 @@ class SibleyController extends FrontendController
             $eventArr[] = $e;
             
         }
+
+        // $Event = new \yii2fullcalendar\models\Event();
+        // $Event->id = 1;
+        // $Event->title = 'Testing';
+        // $Event->start = date('Y-m-d\TH:i:s\Z');
+        // $Event->nonstandard = [
+        //     'field1' => 'Something I want to be included in object #1',
+        //     'field2' => 'Something I want to be included in object #2',
+        // ];
+        // $eventArr[] = $Event;
+
+        // $Event = new \yii2fullcalendar\models\Event();
+        // $Event->id = 2;
+        // $Event->title = 'Testing';
+        // $Event->start = date('Y-m-d\TH:i:s\Z',strtotime('tomorrow 6am'));
+        // $eventArr[] = $Event;
+
+        // $Event = new \yii2fullcalendar\models\Event();
+        // $Event->id = 3;
+        // $Event->title = 'Testing Multi-Day';
+        // $Event->start = date('Y-m-d\TH:i:s\Z',strtotime('tomorrow 6am'));
+        // $Event->end = date('Y-m-d\TH:i:s\Z',strtotime('friday 12:30am'));
+        // $eventArr[] = $Event;
 
         return $this->render('calendar', [
             'events' => $eventArr,

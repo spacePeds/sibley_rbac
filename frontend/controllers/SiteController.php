@@ -19,6 +19,7 @@ use yii\db\Expression;
 use frontend\models\Event;
 use frontend\components\FrontendController;
 use frontend\models\Agenda;
+use frontend\models\Audit;
 //use grekts\rssParser\rssParser;
 
 /**
@@ -288,10 +289,36 @@ class SiteController extends FrontendController
 
             $model = new SignupForm();
             if ($model->load(Yii::$app->request->post())) {
+                // if ($user = $model->signup()) {
+                //     if (Yii::$app->getUser()->login($user)) {
+                //         return $this->goHome();
+                //     }
+                // }
                 if ($user = $model->signup()) {
-                    if (Yii::$app->getUser()->login($user)) {
-                        return $this->goHome();
+                    $email = \Yii::$app->mailer->compose()
+                        ->setTo($user->email)
+                        ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name . ' robot'])
+                        ->setSubject('Signup Confirmation')
+                        ->setTextBody("<p>Thank you for Registering.<p> <p>To activate your account, click this link: " . \yii\helpers\Html::a(
+                            Yii::$app->urlManager->createAbsoluteUrl(
+                                ['site/confirm','id'=>$user->id,'key'=>$user->auth_key]
+                            ), Yii::$app->urlManager->createAbsoluteUrl(
+                                ['site/confirm','id'=>$user->id,'key'=>$user->auth_key])
+                            ) . '</p>'
+                        )
+                        ->send();
+                    if ($email) {
+                        Yii::$app->getSession()->setFlash('success','Account Created. To activate, check Your email!');
+                        $audit = new Audit();
+                        $audit->field = 'Account Create';
+                        $audit->update_user = $user->id;
+                        $audit->save(false);
                     }
+                    else
+                    {
+                        Yii::$app->getSession()->setFlash('warning','Failed, contact Admin!');
+                    }
+                    return $this->goHome();
                 }
             }
     
@@ -303,7 +330,42 @@ class SiteController extends FrontendController
         //}
         
     }
+    /**
+     * Confirm signup action.
+     * localhost/doingiteasy/frontend/web/index.php?r=site%2Fconfirm&id=3&key=kyiho89argPcjBgvyzWrtb_lmgf-ZHCR
+     *
+     * @return mixed
+     */
+    public function actionConfirm($id, $key)
+    {
+        $user = \common\models\User::find()->where([
+            'id'        =>$id,
+            'auth_key'  =>$key,
+            'status'    =>0,
+        ])->one();
 
+        if(!empty($user)){
+            $user->status=10;
+            $user->save();
+            Yii::$app->getSession()->setFlash('success','Success! Your account was activated.');
+            $audit = new Audit();
+            $audit->field = 'Account Activation';
+            $audit->update_user = $user->id;
+            $audit->save(false);
+            //notify admin
+            $email = \Yii::$app->mailer->compose()
+                ->setTo(Yii::$app->params['adminEmail'])
+                ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name . ' robot'])
+                ->setSubject('User confirmed account')
+                ->setTextBody("<p>A user just confirmed their account: <ul><li>$user->username</li><li>$user->email</li></ul>")
+                ->send();
+        }
+        else
+        {
+            Yii::$app->getSession()->setFlash('danger',' Ohoh! For some reason we were unable to activate your account.');
+        }
+        return $this->goHome();
+    }
     /**
      * Requests password reset.
      *
