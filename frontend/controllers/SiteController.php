@@ -295,16 +295,17 @@ class SiteController extends FrontendController
                 //     }
                 // }
                 if ($user = $model->signup()) {
+                    $activateUrl = Yii::$app->urlManager->createAbsoluteUrl(['site/confirm','id'=>$user->id,'key'=>$user->auth_key]);
                     $email = \Yii::$app->mailer->compose()
                         ->setTo($user->email)
                         ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name . ' robot'])
                         ->setSubject('Signup Confirmation')
-                        ->setTextBody("<p>Thank you for Registering.<p> <p>To activate your account, click this link: " . \yii\helpers\Html::a(
-                            Yii::$app->urlManager->createAbsoluteUrl(
-                                ['site/confirm','id'=>$user->id,'key'=>$user->auth_key]
-                            ), Yii::$app->urlManager->createAbsoluteUrl(
-                                ['site/confirm','id'=>$user->id,'key'=>$user->auth_key])
-                            ) . '</p>'
+                        ->setHtmlBody(
+                            "<p>Thank you for Registering.<p> <p>Click this link: " . \yii\helpers\Html::a($activateUrl,$activateUrl) . '</p>'
+                        )
+                        ->setTextBody(
+                            "Thank you for Registering. To activate your account, copy this URL and paste it into your web browser: " . 
+                                Yii::$app->urlManager->createAbsoluteUrl(['site/confirm','id'=>$user->id,'key'=>$user->auth_key])
                         )
                         ->send();
                     if ($email) {

@@ -10,6 +10,7 @@ use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 use yii\helpers\Json;
 use yii\bootstrap4\ActiveForm;  //use yii\widgets\ActiveForm;
+use yii\helpers\ArrayHelper;
 use common\models\User;
 use common\models\Audit;
 use yii\helpers\Url;
@@ -75,6 +76,121 @@ class EventController extends Controller
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
+    }
+    /**
+     * Displays a single Event model.
+     * @param integer $id
+     * @return json
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionGetAjaxEvent($id)
+    {
+        //find event if exists
+        $event = $this->findModel($id);
+        
+        //define ics array
+        $ics = [];
+        $status = 'error';
+        $message = 'No event found';
+
+        if ($event) {
+            $status = 'success';
+            $message = 'Event Found';
+            //duration
+            if (!empty($event->end_dt)) {
+                $duration = '';
+                if (date('mdY', strtotime($event->start_dt)) == date('mdY', strtotime($event->end_dt))) {
+                    
+                    //same dates, are times different?
+                    $date1 = new \DateTime($event->end_dt);
+                    $date2 = new \DateTime($event->start_dt);
+                    $interval = $date1->diff($date2);
+                    if ($date1 > $date2) {
+                        $duration = 'Duration: ' . $interval->h . ' hours, ' . $interval->i . ' minutes';
+                    }
+                    
+                    $ics['startDt'] = date('m/d/Y h:i a', strtotime($event->start_dt));
+                    $ics['endDt'] = date('m/d/Y h:i a', strtotime($event->end_dt));
+
+                    $event->start_dt = date("M j, Y h:ia", strtotime($event->start_dt));
+                    $event->notes = $duration;
+                    
+                } else {                   
+                    $ics['startDt'] = date('m/d/Y h:i a', strtotime($event->start_dt));
+                    $ics['endDt'] = date('m/d/Y h:i a', strtotime($event->end_dt));
+                    
+                    $event->start_dt = date("M j, Y", strtotime($event->start_dt)) . ' - ' .  date("M j, Y", strtotime($event->end_dt));
+                    
+                }  
+            } else {
+                //end date is unspecified
+                $ics['startDt'] = date('m/d/Y h:i a', strtotime($event->start_dt));
+                $ics['endDt'] = date('m/d/Y h:i a', strtotime($event->start_dt));
+            }
+            
+            if($event->all_day == 1) {
+                //define JS vals first before overwriting start_dt param
+                $ics['startDt'] = date('m/d/Y', strtotime($event->start_dt));
+                $ics['endDt'] = date('m/d/Y', strtotime($event->end_dt));
+
+                //$event->start_dt = date("F j, Y", strtotime($event->start_dt)) . ' (All Day)';
+                $event->notes .= ' (All Day)';
+            }
+
+            //apply user-friendly group label
+            $groups = Yii::$app->params['eventGroups'];
+            $event->group = $groups[$event->group];
+            $ics['group'] = $event->group;
+            
+            //find document if exists
+            $pdfFileInfo = $event->getAttachment($id);
+            if (!empty($pdfFileInfo)) {
+                if (file_exists(Url::to('@frontend/web') . $pdfFileInfo['path'] . $pdfFileInfo['name'])) {
+                    $event->pdfFile = Yii::getAlias('@web') . $pdfFileInfo['path'] . $pdfFileInfo['name'];
+                    $event->pdfFileName = $pdfFileInfo['name'] . ' ('.$this->formatBytes($pdfFileInfo['size']).')';
+                    $ics['pdf'] = Url::to('@web', true) . $pdfFileInfo['path'] . $pdfFileInfo['name'];
+                }
+            }
+
+            $ics['notes'] = $event->notes;
+            $ics['location'] = $event->location;
+            $ics['description'] = strip_tags($event->description);
+            $ics['rrule'] = '';
+            
+            switch($event->repeat_interval) {
+                case 1:
+                    //weekly
+                    //$jsVars['rrule'] = "{'RRULE':'FREQ=WEEKLY;UNTIL=".$jsVars['endDt']."'}";
+                    $ics['rrule'] = "{rrule: 'RRULE:FREQ=WEEKLY;UNTIL=".$ics['endDt']."'}";
+                    break;
+                case 2:
+                    //bi-weekly
+                    $ics['rrule'] = "{rrule: 'RRULE:FREQ=WEEKLY;INTERVAL=2,UNTIL=".$ics['endDt']."'}";
+                    break;
+                case 3:
+                    //bi-weekly
+                    $ics['rrule'] = "{rrule: 'RRULE:RRULE:FREQ=MONTHLY,UNTIL=".$ics['endDt']."'}";
+                    break;
+                case 4:
+                    //annually
+                    $ics['rrule'] = "{rrule: 'RRULE:RRULE:FREQ=YEARLY,UNTIL=".$ics['endDt']."'}";
+                    break;
+                default:
+                $ics['rrule'] = '';
+            }
+
+        }
+
+        $result = [
+            'status' => $status,
+            'message' => $message,
+            'payload' => [
+                'event' => ArrayHelper::toArray($event),
+                'ics' => $ics
+            ]
+        ];
+        echo Json::encode($result);
+
     }
     /**
      * Displays a single Event model in a modal.
