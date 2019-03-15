@@ -301,7 +301,7 @@ class SiteController extends FrontendController
                         ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name . ' robot'])
                         ->setSubject('Signup Confirmation')
                         ->setHtmlBody(
-                            "<p>Thank you for Registering.<p> <p>Click this link: " . \yii\helpers\Html::a($activateUrl,$activateUrl) . '</p>'
+                            "<p>Thank you for Registering.<p> <p>Click this link: " . \yii\helpers\Html::a($activateUrl,$activateUrl) . ' to activate your account.</p>'
                         )
                         ->setTextBody(
                             "Thank you for Registering. To activate your account, copy this URL and paste it into your web browser: " . 
