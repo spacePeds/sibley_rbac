@@ -65,7 +65,7 @@ SlickCarouselAsset::register($this);
                     </div>
                 </li>
                 <li class="nav-item dropdown">
-                <a class="nav-link px-2 dropdown-toggle" data-toggle="dropdown" href="#">Recreation</a>
+                <a class="nav-link px-2 dropdown-toggle" data-toggle="dropdown" href="#">Parks & Recreation</a>
                     <div class="dropdown-menu">
                         <a href="<?= Url::to(['/sibley/recreation']) ?>" class="dropdown-item">Recreation Department</a>
                         <a href="/recreation/parks" class="dropdown-item">Community Parks</a>
@@ -106,6 +106,25 @@ SlickCarouselAsset::register($this);
                         </div>
                     </li>
 
+                    <li class="nav-item d-lg-none d-md-none d-sm-block dropdown">
+                        <a class="nav-link px-2 dropdown-toggle" data-toggle="dropdown" href="#">Chamber Of Commerce</a>
+                        <div class="dropdown-menu">
+                            <a href="<?= Url::to(['/sibley/chamber']) ?>" class="dropdown-item">About Sibley Chamber</a>
+                            <a href="<?= Url::to(['/business/list']) ?>" class="dropdown-item">Chamber Member List</a>
+                            <a href="<?= Url::to(['/sibley/chamber-benefits']) ?>" class="dropdown-item">Chamber Member Benefits</a>  
+                        </div>
+                    </li>
+                    <li class="nav-item d-lg-none d-md-none d-sm-block dropdown">
+                    <a class="nav-link px-2 dropdown-toggle" data-toggle="dropdown" href="#">Parks & Rec</a>
+                        <div class="dropdown-menu">
+                            <a href="<?= Url::to(['/sibley/recreation']) ?>" class="dropdown-item">Recreation Department</a>
+                            <a href="/recreation/parks" class="dropdown-item">Community Parks</a>
+                            <a href="/recreation/golf" class="dropdown-item">Sibley Golf and Country Club</a>
+                            <a href="/recreation/camping" class="dropdown-item">Camping Facilities</a>
+                            <a href="/recreation/swimming" class="dropdown-item">Swimming Facilities</a>
+                            <a href="/recreation/fishing" class="dropdown-item">Fishing Opportunities</a>
+                        </div>
+                    </li>
 
                     <li class="nav-item dropdown mr-3">
                         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">

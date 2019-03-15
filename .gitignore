@@ -39,3 +39,10 @@ phpunit.phar
 
 # vagrant runtime
 /.vagrant
+
+# user uploaded media
+/public_html/media
+/public_html/img/ajax
+/public_html/img/assets
+/public_html/img/carousel
+/public_html/img/org
