@@ -345,7 +345,7 @@ class SiteController extends FrontendController
         $user = \common\models\User::find()->where([
             'id'        =>$id,
             'auth_key'  =>$key,
-            'status'    =>0,
+            'status'    =>\common\models\User::STATUS_INACTIVE,
         ])->one();
 
         if(!empty($user)){
