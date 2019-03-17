@@ -5,6 +5,9 @@ deployment:
     - /bin cp -r frontend/public_html/* $DEPLOYPATH
 
 #cp -r frontend/public_html/* /home/cityofsi/public_html
+#cp -r /home/cityofsi/sibley_rbac/frontend/public_html/assets/* /home/cityofsi/www/assets
+#cp -r /home/cityofsi/sibley_rbac/frontend/public_html/js/* /home/cityofsi/www/js
+
 
 #- export DEPLOYPATH=/home/<username>/public_html  # Add /<app_folder> if required
 #        - /bin/cp <file_name> $DEPLOYPATH                 #Copy specific file to destination from root

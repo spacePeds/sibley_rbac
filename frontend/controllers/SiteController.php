@@ -20,6 +20,7 @@ use frontend\models\Event;
 use frontend\components\FrontendController;
 use frontend\models\Agenda;
 use frontend\models\Audit;
+use yii\helpers\Html;
 //use grekts\rssParser\rssParser;
 
 /**
@@ -317,9 +318,11 @@ class SiteController extends FrontendController
                     }
                     else
                     {
-                        Yii::$app->getSession()->setFlash('warning','Failed, contact Admin!');
+                        Yii::$app->getSession()->setFlash('warning','Failed to send confirmation email, contact Admin!');
                     }
                     return $this->goHome();
+                } else{
+                    Yii::$app->getSession()->setFlash('warning','Failed, Unknow error! ' .  print_r($user, true));
                 }
             }
     
