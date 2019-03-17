@@ -67,7 +67,7 @@ class Link extends \yii\db\ActiveRecord
             'name' => Yii::t('app', 'Link'),
             'label' => Yii::t('app', 'Label'),
             'pdfFile' => Yii::t('app', 'Choose PDF file'),
-            'description' => Yii::t('app', 'Description'),
+            'description' => Yii::t('app', 'Description (optional)'),
         ];
     }
     /**
@@ -142,11 +142,11 @@ class Link extends \yii\db\ActiveRecord
         }
         $attachment = $this->getAttachment($id);
         $path = $attachment['path'] . $attachment['name'];
-        $sysPath = Url::to('@frontend/web/') . $path;
+        $sysPath = Url::to('@webroot') . '/'. $path;
         if(file_exists($sysPath)) {
             unlink($sysPath);
         } else {
-            Yii::$app->session->setFlash('error', "Unable to locate attachment at: $path");
+            Yii::$app->session->setFlash('error', "Unable to locate attachment at: $path"); // in:" .Yii::getAlias('@webroot')
         }
        
         $affected_rows = (new \yii\db\Query())

@@ -14,7 +14,11 @@ use common\widgets\SiteAlert;
 use yii\helpers\Url;
 use \yii\web\Request;
 use yii\bootstrap4\Modal;
+use frontend\assets\BootstrapDatepickerAsset;
 
+if (!Yii::$app->user->isGuest) {
+    BootstrapDatepickerAsset::register($this);
+}
 AppAsset::register($this);
 SlickCarouselAsset::register($this);
 

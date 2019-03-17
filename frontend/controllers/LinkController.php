@@ -11,6 +11,7 @@ use yii\filters\VerbFilter;
 use common\models\User;
 use yii\helpers\Html;
 use yii\web\UploadedFile;
+use frontend\models\Audit;
 
 /**
  * LinkController implements the CRUD actions for Link model.
@@ -86,6 +87,13 @@ class LinkController extends Controller
                 if ($model->validate()) {
                     if ($model->save(false)) {
                         //save link before uploading attachment so we have a ID to link to
+                        $audit = new Audit();
+                        $audit->table = 'link';
+                        $audit->record_id = $model->id;
+                        $audit->field = 'Create';
+                        $audit->update_user = Yii::$app->user->identity->id;
+                        $audit->save(false);
+
                         if ($model->pdfFile) {
                             if ($model->upload($model->id, $model->label)) { 
                                 Yii::$app->session->setFlash('success', "Link created successfully with attachment: " . $model->pdfFile->name);
@@ -130,6 +138,14 @@ class LinkController extends Controller
     {
         if (Yii::$app->user->can('update_link')) {
             $model = $this->findModel($id);
+
+            //make sure only owner or site admin can delete
+            $user_id = Yii::$app->user->identity->id;
+            if ($user_id != $model->created_by && $user_id != 1) {
+                Yii::$app->session->setFlash('error', "It does not appear you are the owner of this link. Delete request rejected.");
+                return $this->goBack(Yii::$app->request->referrer);
+            }
+
             $linkGroups = Link::find()->select('group')->asArray()->distinct()->all();
             
             //find document if exists
@@ -147,6 +163,13 @@ class LinkController extends Controller
                 if ($model->validate()) {
                     if ($model->save(false)) {
                         //save link before uploading attachment so we have a ID to link to
+                        $audit = new Audit();
+                        $audit->table = 'link';
+                        $audit->record_id = $model->id;
+                        $audit->field = 'Edit';
+                        $audit->update_user = Yii::$app->user->identity->id;
+                        $audit->save(false);
+
                         if ($model->pdfFile) {
                             if ($model->upload($model->id, $model->label)) { 
                                 Yii::$app->session->setFlash('success', "Link updated successfully with attachment: " . $model->pdfFile->name);
@@ -206,15 +229,33 @@ class LinkController extends Controller
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
+        //make sure only owner or site admin can delete
+        $user_id = Yii::$app->user->identity->id;
+        if ($user_id != $model->created_by && $user_id != 1) {
+            Yii::$app->session->setFlash('error', "It does not appear you are the owner of this link. Delete request rejected.");
+            return $this->goBack(Yii::$app->request->referrer);
+        }
         if ($model->type == 'file') {
             if ($model->deleteAttachment($id)) {
                 $model->delete();
+                $audit = new Audit();
+                $audit->table = 'link';
+                $audit->record_id = $id;
+                $audit->field = 'Delete';
+                $audit->update_user = Yii::$app->user->identity->id;
+                $audit->save(false);
                 Yii::$app->session->setFlash('success', "Successfully deleted link and associated attachment.");
             } else {
                 Yii::$app->session->setFlash('error', "An error occured while deleting link attachment.");
             }
         } else {
             $this->findModel($id)->delete();
+            $audit = new Audit();
+            $audit->table = 'link';
+            $audit->record_id = $id;
+            $audit->field = 'Delete';
+            $audit->update_user = Yii::$app->user->identity->id;
+            $audit->save(false);
             Yii::$app->session->setFlash('success', "Link deleted successfully.");
         }
 

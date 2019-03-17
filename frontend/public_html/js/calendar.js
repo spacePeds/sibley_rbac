@@ -11,6 +11,32 @@ var Cal = new function() {
     };
 
     this.calIcs;
+    this.icsData;
+
+   
+
+    this.setIcsListener = function(icsData) {
+        var self = this;
+        console.log('setting iccs listener');
+       
+        //self.calIcs.download('I am a test');
+        
+        
+        $('.icsLink').on('click', function(e) {
+            console.log('clicked ics', self.icsData);
+            e.preventDefault();
+        
+            self.calIcs = ics();
+            //self.calIcs.addEvent('Demo Event', 'This is thirty minut event', 'Nome, AK', '8/7/2013 5:30 pm', '8/9/2013 6:00 pm', {rrule: 'FREQ=WEEKLY;BYDAY=MO,WE,TH;INTERVAL=1;COUNT=3'});
+            var rrules = '';
+            if (icsData.rrule != '') {
+                rrules = {rrule: icsData.rrule};
+            }
+            self.calIcs.addEvent(icsData.subject, icsData.description, icsData.location, icsData.startDt, icsData.endDt, rrules);
+            console.log(self.calIcs);
+            self.calIcs.download(icsData.subject);
+        });
+    };
 
     this.eventClick = function(calEvent, jsEvent, view, path) {
         var self = this;
@@ -48,14 +74,8 @@ var Cal = new function() {
                 $('#genericModal').modal('show').find('.modal-title').html('<i class="far fa-calendar-alt"></i> ' + event.subject);
                 $('#modalContent').html(evt);
 
-                //initilize ics
-                self.calIcs = ics();
-                self.calIcs.addEvent(event.subject, isc.description, ics.location, ics.startDt, ics.endDt, ics.rrule);
-                $('.icsLink').on('click', function(e) {
-                    console.log('clicked ics', event.subject);
-                    e.preventDefault();
-                    self.calIcs.download(event.subject);
-                });
+                self.icsData = ics;
+                self.setIcsListener(ics);
 
             } else {
                 $('#genericModal').modal('show').find('.modal-title').html('Ohoh! Somethign went wrong.');
@@ -105,7 +125,5 @@ var Cal = new function() {
 };
 $(function(){
     console.log('calendar standard JS');
-    Cal.calIcs= ics();
-    Cal.calIcs.addEvent('Demo Event', 'This is thirty minut event', 'Nome, AK', '8/7/2013 5:30 pm', '8/9/2013 6:00 pm');
-    Cal.calIcs.download('I am a test');
+    
 });

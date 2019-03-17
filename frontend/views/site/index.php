@@ -5,17 +5,15 @@ use yii\helpers\Url;
 use yii\helpers\Html;
 use davidjeddy\RssFeed\RssReader;
 
-/**/
-
-
+$js = <<<EOF
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+EOF;
 
 $this->title = 'Sibley: Highlight of Iowa!';
 ?>
 <div class="site-index">
-
-   
-
-    
 
     <section id="showcase">
         <div id="myCarousel" class="carousel slide" data-ride="carousel">
@@ -159,11 +157,14 @@ $this->title = 'Sibley: Highlight of Iowa!';
                         <li class="list-group-item">
                             <?php if (Yii::$app->user->can('update_link')) : ?>
                                 <div class="cardEdit">
-                                    <a class="btn btn-outline-primary btn-sm" href="<?= Url::to(['/link/update/' . $link['id']]) ?>" title="Update" aria-label="Update"><i class="fas fa-edit"></i></a>
+                                    <a class="btn btn-outline-primary btn-sm" href="<?= Url::to(['/link/update/' . $link['id']]) ?>" data-toggle="tooltip" data-placement="top" title="Update Link" aria-label="Update"><i class="fas fa-edit"></i></a>
 
                                     <?php if (Yii::$app->user->can('delete_link')): ?>
                                         <?= Html::a('<i class="fas fa-trash"></i>', ['/link/delete', 'id' => $link['id']], [
                                             'class' => 'btn btn-outline-danger btn-sm',
+                                            'data-toggle'=>"tooltip",
+                                            'data-placement'=>"top",
+                                            'title'=>"Delete Link",
                                             'data' => [
                                                 'confirm' => 'Are you sure you want to delete this link?',
                                                 'method' => 'post',
@@ -187,7 +188,7 @@ $this->title = 'Sibley: Highlight of Iowa!';
                 <?php endforeach; ?> 
                 <?php if (Yii::$app->user->can('create_link')) : ?>
                     <div class="card">
-                        <a class="btn btn-outline-success btn-sm" href="<?= Url::to(['/link/create']) ?>" title="Create" aria-label="Create"><i class="fas fa-plus-square"></i></a>
+                        <a class="btn btn-outline-success btn-sm" href="<?= Url::to(['/link/create']) ?>" data-toggle="tooltip" data-placement="top" title="Create New Link" aria-label="Create"><i class="fas fa-plus-square"></i></a>
                     </div>                  
                 <?php endif;?>
                 
@@ -208,3 +209,5 @@ $this->title = 'Sibley: Highlight of Iowa!';
 
                         </section>
 </div>
+<?php
+$this->registerJs($js);

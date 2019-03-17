@@ -2,15 +2,11 @@
 
 use yii\helpers\Html;
 use yii\bootstrap4\ActiveForm;
-use frontend\assets\BootstrapDatepickerAsset;
-
-BootstrapDatepickerAsset::register($this);
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Alert */
 /* @var $form yii\widgets\ActiveForm */
 $js = <<<EOF
-console.log('initing datepicker');
 $('.date').datepicker({
     format: 'mm/dd/yyyy',
     todayHighlight: true
@@ -18,6 +14,7 @@ $('.date').datepicker({
 $('option[value="danger"]').addClass('bg-danger');
 $('option[value="info"]').addClass('bg-info');
 $('option[value="secondary"]').addClass('bg-secondary');
+$('option[value="warning"]').addClass('bg-warning');
 EOF;
 $this->registerJs($js);
 ?>
@@ -50,9 +47,11 @@ $this->registerJs($js);
     <?php endif; ?>
 
     <?= $form->field($model, 'type')->dropDownList([
-        'danger'=> 'Alert',
-        'info' => 'Notice',
-        'secondary' => 'Normal'
+        'danger'=> 'Severe Alert',
+        'warning' => 'Moderate Alert',
+        'info' => 'General Notice',
+        'secondary' => 'Informational Notice'
+        
     ],['prompt'=>'Choose an Option']) ?>
 
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>

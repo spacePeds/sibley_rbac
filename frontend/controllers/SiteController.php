@@ -309,7 +309,7 @@ class SiteController extends FrontendController
                         )
                         ->send();
                     if ($email) {
-                        Yii::$app->getSession()->setFlash('success','Account Created. To activate, check Your email!');
+                        Yii::$app->getSession()->setFlash('success','Account Created, but you need to activate! Please check the email address you provided for further instructions!');
                         $audit = new Audit();
                         $audit->field = 'Account Create';
                         $audit->update_user = $user->id;
@@ -347,8 +347,8 @@ class SiteController extends FrontendController
 
         if(!empty($user)){
             $user->status=10;
-            $user->save();
-            Yii::$app->getSession()->setFlash('success','Success! Your account was activated.');
+            $user->save(false);
+            Yii::$app->getSession()->setFlash('success','Success! Your account was activated. ' . \yii\helpers\Html::a('Login','site/login'));
             $audit = new Audit();
             $audit->field = 'Account Activation';
             $audit->update_user = $user->id;
@@ -406,7 +406,7 @@ class SiteController extends FrontendController
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
-            Yii::$app->session->setFlash('success', 'New password saved.');
+            Yii::$app->session->setFlash('success', 'New password saved. ' . \yii\helpers\Html::a('Login','site/login'));
 
             return $this->goHome();
         }
