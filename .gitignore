@@ -41,8 +41,8 @@ phpunit.phar
 /.vagrant
 
 # user uploaded media
-/public_html/media
-/public_html/img/ajax
-/public_html/img/assets
-/public_html/img/carousel
-/public_html/img/org
+/frontend/public_html/media
+/frontend/public_html/img/ajax
+/frontend/public_html/img/assets
+/frontend/public_html/img/carousel
+/frontend/public_html/img/org

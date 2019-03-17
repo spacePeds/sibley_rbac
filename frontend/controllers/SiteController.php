@@ -100,7 +100,8 @@ class SiteController extends FrontendController
                 //$localInterest['group'] = $link['group'];
                 $group = $link['group'];
                 if ($link['type'] == 'file') {
-                    $attInfo = Link::getAttachment($link['id']);
+                    $linkModel = new Link();
+                    $attInfo = $linkModel->getAttachment($link['id']);
                 }
                 $localInterest[$group][] = [
                     'type' => $link['type'],
