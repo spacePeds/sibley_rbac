@@ -142,7 +142,7 @@ class LinkController extends Controller
             //make sure only owner or site admin can delete
             $user_id = Yii::$app->user->identity->id;
             if ($user_id != $model->created_by && $user_id != 1) {
-                Yii::$app->session->setFlash('error', "It does not appear you are the owner of this link. Delete request rejected.");
+                Yii::$app->session->setFlash('error', "It does not appear you are the owner of this link. Update request rejected.");
                 return $this->goBack(Yii::$app->request->referrer);
             }
 
@@ -171,7 +171,7 @@ class LinkController extends Controller
                         $audit->save(false);
 
                         if ($model->pdfFile) {
-                            if ($model->upload($model->id, $model->label)) { 
+                            if ($model->upload($model->id)) { 
                                 Yii::$app->session->setFlash('success', "Link updated successfully with attachment: " . $model->pdfFile->name);
                                 return $this->redirect(['/']);
                             } 

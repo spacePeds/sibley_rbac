@@ -73,7 +73,7 @@ class Link extends \yii\db\ActiveRecord
     /**
      * Upload a PDF
      */
-    public function upload($tableRecordId, $label)
+    public function upload($tableRecordId)
     {
         if ($this->validate()) {
             //$baseName = $string = preg_replace('/\s+/', '', $this->pdfFile->baseName);
