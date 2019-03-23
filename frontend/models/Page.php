@@ -12,6 +12,9 @@ use yii\behaviors\SluggableBehavior;
  * @property string $route
  * @property string $title
  * @property string $body
+ * @property string $slug
+ * @property string $fb_token
+ * @property string $fb_link
  * @property string $last_edit_dt
  * @property int $user_id
  *
@@ -19,6 +22,8 @@ use yii\behaviors\SluggableBehavior;
  */
 class Page extends \yii\db\ActiveRecord
 {
+    public static $fbToggle;
+    
     /**
      * {@inheritdoc}
      */
@@ -34,7 +39,7 @@ class Page extends \yii\db\ActiveRecord
     {
         return [
             [['route', 'title', 'body'], 'required'],
-            [['body'], 'string'],
+            [['body','slug','fb_token','fb_link'], 'string'],
             [['last_edit_dt'], 'safe'],
             [['user_id'], 'integer'],
             [['route', 'title'], 'string', 'max' => 255],
@@ -51,6 +56,8 @@ class Page extends \yii\db\ActiveRecord
             'route' => Yii::t('app', 'Route'),
             'title' => Yii::t('app', 'Title'),
             'body' => Yii::t('app', 'Body'),
+            'fb_token' => Yii::t('app', 'Facebook App ID'),
+            'fb_link' => Yii::t('app', 'Facebook Page ID'),
             'last_edit_dt' => Yii::t('app', 'Last Edit Dt'),
             'user_id' => Yii::t('app', 'User ID'),
         ];

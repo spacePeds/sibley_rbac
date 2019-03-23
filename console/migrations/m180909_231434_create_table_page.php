@@ -21,6 +21,8 @@ class m180909_231434_create_table_page extends Migration
             'title' =>  $this->string(255)->notNull(),
             'body' =>  $this->text()->notNull(),
             'slug' => $this->string(255)->notNull(),
+            'fb_token' => $this->string(255),
+            'fb_link' => $this->string(255),
             'last_edit_dt' =>  $this->dateTime()->notNull(),
             'user_id' =>  $this->integer()->notNull()
             

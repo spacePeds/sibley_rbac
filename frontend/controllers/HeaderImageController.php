@@ -12,6 +12,7 @@ use frontend\models\Event;
 use yii\web\UploadedFile;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
+use frontend\models\Audit;
 
 /**
  * HeaderImageController implements the CRUD actions for HeaderImage model.
@@ -84,11 +85,19 @@ class HeaderImageController extends Controller
                     // file is uploaded successfully
                     $model->ajaxResult['message'] .= ' Record saved succcessfully.';               
                     $model->ajaxResult['recordId'] = $imgId;               
-                }                  
+                }
+                $audit = new Audit();
+                $audit->table = 'header_image';
+                $audit->record_id = $imgId;
+                $audit->field = 'Create';
+                $audit->new_value = $imgPath . $documentName;
+                $audit->update_user = Yii::$app->user->identity->id;
+                $audit->save(false);
+
                 $data = ArrayHelper::toArray($model);
                 $model->ajaxResult['form'] = $data;
             } else {
-                $model->ajaxResult = ['status' => 'error','message' => 'Failed to save record.'];
+                $model->ajaxResult = ['status' => 'error','message' => 'Failed to save record.','errors' => $model->errors];
             }
                   
             return $this->asJson($model->ajaxResult);
@@ -140,6 +149,13 @@ class HeaderImageController extends Controller
                 'message' => 'Record Deleted.',
                 'imgPath' => $sysPath
             ];
+            $audit = new Audit();
+            $audit->table = 'header_image';
+            $audit->record_id = $model->id;
+            $audit->field = 'Delete';
+            $audit->old_value = $sysPath;
+            $audit->update_user = Yii::$app->user->identity->id;
+            $audit->save(false);
             if (file_exists($sysPath)) {
                 unlink($sysPath);
             } 

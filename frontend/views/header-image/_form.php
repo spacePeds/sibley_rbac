@@ -50,7 +50,7 @@ use yii\helpers\Url;
                     'class' => 'form-control-invalid-feedback',
                 ],
                 'template' => '{label}{input}
-                <small id="url_exHelp" class="form-text text-muted">Darken the image by entering a decimal value between 0 -1</small>
+                <small id="url_exHelp" class="form-text text-muted">Darken the image by entering a decimal value between 0 (lightest) to 1 (darkest)</small>
                 {error}'
             ])->textInput(['maxlength' => true]) ?>
         </div>
@@ -61,7 +61,7 @@ use yii\helpers\Url;
                     'class' => 'form-control-invalid-feedback',
                 ],
                 'template' => '{label}{input}
-                <small id="url_exHelp" class="form-text text-muted">Applies to Parallax Display Type Only</small>
+                <small id="url_exHelp" class="form-text text-muted">Negative or Positive vertical positioning in pixels.</small>
                 {error}'
             ])->textInput(['maxlength' => true]) ?>
         </div>
@@ -78,7 +78,8 @@ use yii\helpers\Url;
     
     <?= $form->field($model, 'sequence')->textInput() ?>
 
-    <div class="form-group">
+    <div class="form-group text-right">
+        <button type="button" class="btn btn-link" data-dismiss="modal" aria-label="Close">Cancel</button>
         <?= Html::button(Yii::t('app', 'Save'), ['class' => 'btn btn-success','id' => 'headerImgSubmit']) ?>
     </div>
 

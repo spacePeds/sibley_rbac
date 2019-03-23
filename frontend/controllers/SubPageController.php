@@ -92,7 +92,7 @@ class SubPageController extends Controller
                         $documentModel->update();
                     }
 
-                    Yii::$app->session->setFlash('success', 'Insert successful. New id is: ' . $newId);
+                    Yii::$app->session->setFlash('success', 'Section Insert successful.');  //New id is: ' . $newId
                 } else {
                     Yii::$app->session->setFlash('error', 'Sub-page did not save successfully.');
                 }
@@ -119,15 +119,39 @@ class SubPageController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        if (Yii::$app->user->can('update_subPage')) {
+            $model = $this->findModel($id);
+            $model->last_edit = date('Y-m-d H:i:s');
+            if ($model->load(Yii::$app->request->post())) {
+                $model->last_edit = date('Y-m-d H:i:s');
+                if ($model->type == 'section') {
+                    $model->path = '#' . str_replace(' ', '_', strtolower($model->title));                    
+                }
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+                if ($model->save(false)) {
+                    //find any newly uploaded documents and update soft key_link
+                    $newId = $model->getPrimaryKey();
+                    $documents = Document::find()->where(['table_record' => 'subPage_temp'])->all();
+                    foreach($documents as $documentModel) {
+                        $documentModel->table_record = 'subPage_' . $newId;
+                        $documentModel->update();
+                    }
+
+                    Yii::$app->session->setFlash('success', 'Section Insert successful.');  //New id is: ' . $newId
+                } else {
+                    Yii::$app->session->setFlash('error', 'Sub-page did not save successfully.');
+                }
+                return $this->redirect([$page->route]);
+                    
+                
+            }
+
+            return $this->render('update', [
+                'model' => $model,
+            ]);
+        } else {
+            throw new ForbiddenHttpException('You either do not have the correct access or you did not specify the correct parameters');
         }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
     }
 
     // public function actionUpload()

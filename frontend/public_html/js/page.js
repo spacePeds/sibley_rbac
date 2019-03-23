@@ -1,5 +1,5 @@
 $(function(){
-    console.log('page custom JS');
+    //console.log('page custom JS');
 
     $('#btnModalAsset').on('click',function() {
         $('#genericModal').find('.modal-dialog').addClass('modal-lg');
@@ -12,12 +12,18 @@ $(function(){
             .load($(this).attr('value'));
     });
 
+    //setup listener for prepend image toggle
     $('#headerImageToggle').on('click',function() {
         $('#headerImageContainer').toggle();
     });
+    //look for previously uploaded prepended images and click cechkbox if found
+    if($('.uploadedImages').find('img').length > 0) {
+        $('#headerImageToggle').click();
+    }
+    
     
     $('#headerImageFormTrigger').on('click',function() {
-        console.log('header image form triggered');
+        //console.log('header image form triggered');
         var pageId = $(this).data('id');
         var pageTitle = $(this).data('title');
         $('#genericModal').modal('show')
@@ -27,9 +33,16 @@ $(function(){
                 $('#genericModal').find('#headerimage-image_idx').val('page_'+pageId);
                 $('#genericModal').find('.modal-dialog').addClass('modal-lg');
                 $('#genericModal').find('.modal-footer').hide();
+                $('.uploadMessage').html('');
+
+                $('#headerimage-display').on('change', function() {
+                    if ($(this).val() == 'parallax') {
+                        $('#headerimage-position').val('center');
+                    }
+                });
 
                 $('#headerImgSubmit').on('click',function() {
-                    console.log('clicked submit');
+                    //console.log('clicked submit');
                     $('#genericModal').find('.im_progress').show();
                     var url="/header-image/create";
                     ajaxFormSubmit(url,'#header_image_form',function(data){
@@ -37,7 +50,7 @@ $(function(){
                             $('.im_progress').fadeOut();
                             var imgSrc = $('#img_preview').attr('src');
                             var imgId = (data.recordId) ? data.recordId : '';
-                            console.log('img:',imgSrc);
+                            //console.log('img:',imgSrc);
                             $('.uploadedImages').append(
                                 '<div class="card" data-id="'+imgId+'">' +
                                 '<img class="card-img-top img-thumbnail" style="max-height:100px;object-fit:cover;" src="'+imgSrc+'">' +
@@ -47,6 +60,17 @@ $(function(){
                             $(".img_preview").hide();
                             $('#genericModal').modal('hide');
                         } else {
+                            var errors = [];
+                            for (var elem in data.errors) {
+                                errors.push(data.errors[elem]);
+                            }
+                            var errMsg = '<div class="alert alert-danger alert-dismissible fade show p-1 small" role="alert">'
+                                + errors.join('<br>')
+                                + '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
+                                + '<span aria-hidden="true">&times;</span>'
+                                + '</button>'
+                                + '</div>';
+                            $('.uploadMessage').html(errMsg);
                             alert("Something went wrong." + data.message);
                             $(".img_preview").hide();
                             $('#genericModal').modal('hide');
@@ -126,6 +150,56 @@ $(function(){
             }
             reader.readAsDataURL(input.files[0]);
         }
+    }
+
+    //facebook
+    if ($('#pagewithcategories-fb_token').val() != '') {
+        $('#fbToggle').prop('checked',true);
+        $('#fbOptions').show();
+    }
+    $('#fbToggle').on('click', function() {
+        if ($('#fbOptions').is(':hidden')) {
+            $('#fbOptions').slideDown();
+        } else {
+            $('#fbOptions').slideUp();
+        }
+    });
+
+    //cancel
+    $('#cancelButn').on('click', function() {
+        window.history.back();
+    });
+
+    //categories
+    if ($('#pagewithcategories-category_ids').val() != '') {
+        var selectedCategories = $('#pagewithcategories-category_ids').val();
+        getCategoryDetails(selectedCategories);
+    }
+    $('#pagewithcategories-category_ids').on('change',function() {
+        var selectedCategories = $(this).val();
+        //console.log('category selection changed');
+        getCategoryDetails(selectedCategories);
+    });
+    
+    function getCategoryDetails(categories) {
+        //console.log('cats:',categories);
+        $.ajax({
+            url: '/page/ajax-organization-details',
+            type: 'POST',
+            data: {'categories': categories},
+            datatype: 'json',
+
+        }).done(function(data) {
+            //console.log(data);
+            if (data.status =='error') {
+                $('#categoryDetails').html(data.message);
+            } else {
+                $('#categoryDetails').html(data);
+            }
+        }).fail(function( jqXHR, textStatus, errorThrown ) {
+            console.log(jqXHR, textStatus, errorThrown);
+            alert(errorThrown);
+        })
     }
 
     //reset

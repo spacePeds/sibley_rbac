@@ -10,6 +10,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\filters\VerbFilter;
+use frontend\models\Audit;
 
 /**
  * AlertController implements the CRUD actions for Alert model.
@@ -70,13 +71,20 @@ class AlertController extends Controller
             $model = new Alert();          
 
             if ($model->load(Yii::$app->request->post())) {
-                
+                $user_id = Yii::$app->user->identity->id;
+                $model->created_by = $user_id;
                 $model->created_dt = date('Y-m-d H:i:s');
                 if ($model->validate()) {
                     //format dates for DB
                     $model->start_dt = date("Y-m-d", strtotime($model->start_dt));
                     $model->end_dt = date("Y-m-d 23:59:59", strtotime($model->end_dt));
                     if ($model->save(false)) {
+                        $audit = new Audit();
+                        $audit->table = 'alert';
+                        $audit->record_id = $model->id;
+                        $audit->field = 'Create';
+                        $audit->update_user = Yii::$app->user->identity->id;
+                        $audit->save(false);
                         Yii::$app->session->setFlash('success', 'Site-wide notification successfully created.');
                     } else {
                         Yii::$app->session->setFlash('error', 'An error occured while creating the Site-wide notification.' . print_r($model, true));
@@ -103,28 +111,47 @@ class AlertController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        if (Yii::$app->user->can('update_alert')) {
 
-        if ($model->load(Yii::$app->request->post())) {
-            if ($model->validate()) {
-                $model->start_dt = date("Y-m-d", strtotime($model->start_dt));
-                $model->end_dt = date("Y-m-d 23:59:59", strtotime($model->end_dt));
-                if ($model->save(false)) {
-                    Yii::$app->session->setFlash('success', 'Notification successfully updated.');
-                } else {
-                    Yii::$app->session->setFlash('error', 'An error occured while modifying the notification.');
-                }
-                return $this->goBack(Yii::$app->request->referrer);
+            $model = $this->findModel($id);
+
+            //make sure only owner or site admin can update
+            $user_id = Yii::$app->user->identity->id;
+            if ($user_id != $model->created_by && $user_id != 1) {
+                Yii::$app->session->setFlash('error', "It does not appear you are the owner of this site-wide alert. Update request rejected.");
+                //return $this->goBack(Yii::$app->request->referrer);
             }
-        }
 
-        //format the dates for Merika
-        $model->start_dt = date("m/d/Y", strtotime($model->start_dt));
-        $model->end_dt = date("m/d/Y", strtotime($model->end_dt));
-        return $this->renderAjax('update', [
-            'model' => $model,
-            'group'  => $this->getGroup()
-        ]);
+            if ($model->load(Yii::$app->request->post())) {
+                if ($model->validate()) {
+                    $model->start_dt = date("Y-m-d", strtotime($model->start_dt));
+                    $model->end_dt = date("Y-m-d 23:59:59", strtotime($model->end_dt));
+                    if ($model->save(false)) {
+                        $audit = new Audit();
+                        $audit->table = 'alert';
+                        $audit->record_id = $model->id;
+                        $audit->field = 'Create';
+                        $audit->update_user = Yii::$app->user->identity->id;
+                        $audit->save(false);
+                        Yii::$app->session->setFlash('success', 'Notification successfully updated.');
+                    } else {
+                        Yii::$app->session->setFlash('error', 'An error occured while modifying the notification.');
+                    }
+                    return $this->goBack(Yii::$app->request->referrer);
+                }
+            }
+
+            //format the dates for Merika
+            $model->start_dt = date("m/d/Y", strtotime($model->start_dt));
+            $model->end_dt = date("m/d/Y", strtotime($model->end_dt));
+            return $this->renderAjax('update', [
+                'model' => $model,
+                'group'  => $this->getGroup()
+            ]);
+
+        } else {
+            throw new ForbiddenHttpException('You do not have permission to access this page.');
+        }
     }
 
     /**
@@ -136,9 +163,28 @@ class AlertController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        if (($model = Alert::findOne($id)) !== null) {
 
-        return $this->redirect(['/']);
+            //make sure only owner or site admin can delete
+            $user_id = Yii::$app->user->identity->id;
+            if ($user_id != $model->created_by && $user_id != 1) {
+                Yii::$app->session->setFlash('error', "It does not appear you are the owner of this link. Delete request rejected.");
+                return $this->goBack(Yii::$app->request->referrer);
+            }
+
+            $audit = new Audit();
+            $audit->table = 'alert';
+            $audit->record_id = $model->id;
+            $audit->field = 'Delete';
+            $audit->update_user = $user_id;
+            $audit->save(false);
+
+            //delete the alert
+            $model->delete();
+        }
+
+        
+        return $this->goBack(Yii::$app->request->referrer);
     }
 
     /**
@@ -166,16 +212,16 @@ class AlertController extends Controller
         $group = [];
         $user_id = User::findByUsername(Yii::$app->user->identity->username)->getId();            
         $role = \Yii::$app->authManager->getRolesByUser($user_id);
-        if ($role['superAdmin']) {
+        if (isset($role['superAdmin'])) {
             $group = [
                 'city' => 'City',
                 'chamber' => 'Chamber',
                 'rec' => 'Recreation Department'];
-        } else if ($role['cityAdmin']) {
+        } else if (isset($role['cityAdmin'])) {
             $group = ['city'];
-        } else if ($role['chamberAdmin']) {
+        } else if (isset($role['chamberAdmin'])) {
             $group = ['chamber'];
-        } else if ($role['recAdmin']) {
+        } else if (isset($role['recAdmin'])) {
             $group = ['rec'];
         }
         return $group;

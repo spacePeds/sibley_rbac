@@ -10,9 +10,9 @@ use yii\helpers\Url;
     
     <div class="slick row align-items-start">
         <div class="col-1 col-sm-2 p-1">
-            <h3 class="modHeader m-2 d-none d-sm-block"><?=$title?></h3>
+            <h3 class="modHeader m-1 d-none d-sm-block"><?=$title?></h3>
         </div>
-        <div class="col-9 col-sm-8 p-1">
+        <div class="col-9 col-sm-8 px-1">
             <div class="SlickCarousel-<?=$group?>"> 
                 
                 <?php foreach ($alerts as $type => $alert): ?>

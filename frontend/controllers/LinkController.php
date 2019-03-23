@@ -139,7 +139,7 @@ class LinkController extends Controller
         if (Yii::$app->user->can('update_link')) {
             $model = $this->findModel($id);
 
-            //make sure only owner or site admin can delete
+            //make sure only owner or site admin can update
             $user_id = Yii::$app->user->identity->id;
             if ($user_id != $model->created_by && $user_id != 1) {
                 Yii::$app->session->setFlash('error', "It does not appear you are the owner of this link. Update request rejected.");

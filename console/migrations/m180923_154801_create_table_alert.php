@@ -24,6 +24,7 @@ class m180923_154801_create_table_alert extends Migration
             'start_dt' =>  $this->dateTime()->notNull(),
             'end_dt' =>  $this->dateTime()->notNull(),
             'created_dt' =>  $this->dateTime()->notNull(),
+            'created_by' =>  $this->integer()->notNull(),
             
         ], $tableOptions);
 

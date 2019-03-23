@@ -14,12 +14,15 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-    Err: <?= Yii::$app->session->getFlash('error'); ?><br>
-    Succ: <?= Yii::$app->session->getFlash('success'); ?><br>
+    
 
-    <p>
-        <?= Html::a(Yii::t('app', 'Create Page'), ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+    <?php if (Yii::$app->user->can('create_page')) : ?>
+        Err: <?= Yii::$app->session->getFlash('error'); ?><br>
+        Succ: <?= Yii::$app->session->getFlash('success'); ?><br>
+        <p>
+            <?= Html::a(Yii::t('app', 'Create Page'), ['create'], ['class' => 'btn btn-success']) ?>
+        </p>
+    <?php endif;?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,

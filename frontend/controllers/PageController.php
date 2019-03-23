@@ -4,6 +4,7 @@ namespace frontend\controllers;
 
 use Yii;
 use frontend\models\PageWithCategories;
+use yii\web\ForbiddenHttpException;
 use frontend\models\Category;
 use frontend\models\Page;
 use frontend\models\PageSearch;
@@ -18,6 +19,10 @@ use common\models\User;
 use yii\web\UploadedFile;
 use yii\helpers\Url;
 use yii\db\Query;
+use frontend\models\Audit;
+use frontend\models\Business;
+use yii\helpers\Json;
+
 
 /**
  * PageController implements the CRUD actions for Page model.
@@ -62,9 +67,13 @@ class PageController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        //return $this->render('view', [
+        //    'model' => $this->findModel($id),
+        //]);
+
+        $model = $this->findModel($id);
+
+        return $this->redirect([$model->route]);
     }
 
     /**
@@ -74,45 +83,55 @@ class PageController extends Controller
      */
     public function actionCreate()
     {
-        $user_id = User::findByUsername(Yii::$app->user->identity->username)->getId();
-        $model = new PageWithCategories();
+        if (Yii::$app->user->can('create_page')) {
+            $user_id = User::findByUsername(Yii::$app->user->identity->username)->getId();
+            $model = new PageWithCategories();
 
-        if ($model->load(Yii::$app->request->post())) {
-            $model->last_edit_dt = date('Y-m-d H:i:s');
-            $model->user_id = $user_id;
-            if ($model->save()) {
-                $model->saveCategories();
-                Yii::$app->session->setFlash('success', 'Insert successful.');
-                return $this->redirect([Yii::$app->request->post('route')]);
-            }
-        }
-
-/*
-        if ($model->load(Yii::$app->request->post())) {
-            $model->last_edit_dt = date('Y-m-d H:i:s');
-            $model->user_id = 1;    
-            $valid = $model->validate();
-            if ($valid) {
-                $transaction = \Yii::$app->db->beginTransaction();
-                try {
-                    if ($model->save()) {
-                        $model->saveCategories();
-                        Yii::$app->session->setFlash('success', 'Insert successful.');
-                        return $this->redirect(['view', 'id' => $model->id]);
-                    }
-                } catch (Exception $e) {
-                    Yii::$app->session->setFlash('warning', 'Insert failed.' .print_r($e,false));
-                    $transaction->rollBack();
-                    return $this->redirect(['']);
+            if ($model->load(Yii::$app->request->post())) {
+                $model->last_edit_dt = date('Y-m-d H:i:s');
+                $model->user_id = $user_id;
+                if ($model->save()) {
+                    $audit = new Audit();
+                    $audit->table = 'page';
+                    $audit->record_id = $model->id;
+                    $audit->field = 'Create';
+                    $audit->update_user = Yii::$app->user->identity->id;
+                    $audit->save(false);
+                    $model->saveCategories();
+                    Yii::$app->session->setFlash('success', 'Insert successful.');
+                    return $this->redirect([Yii::$app->request->post('route')]);
                 }
             }
+
+    /*
+            if ($model->load(Yii::$app->request->post())) {
+                $model->last_edit_dt = date('Y-m-d H:i:s');
+                $model->user_id = 1;    
+                $valid = $model->validate();
+                if ($valid) {
+                    $transaction = \Yii::$app->db->beginTransaction();
+                    try {
+                        if ($model->save()) {
+                            $model->saveCategories();
+                            Yii::$app->session->setFlash('success', 'Insert successful.');
+                            return $this->redirect(['view', 'id' => $model->id]);
+                        }
+                    } catch (Exception $e) {
+                        Yii::$app->session->setFlash('warning', 'Insert failed.' .print_r($e,false));
+                        $transaction->rollBack();
+                        return $this->redirect(['']);
+                    }
+                }
+            }
+    */
+            return $this->render('create', [
+                'model' => $model,
+                'role' => \Yii::$app->authManager->getRolesByUser($user_id),
+                'categories' => Category::getAvailableCategories(),
+            ]);
+        } else {
+            throw new ForbiddenHttpException('You do not have permission to perform this action.');
         }
-*/
-        return $this->render('create', [
-            'model' => $model,
-            'role' => \Yii::$app->authManager->getRolesByUser($user_id),
-            'categories' => Category::getAvailableCategories(),
-        ]);
     }
 
     /**
@@ -161,31 +180,42 @@ class PageController extends Controller
      */
     public function actionUpdate($id)
     {
-        $user_id = User::findByUsername(Yii::$app->user->identity->username)->getId();
-        $model = PageWithCategories::findOne($id);
+        if (Yii::$app->user->can('update_page')) {
+        
+            $user_id = User::findByUsername(Yii::$app->user->identity->username)->getId();
+            $model = PageWithCategories::findOne($id);
 
-        if ($model->load(Yii::$app->request->post())) {
-            $model->last_edit_dt = date('Y-m-d H:i:s');
-            $model->user_id = $user_id;    //($model->getUser()) ? $model->getUser()->id :
-            if ($model->save()) {
-                $model->saveCategories();
-                Yii::$app->session->setFlash('success', 'Update of "'.Yii::$app->request->post('PageWithCategories')['title'].'" successful.');
-                //echo '<pre>' . print_r($_POST, true) . '</pre>';
-                return $this->redirect(Yii::$app->request->post('PageWithCategories')['route']);
+            if ($model->load(Yii::$app->request->post())) {
+                $model->last_edit_dt = date('Y-m-d H:i:s');
+                $model->user_id = $user_id;    //($model->getUser()) ? $model->getUser()->id :
+                if ($model->save()) {
+                    $audit = new Audit();
+                    $audit->table = 'page';
+                    $audit->record_id = $model->id;
+                    $audit->field = 'Update';
+                    $audit->update_user = Yii::$app->user->identity->id;
+                    $audit->save(false);
+                    $model->saveCategories();
+                    Yii::$app->session->setFlash('success', 'Update of "'.Yii::$app->request->post('PageWithCategories')['title'].'" successful.');
+                    //echo '<pre>' . print_r($_POST, true) . '</pre>';
+                    return $this->redirect(Yii::$app->request->post('PageWithCategories')['route']);
+                }
+                Yii::$app->session->setFlash('error', 'Update of "'.$_POST['PageWithCategories']['title'].'" failed.');
             }
-            Yii::$app->session->setFlash('error', 'Update of "'.$_POST['PageWithCategories']['title'].'" failed.');
+            
+            $model->loadCategories();
+            
+            $headImages = HeaderImage::find()->where(['image_idx'=>'page_'.$id])->asArray()->all();
+            
+            return $this->render('update', [
+                'model' => $model,
+                'categories' => Category::getAvailableCategories(),
+                'role' => \Yii::$app->authManager->getRolesByUser($user_id),
+                'headImages' => $headImages
+            ]);
+        } else {
+            throw new ForbiddenHttpException('You do not have permission to perform this action.');
         }
-        
-        $model->loadCategories();
-        
-        $headImages = HeaderImage::find()->where(['image_idx'=>'page_'.$id])->asArray()->all();
-        
-        return $this->render('update', [
-            'model' => $model,
-            'categories' => Category::getAvailableCategories(),
-            'role' => \Yii::$app->authManager->getRolesByUser($user_id),
-            'headImages' => $headImages
-        ]);
     }
 
     /**
@@ -197,13 +227,24 @@ class PageController extends Controller
      */
     public function actionDelete($id)
     {
-        $model = $this->findModel($id);
+        if (Yii::$app->user->can('delete_page')) {
+        
+            $model = $this->findModel($id);
 
-        if ($model->delete()) {
-            Yii::$app->session->setFlash('success', 'Page deleted successfully.');
+            if ($model->delete()) {
+                $audit = new Audit();
+                $audit->table = 'page';
+                $audit->record_id = $model->id;
+                $audit->field = 'Delete';
+                $audit->update_user = Yii::$app->user->identity->id;
+                $audit->save(false);
+                Yii::$app->session->setFlash('success', 'Page deleted successfully.');
+            }
+
+            return $this->redirect(['index']);
+        } else {
+            throw new ForbiddenHttpException('You do not have permission to perform this action.');
         }
-
-        return $this->redirect(['index']);
     }
 
     /**
@@ -232,6 +273,51 @@ class PageController extends Controller
         }
         return $this->redirect(['multiple']);
     }
+
+    /**
+     * Retrieve organization details matching provided category ids
+     * @param array categories
+     */
+public function actionAjaxOrganizationDetails() {
+
+    $posted = Yii::$app->request->post();
+    $categories = $posted['categories'];
+
+    $result['orgs'] = '';
+    $result['status'] = 'error';
+    $result['message'] = 'No matching Organizations';
+    
+    $organizations = Business::find()
+        ->select('business.id as bid, business.*, business_category.*, contact_method.*')
+        ->leftJoin('business_category', '`business_category`.`business_id` = `business`.`id`')
+        ->leftJoin('contact_method', '`contact_method`.`business_id` = `business`.`id`')
+        ->where(['in', 'business_category.category_id', $categories])->asArray()->all();
+
+    if (!empty($organizations)) {
+        foreach ($organizations as $organization) {
+            $bid = $organization['bid'];
+            $page['linkedOrganizations'][$bid]['name'] = $organization['name'];
+            $page['linkedOrganizations'][$bid]['address1'] = $organization['address1'];
+            $page['linkedOrganizations'][$bid]['address2'] = $organization['address2'];
+            $page['linkedOrganizations'][$bid]['city'] = $organization['city'];
+            $page['linkedOrganizations'][$bid]['state'] = $organization['state'];
+            $page['linkedOrganizations'][$bid]['zip'] = $organization['zip'];
+            $page['linkedOrganizations'][$bid]['url'] = $organization['url'];
+            $page['linkedOrganizations'][$bid]['note'] = $organization['note'];
+            $page['linkedOrganizations'][$bid]['member'] = $organization['member'];
+            $page['linkedOrganizations'][$bid]['contact'][] = [
+                'method' => $organization['method'],
+                'contact'=> $organization['contact'],
+                'description' => $organization['description']
+            ];
+        }
+        return $this->renderAjax('/sibley/_linkedOrg', ['page' => $page,]);
+        //$result['status'] = 'success';
+        //$result['message'] = '';
+    }
+        
+    //echo Json::encode($result);
+}
 
     /**
      * Finds the Page model based on its primary key value.

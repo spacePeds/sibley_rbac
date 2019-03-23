@@ -65,7 +65,7 @@ SlickCarouselAsset::register($this);
                     <div class="dropdown-menu">
                         <a href="<?= Url::to(['/sibley/chamber']) ?>" class="dropdown-item">About Sibley Chamber</a>
                         <a href="<?= Url::to(['/business/list']) ?>" class="dropdown-item">Chamber Member List</a>
-                        <a href="<?= Url::to(['/sibley/chamber-benefits']) ?>" class="dropdown-item">Chamber Member Benefits</a>  
+                          
                     </div>
                 </li>
                 <li class="nav-item dropdown">
@@ -115,11 +115,11 @@ SlickCarouselAsset::register($this);
                         <div class="dropdown-menu">
                             <a href="<?= Url::to(['/sibley/chamber']) ?>" class="dropdown-item">About Sibley Chamber</a>
                             <a href="<?= Url::to(['/business/list']) ?>" class="dropdown-item">Chamber Member List</a>
-                            <a href="<?= Url::to(['/sibley/chamber-benefits']) ?>" class="dropdown-item">Chamber Member Benefits</a>  
+                            <!--<a href="<?= Url::to(['/sibley/chamber-benefits']) ?>" class="dropdown-item">Chamber Member Benefits</a> --> 
                         </div>
                     </li>
                     <li class="nav-item d-lg-none d-md-none d-sm-block dropdown">
-                    <a class="nav-link px-2 dropdown-toggle" data-toggle="dropdown" href="#">Parks & Rec</a>
+                    <a class="nav-link px-2 dropdown-toggle" data-toggle="dropdown" href="#">Parks & Rec.</a>
                         <div class="dropdown-menu">
                             <a href="<?= Url::to(['/sibley/recreation']) ?>" class="dropdown-item">Recreation Department</a>
                             <a href="/recreation/parks" class="dropdown-item">Community Parks</a>
@@ -140,7 +140,7 @@ SlickCarouselAsset::register($this);
                             <a href="<?= Url::to(['/sibley/council']) ?>" class="dropdown-item"> View Council Meeting Agendas</a>
                             <a href="<?= Url::to(['/sibley/spiritual-centers']) ?>" class="dropdown-item"> View Community Spiritual Centers</a>
                             <a href="settings.html" class="dropdown-item"> Pay A Utility Bill</a>
-                            <?php if (Yii::$app->user->can('update_alert')) : ?>
+                            <?php if (Yii::$app->user->can('create_alert')) : ?>
                                 <a href="#" id="createSiteWideAlert" class="dropdown-item"> Add Site-Wide Alert</a>
                             <?php endif; ?>
                         </div>

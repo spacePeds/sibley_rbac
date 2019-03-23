@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?php //echo '<pre>' . print_r($model, true) . '</pre>' ?>
 
-<div class="category-index">
+<div class="category-index container">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

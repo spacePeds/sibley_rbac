@@ -33,7 +33,7 @@ class Alert extends \yii\db\ActiveRecord
     {
         return [
             [['group', 'type', 'title', 'start_dt', 'end_dt', 'created_dt'], 'required'],
-            [['start_dt', 'end_dt', 'created_dt'], 'safe'],
+            [['start_dt', 'end_dt', 'created_dt','created_by'], 'safe'],
             [['group', 'type'], 'string', 'max' => 100],
             [['title'], 'string', 'max' => 255],
             [['message'], 'string'],

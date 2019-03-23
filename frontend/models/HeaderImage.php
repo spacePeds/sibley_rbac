@@ -40,7 +40,8 @@ class HeaderImage extends \yii\db\ActiveRecord
     {
         return [
             [['display', 'height', 'position'], 'required'],
-            [['brightness', 'offset', 'height', 'created_by','sequence'], 'integer'],
+            [['offset', 'height', 'created_by','sequence'], 'integer'],
+            ['brightness','number','min' => 0, 'max' => 1],
             [['last_edit','created_by'], 'safe'],
             ['brightness', 'double'],
             [['brightness', 'offset'], 'default', 'value'=> 0],

@@ -87,10 +87,14 @@ body {
     top: 2.5em;
   }
 /*Adding this back as aparently it was in bootstrap 3 but not in bootstrap 4*/
+.breadcrumb {
+    margin-bottom:0rem;
+}
 .breadcrumb > li + li:before {
     color: #ccc;
     content: "/ ";
     padding: 0 5px;
+    
 }
 /*Calendar formatting*/
 .out-of-range{
