@@ -43,6 +43,7 @@ class SubPageController extends Controller
         $searchModel = new SubPageSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        return $this->redirect(['/']);
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -57,6 +58,7 @@ class SubPageController extends Controller
      */
     public function actionView($id)
     {
+        return $this->redirect(['/']);
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);

@@ -16,6 +16,9 @@ $this->params['breadcrumbs'][] = $this->title;
 //echo '<pre>' . print_r($subSections) . '</pre>';
 $standardHeaderImages = [];
 
+$user_id = Yii::$app->user->identity->id;
+$role = \Yii::$app->authManager->getRolesByUser($user_id);
+
 if (!empty($page['fb_token'])):
 ?>
 <div id="fb-root"></div>
@@ -73,7 +76,7 @@ if (!empty($page['fb_token'])):
     <div class="row">
         <div class="col-md-3 bg-sidebar">
 
-            <?php if (Yii::$app->user->can('update_page') || Yii::$app->user->can('update_page_rec')): ?>
+        <?php if (isset($role['superAdmin']) || (Yii::$app->user->can('update_page') && Yii::$app->user->can('update_page_rec'))): ?>
                 <div class="list-group my-3">
                     <a href="<?= Url::to(['/page/update']) . '/'.$key ?>" role="button" class="btn btn-primary">Edit Page</a>
                 </div>
@@ -93,7 +96,7 @@ if (!empty($page['fb_token'])):
                     <?php endif; ?>
                 <?php endforeach; ?>
 
-                <?php if (Yii::$app->user->can('create_subPage') || (Yii::$app->user->can('update_page_rec') && Yii::$app->user->can('create_subPage'))): ?>
+                <?php if (isset($role['superAdmin']) || (Yii::$app->user->can('update_page_rec') && Yii::$app->user->can('create_subPage'))): ?>
                     <a href="<?=Url::to('/sub-page/create')?>/<?=$key?>" class="list-group-item btn btn-outline-success btn-sm"><i class="fas fa-plus-square"></i> Create Section</a>
                 <?php endif; ?>
 
@@ -101,15 +104,10 @@ if (!empty($page['fb_token'])):
             
             <?php if (strpos($page['route'],'recreation') !== false): ?>
                 
-                <div class="card text-center my-3">
-                    <div class="card-body p-2">
-                        <p class="card-text">Click on the button below to pay program and rental fees, or to purchase a pool pass. </p>
-                        <a class="btn btn-primary" target="_blank" href="https://www.govpaynow.com/gps/user/plc/a001y7" role="button"><i class="far fa-credit-card"></i> Pay</a>
-                    </div>
-                    <div class="card-footer text-muted small">
-                        We've partnered with GovPayNet to make paying fees easier!
-                    </div>
-                </div>
+                <?= $this->render('_govPayNetWidget', [
+                    'text' => 'Click on the button below to pay program and rental fees, or to purchase a pool pass.', 
+                    'link' => 'https://www.govpaynow.com/gps/user/plc/a001y7'
+                ]) ?>
 
                 <div class="card text-center">
                     <div class="card-header bg-dark text-white">
@@ -144,15 +142,10 @@ if (!empty($page['fb_token'])):
 
             <?php if (strpos($page['route'],'city') !== false): ?>
 
-                <div class="card text-center my-3">
-                    <div class="card-body p-2">
-                        <p class="card-text">Click on the button below to pay city utility fees. </p>
-                        <a class="btn btn-primary" target="_blank" href="https://www.govpaynow.com/gps/user/cyg/plc/a001y8" role="button"><i class="far fa-credit-card"></i> Pay</a>
-                    </div>
-                    <div class="card-footer text-muted small">
-                        We've partnered with GovPayNet to make paying fees easier!
-                    </div>
-                </div>
+                <?= $this->render('_govPayNetWidget', [
+                    'text' => 'Click on the button below to pay city utility fees.', 
+                    'link' => 'https://www.govpaynow.com/gps/user/cyg/plc/a001y8'
+                ]) ?>
 
                 <div class="card text-center">
                     <div class="card-header bg-dark text-white">
@@ -171,7 +164,9 @@ if (!empty($page['fb_token'])):
                                 ?>
                             </li>
                         <?php endforeach; ?>
-
+                        <?php if (count($meetings) < 1): ?>
+                            <li class="list-group-item text-muted small">Recent meeting data unavailable</li>
+                        <?php endif; ?>
                         
                         </ul>
                         <!--<a href="#" class="btn btn-danger btn-block mt-2">Get It</a>-->

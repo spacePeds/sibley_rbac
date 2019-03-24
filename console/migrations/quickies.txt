@@ -1,16 +1,5 @@
-ALTER TABLE `contact_method` CHANGE `method` `method` ENUM('email','phone','fax') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;
-
-CREATE TABLE `sibley_rbac`.`image_asset` ( `id` INT UNSIGNED NOT NULL AUTO_INCREMENT , `path` VARCHAR(1024) NOT NULL , `type` VARCHAR(255) NOT NULL , `size` INT NOT NULL , `name` VARCHAR(255) NOT NULL, `sort_order` INT NOT NULL, PRIMARY KEY (`id`)) ENGINE = InnoDB;
-ALTER TABLE `image_asset` CHANGE `sort_order` `created_dt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
-ALTER TABLE `event` ADD `all_day` INT NOT NULL AFTER `end_dt`;
-ALTER TABLE `event` ADD `repeat_interval` TINYINT NOT NULL AFTER `all_day` COMMENT '0-no, 1-weekly, 2=monthly, 3-annualy';
-ALTER TABLE `staff` ADD `image_asset` INT AFTER `phone`, ADD INDEX `staff_image_asset` (`image_asset`);
-
-
-/*do not run*/
-CREATE TABLE `sibley_rbac`.`option_value` ( `id` INT UNSIGNED NOT NULL AUTO_INCREMENT , `catalog_option_id` INT NOT NULL , `name` VARCHAR(128) NOT NULL , `sort_order` SMALLINT NOT NULL , `image_id` INT NOT NULL, PRIMARY KEY (`id`)) ENGINE = InnoDB;
-CREATE TABLE `sibley_rbac`. `catalog_option` ( `id` INT UNSIGNED NOT NULL AUTO_INCREMENT , `name` VARCHAR(128) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
-
+/*Notes*/
+cp -r /home/cityofsi/sibley_rbac/frontend/public_html/js/* /home/cityofsi/www/js
 
 /*rbac migrations*/
 yii migrate --migrationPath=@yii/rbac/migrations/
