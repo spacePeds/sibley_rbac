@@ -7,6 +7,7 @@ use frontend\models\SubPage;
 use frontend\models\Page;
 use frontend\models\SubPageSearch;
 use frontend\models\Document;
+use common\models\User;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\ForbiddenHttpException;
@@ -77,6 +78,13 @@ class SubPageController extends Controller
             $model->pageLabel = $page->title;
             $model->page_id = $id;
             
+            //make sure only owner or site admin can delete
+            $user_id = Yii::$app->user->identity->id;
+            if ($user_id != $model->created_by && $user_id != 1) {
+                
+                Yii::$app->session->setFlash('error', "It does not appear you are the user who created this. Edit request rejected.");
+                return $this->goBack(Yii::$app->request->referrer);
+            }
 
             if ($model->load(Yii::$app->request->post())) {
                 $model->last_edit = date('Y-m-d H:i:s');
@@ -124,6 +132,21 @@ class SubPageController extends Controller
         if (Yii::$app->user->can('update_subPage')) {
             $model = $this->findModel($id);
             $model->last_edit = date('Y-m-d H:i:s');
+
+            $user_id = Yii::$app->user->identity->id;
+
+            // $command = (new \yii\db\Query())
+            // ->select(['username'])
+            // ->from('user')
+            // ->where(['id' => $model->created_by])
+            // ->createCommand();
+            // $rows = $command->queryAll();
+            
+            if ($user_id != $model->created_by && $user_id != 1) {
+                Yii::$app->session->setFlash('error', "It does not appear you are the person who create this record. Edit request rejected.");
+                return $this->goBack(Yii::$app->request->referrer);
+            }
+            
             if ($model->load(Yii::$app->request->post())) {
                 $model->last_edit = date('Y-m-d H:i:s');
                 if ($model->type == 'section') {

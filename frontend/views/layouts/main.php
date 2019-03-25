@@ -64,7 +64,7 @@ SlickCarouselAsset::register($this);
                     <a class="nav-link px-2 dropdown-toggle" data-toggle="dropdown" href="#">Chamber Of Commerce</a>
                     <div class="dropdown-menu">
                         <a href="<?= Url::to(['/sibley/chamber']) ?>" class="dropdown-item">About Sibley Chamber</a>
-                        <a href="<?= Url::to(['/business/list']) ?>" class="dropdown-item">Chamber Member List</a>
+                        <a href="<?= Url::to(['/business/list']) ?>" class="dropdown-item">Chamber Member Organizations</a>
                           
                     </div>
                 </li>
@@ -114,7 +114,7 @@ SlickCarouselAsset::register($this);
                         <a class="nav-link px-2 dropdown-toggle" data-toggle="dropdown" href="#">Chamber Of Commerce</a>
                         <div class="dropdown-menu">
                             <a href="<?= Url::to(['/sibley/chamber']) ?>" class="dropdown-item">About Sibley Chamber</a>
-                            <a href="<?= Url::to(['/business/list']) ?>" class="dropdown-item">Chamber Member List</a>
+                            <a href="<?= Url::to(['/business/list']) ?>" class="dropdown-item">Chamber Member Organizations</a>
                             <!--<a href="<?= Url::to(['/sibley/chamber-benefits']) ?>" class="dropdown-item">Chamber Member Benefits</a> --> 
                         </div>
                     </li>

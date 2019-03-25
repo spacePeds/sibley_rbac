@@ -46,7 +46,7 @@ class BusinessSearch extends Business
     {
         //Business->getContactMetods()
         //$query = Business::find()->with('contactMethods');
-        $query = Business::find()->leftJoin('contact_method', '`contact_method`.`business_id` = `business`.`id`');
+        $query = Business::find()->leftJoin('contact_method', '`contact_method`.`business_id` = `business`.`id`')->where(['member'=> 1]);
 
         // add conditions that should always apply here
 
