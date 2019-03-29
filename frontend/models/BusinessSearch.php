@@ -45,8 +45,12 @@ class BusinessSearch extends Business
     public function search($params)
     {
         //Business->getContactMetods()
-        //$query = Business::find()->with('contactMethods');
-        $query = Business::find()->leftJoin('contact_method', '`contact_method`.`business_id` = `business`.`id`')->where(['member'=> 1]);
+        if (Yii::$app->user->can('update_business')) {
+            $query = Business::find()->with('contactMethods');
+        } else {
+            $query = Business::find()->leftJoin('contact_method', '`contact_method`.`business_id` = `business`.`id`')->where(['member'=> 1]);
+        }
+        
 
         // add conditions that should always apply here
 

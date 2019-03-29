@@ -71,41 +71,47 @@ class HeaderImageController extends Controller
     {
         $model = new HeaderImage();
 
-        if ($model->load(Yii::$app->request->post())) {
-            $model->created_by = Yii::$app->user->identity->id;
-            $model->last_edit = date('Y-m-d H:i:s');
+        if (Yii::$app->user->can('update_page')) {
 
-            $model->uploadedImage = UploadedFile::getInstance($model, 'uploadedImage');
-            $imgPath = 'img/assets/';
-            $documentName = 'headerImg_' . time().rand(100,999) . '.' . $model->uploadedImage->extension;
-            $model->image_path = '/'. $imgPath . $documentName;
-            if ($model->save()) {
-                $imgId = Yii::$app->db->getLastInsertID();
-                if ($model->upload($imgPath . $documentName)) {
-                    // file is uploaded successfully
-                    $model->ajaxResult['message'] .= ' Record saved succcessfully.';               
-                    $model->ajaxResult['recordId'] = $imgId;               
+            if ($model->load(Yii::$app->request->post())) {
+                $model->created_by = Yii::$app->user->identity->id;
+                $model->last_edit = date('Y-m-d H:i:s');
+
+                $model->uploadedImage = UploadedFile::getInstance($model, 'uploadedImage');
+                $imgPath = 'img/assets/';
+                $documentName = 'headerImg_' . time().rand(100,999) . '.' . $model->uploadedImage->extension;
+                $model->image_path = '/'. $imgPath . $documentName;
+                if ($model->save()) {
+                    $imgId = Yii::$app->db->getLastInsertID();
+                    if ($model->upload($imgPath . $documentName)) {
+                        // file is uploaded successfully
+                        $model->ajaxResult['message'] .= ' Record saved succcessfully.';               
+                        $model->ajaxResult['recordId'] = $imgId;               
+                    }
+                    $audit = new Audit();
+                    $audit->table = 'header_image';
+                    $audit->record_id = $imgId;
+                    $audit->field = 'Create';
+                    $audit->new_value = $imgPath . $documentName;
+                    $audit->update_user = Yii::$app->user->identity->id;
+                    $audit->save(false);
+
+                    $data = ArrayHelper::toArray($model);
+                    $model->ajaxResult['form'] = $data;
+                } else {
+                    $model->ajaxResult = ['status' => 'error','message' => 'Failed to save record.','errors' => $model->errors];
                 }
-                $audit = new Audit();
-                $audit->table = 'header_image';
-                $audit->record_id = $imgId;
-                $audit->field = 'Create';
-                $audit->new_value = $imgPath . $documentName;
-                $audit->update_user = Yii::$app->user->identity->id;
-                $audit->save(false);
-
-                $data = ArrayHelper::toArray($model);
-                $model->ajaxResult['form'] = $data;
-            } else {
-                $model->ajaxResult = ['status' => 'error','message' => 'Failed to save record.','errors' => $model->errors];
+                    
+                return $this->asJson($model->ajaxResult);
             }
-                  
-            return $this->asJson($model->ajaxResult);
-        }
 
-        return $this->renderAjax('create', [
-            'model' => $model,
-        ]);
+            return $this->renderAjax('create', [
+                'model' => $model,
+            ]);
+
+        } else {
+            throw new ForbiddenHttpException('You do not have permission to perform this action.');
+        }
     }
 
     /**
@@ -119,13 +125,17 @@ class HeaderImageController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
+        if (Yii::$app->user->can('update_page')) {
+            
+            //@todo!!
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+            return $this->renderAjax('update', [
+                'model' => $model,
+            ]);
+
+        } else {
+            throw new ForbiddenHttpException('You do not have permission to perform this action.');
+        }
     }
 
     /**
@@ -137,30 +147,35 @@ class HeaderImageController extends Controller
      */
     public function actionDelete()
     {
-        $data = Yii::$app->request->post();
-        $model = $this->findModel($data['id']);
-        $sysPath = Url::to('@webroot') . $model->image_path;
+        if (Yii::$app->user->can('update_page')) {
         
-        if (!$model->delete()) {
-            $model->ajaxResult = ['status' => 'error','message' => 'Failed to delete record. ' . print_r($data,true)];
+            $data = Yii::$app->request->post();
+            $model = $this->findModel($data['id']);
+            $sysPath = Url::to('@webroot') . $model->image_path;
+            
+            if (!$model->delete()) {
+                $model->ajaxResult = ['status' => 'error','message' => 'Failed to delete record. ' . print_r($data,true)];
+            } else {
+                $model->ajaxResult = [
+                    'status' => 'success',
+                    'message' => 'Record Deleted.',
+                    'imgPath' => $sysPath
+                ];
+                $audit = new Audit();
+                $audit->table = 'header_image';
+                $audit->record_id = $model->id;
+                $audit->field = 'Delete';
+                $audit->old_value = $sysPath;
+                $audit->update_user = Yii::$app->user->identity->id;
+                $audit->save(false);
+                if (file_exists($sysPath)) {
+                    unlink($sysPath);
+                } 
+            }
+            return $this->asJson($model->ajaxResult);
         } else {
-            $model->ajaxResult = [
-                'status' => 'success',
-                'message' => 'Record Deleted.',
-                'imgPath' => $sysPath
-            ];
-            $audit = new Audit();
-            $audit->table = 'header_image';
-            $audit->record_id = $model->id;
-            $audit->field = 'Delete';
-            $audit->old_value = $sysPath;
-            $audit->update_user = Yii::$app->user->identity->id;
-            $audit->save(false);
-            if (file_exists($sysPath)) {
-                unlink($sysPath);
-            } 
-        }
-        return $this->asJson($model->ajaxResult);
+            throw new ForbiddenHttpException('You do not have permission to perform this action.');
+        }    
     }
 
     /**
