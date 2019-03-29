@@ -57,6 +57,23 @@ class RecreationController extends FrontendController
     {
         //define semantic url for page
         $slug = '';
+        $pageKey = 11;
+        $page = $this->getGenericPage($pageKey);
+        return $this->render('/sibley/generic', [
+            'details' => $page,
+            'key' => $pageKey
+        ]);
+    }
+
+    /**
+     * Displays sibley generic golf course page.
+     *
+     * @return mixed
+     */
+    public function actionGolf()
+    {
+        //define semantic url for page
+        $slug = '';
         $pageKey = 10;
         $page = $this->getGenericPage($pageKey);
         return $this->render('/sibley/generic', [
@@ -64,6 +81,55 @@ class RecreationController extends FrontendController
             'key' => $pageKey
         ]);
     }
-   
+
+    /**
+     * Displays sibley generic golf course page.
+     *
+     * @return mixed
+     */
+    public function actionCamping()
+    {
+        //define semantic url for page
+        $slug = '';
+        $pageKey = 12;
+        $page = $this->getGenericPage($pageKey);
+        return $this->render('/sibley/generic', [
+            'details' => $page,
+            'key' => $pageKey
+        ]);
+    }
     
+    /**
+     * Displays sibley generic golf course page.
+     *
+     * @return mixed
+     */
+    public function actionFishing()
+    {
+        //define semantic url for page
+        $slug = '';
+        $pageKey = 13;
+        $page = $this->getGenericPage($pageKey);
+        return $this->render('/sibley/generic', [
+            'details' => $page,
+            'key' => $pageKey
+        ]);
+    }
+
+    /**
+     * Displays sibley generic golf course page.
+     *
+     * @return mixed
+     */
+    public function actionSwimming()
+    {
+        //define semantic url for page
+        $slug = '';
+        $pageKey = 14;
+        $page = $this->getGenericPage($pageKey);
+        return $this->render('/sibley/generic', [
+            'details' => $page,
+            'key' => $pageKey
+        ]);
+    }
 }

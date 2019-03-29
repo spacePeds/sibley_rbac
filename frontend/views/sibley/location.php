@@ -12,11 +12,12 @@ if (count($details) < 1) {
     $this->title = $details->title;
     $body = $details->body;
 }
-
+$standardHeaderImages = [];
 
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <?php //echo '<pre>' . print_r($details,true) . '</pre>' ?>
+
 
 
 <section id="location">
@@ -26,6 +27,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 <a href="<?= Url::to(['/page/update']) . '/'.$key ?>" role="button" class="btn btn-primary">Edit Location Page</a>
             </div>
         <?php endif; ?>
+
+        <?php foreach ($standardHeaderImages as $leadImage) {
+            echo $leadImage;
+        }
+        ?>
+
         <?= $body ?>
     </div>
 </section>

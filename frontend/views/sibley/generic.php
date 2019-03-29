@@ -16,14 +16,67 @@ if (count($details) < 1) {
     $url = Url::to(['/page/update']) . '/'.$key;
     $linkText = 'Edit ' . $this->title . ' Page';
 }
-
-
+$standardHeaderImages = [];
 $this->params['breadcrumbs'][] = $title;
 ?>
 <?php //echo '<pre>' . print_r($details['headerImages'],true) . '</pre>' ?>
 
+<?php if (!empty($details['fb_token'])):
+?>
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.2&appId=<?=$details['fb_token']?>&autoLogAppEvents=1"></script>
+<?php endif; ?>
+
+<!-- define header images -->
+<?php if (isset($details['headerImages'])): ?>
+    <?php foreach ($details['headerImages'] as $headerImage) {
+        $imgPath = $headerImage['image_path'];
+        $height = !empty($headerImage['height']) ? $headerImage['height'] : '';
+        $offset = !empty($headerImage['offset']) ? $headerImage['offset'] : '';
+        $class = 'float-left';
+        if ($headerImage['display'] == 'rounded') {
+            $class = 'rounded-circle';
+        }
+        if (!empty($headerImage['position'])) {
+            if ($headerImage['position'] == 'center') {
+                $class .= ' mx-auto d-block';
+            }
+            if ($headerImage['position'] == 'right') {
+                $class .= ' float-right';
+            }
+        }
+        if ($headerImage['display'] == 'parallax') {
+            $style = 'min-height:'.$headerImage['height'].'px;';
+            $style .= "background: url('".$imgPath."');";
+            $style .= 'background-position:center;background-size: cover;'; //background-position:'.$offset.',0
+            $style .= 'text-align:center;color:#fff;position: relative;background-attachment: fixed;background-repeat: no-repeat;';
+            ?>
+            <section class="p-3" style="<?=$style?>">
+                <div class="parallax-overlay" style="background: rgba(0,0,0,<?=$headerImage['brightness']?>);">
+                    <div class="row">
+                        <div class="col">
+                            <div class="container pt-5">
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </section>
+            <?php
+        }
+    
+        if ($headerImage['display'] != 'parallax') {
+            if (!empty($offset)) {
+                $style = "margin-top:".$offset."px;";
+            }
+            $standardHeaderImages[] = '<img src="'.$imgPath.'" height="'.$height.'" class="'.$class.'" style="'.$style.'">';       
+        }
+    }
+    ?>
+<?php endif; ?>
+
 
 <section id="genericPage" class="container">
+
     <div class="container bg-white clearfix">
         <?php if (Yii::$app->user->can('update_location')) : ?>
             <div class="text-right adminFloaterRev2 shadow-sm p-1 mb-2 bg-white rounded">
@@ -31,52 +84,32 @@ $this->params['breadcrumbs'][] = $title;
             </div>
         <?php endif; ?>
 
-        <?php foreach ($details['headerImages'] as $headerImage) {
-            $imgPath = $headerImage['image_path'];
-            $height = !empty($headerImage['height']) ? $headerImage['height'] : '';
-            $offset = !empty($headerImage['offset']) ? $headerImage['offset'] : '';
-            $class = 'float-left';
-            if ($headerImage['display'] == 'rounded') {
-                $class = 'rounded';
-            }
-            if (!empty($headerImage['position'])) {
-                if ($headerImage['position'] == 'center') {
-                    $class .= ' mx-auto d-block';
-                }
-                if ($headerImage['position'] == 'right') {
-                    $class .= ' float-right';
-                }
-            }
-            if ($headerImage['display'] == 'parallax') {
-                $style = 'min-height:'.$headerImage['height'].'px;';
-                $style .= "background: url('".$imgPath."');";
-                $style .= 'background-position:center;background-size: cover;'; //background-position:'.$offset.',0
-                $style .= 'text-align:center;color:#fff;position: relative;background-attachment: fixed;background-repeat: no-repeat;';
-                ?>
-                <section class="p-3" style="<?=$style?>">
-                    <div class="parallax-overlay" style="background: rgba(0,0,0,<?=$headerImage['brightness']?>);">
-                        <div class="row">
-                            <div class="col">
-                                <div class="container pt-5">
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-                </section>
-                <?php
-            }
+        <h3><?=$details['title']?></h3>
+
+        <?php foreach ($standardHeaderImages as $leadImage) {
+            echo $leadImage;
+        }
+        ?>
         
-        if ($headerImage['display'] != 'parallax') {
-        ?>
-        <img src="<?=$imgPath?>" height="<?=$height?>" class="<?=$class?>">
-        <?php
-        }
-        }
-        ?>
         <?= $body ?>
     </div>
+</section>
 
-    <?php if (isset($details['linkedOrganizations'])): ?>
+<?php if (!empty($details['fb_token']) && !empty($details['fb_link'])): ?>
+    <section class="text-center" id="facebook">
+        <div class="container bg-white clearfix">
+        <h4 class="text-left"><?=$details['title']?> Facebook Feed</h4>
+        <div class="fb-page" data-href="https://www.facebook.com/<?=$details['fb_link']?>" data-tabs="timeline" data-width="500" data-small-header="true" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true">
+            <blockquote cite="https://www.facebook.com/<?=$details['fb_link']?>" class="fb-xfbml-parse-ignore">
+                <a href="https://www.facebook.com/<?=$details['fb_link']?>"><?=$details['title']?></a>
+            </blockquote>
+        </div>
+        </div>
+    </section>
+<?php endif; ?>
+    
+<?php if (isset($details['linkedOrganizations'])): ?>
+    <section id="organizations">
         <?php foreach ($details['linkedOrganizations'] as $organization): 
             if (!empty($organization['url'])) {
                 $organization['name'] = '<a target="_blank" href="'.$organization['url'].'"><i class="fas fa-link"></i> '.$organization['name'].'</a>';
@@ -119,8 +152,9 @@ $this->params['breadcrumbs'][] = $title;
                 <?php endif; ?>
             </div>
         <?php endforeach; ?>
-    <?php endif; ?>
-</section>
+    </section>
+<?php endif; ?>
+
 
 <?php
 function format_phone($country, $phone) {

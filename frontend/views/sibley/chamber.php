@@ -26,7 +26,7 @@ if (!empty($page['fb_token'])):
 <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.2&appId=<?=$page['fb_token']?>&autoLogAppEvents=1"></script>
 <?php endif; ?>
 
-<!-- paralex image -->
+<!-- define header images -->
 <?php if (isset($page['headerImages'])): ?>
     <?php foreach ($page['headerImages'] as $headerImage) {
         $imgPath = $headerImage['image_path'];

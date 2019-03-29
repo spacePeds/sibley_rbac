@@ -275,11 +275,8 @@ class SibleyController extends FrontendController
         //define semantic url for page
         $slug = '';
         $pageKey = 2;
-        $page = Page::find()->where(['id'=>$pageKey])->one();
-        if (empty($page)) {
-
-        }
-        return $this->render('location', [
+        $page = $this->getGenericPage($pageKey);
+        return $this->render('generic', [
             'details' => $page,
             'key' => $pageKey
         ]);
@@ -300,6 +297,8 @@ class SibleyController extends FrontendController
             'key' => $pageKey
         ]);
     }
+
+    
     /**
      * Displays sibley generic lodging page.
      *
