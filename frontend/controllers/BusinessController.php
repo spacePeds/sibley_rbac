@@ -18,6 +18,7 @@ use yii\web\Response;
 use yii\widgets\ActiveForm;
 use yii\helpers\Url;
 use yii\data\ArrayDataProvider;
+use frontend\models\Audit;
 
 /**
  * BusinessController implements the CRUD actions for Business model.
@@ -96,64 +97,75 @@ class BusinessController extends Controller
         $model = new BusinessWithCategories();
         $modelsContactMethod = [new ContactMethod];
 
-        if ($model->load(Yii::$app->request->post())) {
-            Yii::debug('form has been posted', __METHOD__);
-            $modelsContactMethod = Model::createMultiple(ContactMethod::classname());
-            Model::loadMultiple($modelsContactMethod, Yii::$app->request->post());
+        if (Yii::$app->user->can('create_business')) {
 
-            // validate all models
-            $valid = $model->validate();
-            $valid = Model::validateMultiple($modelsContactMethod) && $valid;
+            if ($model->load(Yii::$app->request->post())) {
+                Yii::debug('form has been posted', __METHOD__);
+                $modelsContactMethod = Model::createMultiple(ContactMethod::classname());
+                Model::loadMultiple($modelsContactMethod, Yii::$app->request->post());
 
-            if ($valid) {
-                Yii::debug('data is valid, beginning transaction', __METHOD__);
-                $transaction = \Yii::$app->db->beginTransaction();
-                $model->imgFile = UploadedFile::getInstance($model, 'imgFile');
-                $model->created_dt = date('Y-m-d H:i:s');
+                // validate all models
+                $valid = $model->validate();
+                $valid = Model::validateMultiple($modelsContactMethod) && $valid;
 
-                try {
-                    if ($flag = $model->save(false)) {
-                        foreach ($modelsContactMethod as $modelContactMethod) {
-                            $modelContactMethod->business_id = $model->id;
-                            $modelContactMethod->created_dt = date('Y-m-d H:i:s');
-                            if (! ($flag = $modelContactMethod->save(false))) {
-                                $transaction->rollBack();
-                                break;
+                if ($valid) {
+                    Yii::debug('data is valid, beginning transaction', __METHOD__);
+                    $transaction = \Yii::$app->db->beginTransaction();
+                    $model->imgFile = UploadedFile::getInstance($model, 'imgFile');
+                    $model->created_dt = date('Y-m-d H:i:s');
+
+                    try {
+                        if ($flag = $model->save(false)) {
+                            $audit = new Audit();
+                            $audit->table = 'business';
+                            $audit->record_id = $model->id;
+                            $audit->field = 'Create';
+                            $audit->update_user = Yii::$app->user->identity->id;
+                            $audit->save(false);
+                            foreach ($modelsContactMethod as $modelContactMethod) {
+                                $modelContactMethod->business_id = $model->id;
+                                $modelContactMethod->created_dt = date('Y-m-d H:i:s');
+                                if (! ($flag = $modelContactMethod->save(false))) {
+                                    $transaction->rollBack();
+                                    break;
+                                }
+                            }
+                            if (!$model->upload($model->id)) {
+                                Yii::$app->session->setFlash('error', "Organization image failed to save.");
+                            } else {
+                                //save teh image name
+                                $model->updateAttributes(['image' => $model->image]);
                             }
                         }
-                        if (!$model->upload($model->id)) {
-                            Yii::$app->session->setFlash('error', "Organization image failed to save.");
-                        } else {
-                            //save teh image name
-                            $model->updateAttributes(['image' => $model->image]);
-                        }
-                    }
 
-                    if ($flag) {
-                        $model->created_dt = date('Y-m-d H:i:s');
-                        $model->saveCategories();
-                        $transaction->commit();
-                        Yii::$app->session->setFlash('success', 'Business '.Yii::$app->request->post('name').'created successfully.');
-                        return $this->redirect(['view', 'id' => $model->id]);
+                        if ($flag) {
+                            $model->created_dt = date('Y-m-d H:i:s');
+                            $model->saveCategories();
+                            $transaction->commit();
+                            Yii::$app->session->setFlash('success', 'Business '.Yii::$app->request->post('name').'created successfully.');
+                            return $this->redirect(['view', 'id' => $model->id]);
+                        }
+                    } catch (Exception $e) {
+                        Yii::$app->session->setFlash('warning', 'Insert failed.');
+                        $transaction->rollBack();
                     }
-                } catch (Exception $e) {
-                    Yii::$app->session->setFlash('warning', 'Insert failed.');
-                    $transaction->rollBack();
                 }
+
+
+                //$model->created_dt = date('Y-m-d H:i:s');
+                //$model->save();
+                //$model->saveCategories();
+                //return $this->redirect(['view', 'id' => $model->id]);
             }
 
-
-            //$model->created_dt = date('Y-m-d H:i:s');
-            //$model->save();
-            //$model->saveCategories();
-            //return $this->redirect(['view', 'id' => $model->id]);
+            return $this->render('create', [
+                'model' => $model,
+                'categories' => Category::getAvailableCategories(),
+                'modelsContact' => (empty($modelsContactMethod)) ? [new ContactMethod] : $modelsContactMethod
+            ]);
+        } else {
+            throw new ForbiddenHttpException('You do not have permission to create an organization.');
         }
-
-        return $this->render('create', [
-            'model' => $model,
-            'categories' => Category::getAvailableCategories(),
-            'modelsContact' => (empty($modelsContactMethod)) ? [new ContactMethod] : $modelsContactMethod
-        ]);
     }
 
     /**
@@ -169,62 +181,73 @@ class BusinessController extends Controller
         $modelsContact = $model->contactMethods;
         $model->loadCategories();
 
+        if (Yii::$app->user->can('update_business')) {
         
-        if ($model->load(Yii::$app->request->post())) {
-            $oldIDs = ArrayHelper::map($modelsContact, 'id', 'id');
-            $modelsContact = Model::createMultiple(ContactMethod::classname(), $modelsContact);
-            Model::loadMultiple($modelsContact, Yii::$app->request->post());
-            $deletedIDs = array_diff($oldIDs, array_filter(ArrayHelper::map($modelsContact, 'id', 'id')));
+            if ($model->load(Yii::$app->request->post())) {
+                $oldIDs = ArrayHelper::map($modelsContact, 'id', 'id');
+                $modelsContact = Model::createMultiple(ContactMethod::classname(), $modelsContact);
+                Model::loadMultiple($modelsContact, Yii::$app->request->post());
+                $deletedIDs = array_diff($oldIDs, array_filter(ArrayHelper::map($modelsContact, 'id', 'id')));
 
-            // validate all models
-            $valid = $model->validate();
-            $valid = Model::validateMultiple($modelsContact) && $valid;
+                // validate all models
+                $valid = $model->validate();
+                $valid = Model::validateMultiple($modelsContact) && $valid;
 
-            if ($valid) {
-                $transaction = \Yii::$app->db->beginTransaction();
-                $model->imgFile = UploadedFile::getInstance($model, 'imgFile');
-                if (!$model->upload($model->id)) {
-                    Yii::$app->session->setFlash('error', "An error occured while updating the organization image.");
-                } else {
-                    //save teh image name
-                    $model->updateAttributes(['image' => $model->image]);
-                }
-                
-                try {
-                    if ($flag = $model->save(false)) {
-                        if (!empty($deletedIDs)) {
-                            ContactMethod::deleteAll(['id' => $deletedIDs]);
-                        }
-                        foreach ($modelsContact as $modelContact) {
-                            $modelContact->business_id = $model->id;
-                            if (! ($flag = $modelContact->save(false))) {
-                                $transaction->rollBack();
-                                break;
+                if ($valid) {
+                    $transaction = \Yii::$app->db->beginTransaction();
+                    $model->imgFile = UploadedFile::getInstance($model, 'imgFile');
+                    if (!$model->upload($model->id)) {
+                        Yii::$app->session->setFlash('error', "An error occured while updating the organization image.");
+                    } else {
+                        //save teh image name
+                        $model->updateAttributes(['image' => $model->image]);
+                    }
+                    
+                    try {
+                        if ($flag = $model->save(false)) {
+                            $audit = new Audit();
+                            $audit->table = 'business';
+                            $audit->record_id = $model->id;
+                            $audit->field = 'Update';
+                            $audit->update_user = Yii::$app->user->identity->id;
+                            $audit->save(false);
+
+                            if (!empty($deletedIDs)) {
+                                ContactMethod::deleteAll(['id' => $deletedIDs]);
+                            }
+                            foreach ($modelsContact as $modelContact) {
+                                $modelContact->business_id = $model->id;
+                                if (! ($flag = $modelContact->save(false))) {
+                                    $transaction->rollBack();
+                                    break;
+                                }
                             }
                         }
+                        if ($flag) {
+                            $model->saveCategories();
+                            $transaction->commit();
+                            return $this->redirect(['view', 'id' => $model->id]);
+                        }
+                    } catch (Exception $e) {
+                        $transaction->rollBack();
                     }
-                    if ($flag) {
-                        $model->saveCategories();
-                        $transaction->commit();
-                        return $this->redirect(['view', 'id' => $model->id]);
-                    }
-                } catch (Exception $e) {
-                    $transaction->rollBack();
                 }
             }
-        }
-        
-         
-        $sysPath = Url::to('@frontend/web/') . Yii::$app->params['orgImagePath'];
-        if (file_exists($sysPath . $model->image)) {
-            $model->imgFileUrl = Yii::$app->params['orgImagePath'] . $model->image;
-        }
+            
+            
+            $sysPath = Url::to('@frontend/web/') . Yii::$app->params['orgImagePath'];
+            if (file_exists($sysPath . $model->image)) {
+                $model->imgFileUrl = Yii::$app->params['orgImagePath'] . $model->image;
+            }
 
-        return $this->render('update', [
-            'model' => $model,
-            'categories' => Category::getAvailableCategories(),
-            'modelsContact' => (empty($modelsContact)) ? [new ContactMethod] : $modelsContact
-        ]);
+            return $this->render('update', [
+                'model' => $model,
+                'categories' => Category::getAvailableCategories(),
+                'modelsContact' => (empty($modelsContact)) ? [new ContactMethod] : $modelsContact
+            ]);
+        } else {
+            throw new ForbiddenHttpException('You do not have permission to edit this organization.');
+        }
     }
 
     /**
@@ -240,16 +263,26 @@ class BusinessController extends Controller
         $businessName = $model->name;
         $sysPath = Url::to('@frontend/web/') . Yii::$app->params['orgImagePath'] . $model->image;
 
-        if ($model->delete()) {
-            Yii::$app->session->setFlash('success', 'Record  <strong>"' . $businessName . '"</strong> deleted successfully. ');
-            
-            
-            if(file_exists($sysPath) && !empty($model->image)) {
-                unlink($sysPath);
-            } 
-        }
+        if (Yii::$app->user->can('delete_business')) {
 
-        return $this->redirect(['index']);
+            if ($model->delete()) {
+                $audit = new Audit();
+                $audit->table = 'business';
+                $audit->record_id = $model->id;
+                $audit->field = 'Delete';
+                $audit->update_user = Yii::$app->user->identity->id;
+                $audit->save(false);
+                Yii::$app->session->setFlash('success', 'Record  <strong>"' . $businessName . '"</strong> deleted successfully. ');
+                
+                if(file_exists($sysPath) && !empty($model->image)) {
+                    unlink($sysPath);
+                } 
+            }
+
+            return $this->redirect(['index']);
+        } else {
+            throw new ForbiddenHttpException('You do not have permission to delete '.$businessName.'.');
+        }
     }
 
     /**

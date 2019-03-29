@@ -126,14 +126,18 @@ class Business extends \yii\db\ActiveRecord
             $type = $this->imgFile->extension;
             $size = $this->imgFile->size;
             $name = $businessRecordId.'.'.$this->imgFile->extension; 
-            $sysPath = Url::to('@frontend/web/') . Yii::$app->params['orgImagePath'];
-            $path = Yii::$app->params['orgImagePath'];
-            //Yii::$app->session->setFlash('success', 'DEBUG: path exist? url webroot:' . Url::to('@webroot/web/') . 'url frontend: ' .Url::to('@frontend/web/') . ', param: ' . Yii::$app->params['orgImagePath']);
-                         
-            if (!is_dir($sysPath)) {
-                mkdir($sysPath, 0777, true); 
+            $sysPath = '/' . Yii::$app->params['orgImagePath'];
+            $path = Yii::$app->params['orgImagePath'] . $name;
+            Yii::$app->session->setFlash('success', 'DEBUG: path exist? url webroot: ' . Yii::getAlias('@webroot') . ', url frontend: ' .Url::to('@frontend/web/') . ', param: ' . Yii::$app->params['orgImagePath']);
+                    
+            //https://stackoverflow.com/questions/5246114/php-mkdir-permission-denied-problem
+            //chown -R www-data:www-data /path/to/webserver/www
+            //chmod -R g+rw /path/to/webserver/www
+            if (!is_dir(Url::to('@webroot') . $sysPath)) {
+                mkdir(Url::to('@webroot') . $sysPath); 
             }
-            if (!$this->imgFile->saveAs($sysPath . $name)) {
+            //reletive url with no leading slash
+            if (!$this->imgFile->saveAs($path)) {
                 return false;
             }
             $this->image = $name;
