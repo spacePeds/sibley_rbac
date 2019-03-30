@@ -19,6 +19,9 @@ $standardHeaderImages = [];
 $user_id = Yii::$app->user->identity->id;
 $role = \Yii::$app->authManager->getRolesByUser($user_id);
 
+//import phone# formatting functions
+$this->render('_helperFormatPhone', []);
+
 if (!empty($page['fb_token'])):
 ?>
 <div id="fb-root"></div>
@@ -87,6 +90,10 @@ if (!empty($page['fb_token'])):
                 <?php if (!empty($page['fb_token']) && !empty($page['fb_link'])): ?>
                     <a href="#facebook" class="list-group-item list-group-item-action">Facebook Feed</a>
                 <?php endif; ?>
+
+                <?php if(isset($staff)): ?>
+                    <a href="#cityStaff" class="list-group-item list-group-item-action">City Staff</a>
+                <?php endif;?>
                 
                 <?php foreach ($subSections as $subSection): ?>
                     <?php if ($subSection['type'] == 'xlink'): ?>

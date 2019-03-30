@@ -18,10 +18,18 @@ EOF;
 $this->registerJs($js);
 
 $staffImage = '';
+if (!empty($model->image)) {
+    $path = '/'. Yii::$app->params['staffImagePath'] . $model->image;
+    $staffImage = '<img src="'.$path.'" class="img-thumbnail">';
+}
+                                            
+if (isset($staffImg)) {
+    $staffImage = $staffImg;
+}
 
 ?>
 
-<div class="staff-form">
+<div class="container staff-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
@@ -88,14 +96,43 @@ $staffImage = '';
                     <pre><?php //echo var_dump($imgAssets) ?></pre>
 
     
-
-
-    <?= $form->field($model, 'image_asset')->hiddenInput(); ?>
     <div class="row"><div class="col-md-2">
         <div id="staffImgContainer"><?=$staffImage?></div>
     </div></div>
 
-    <button id="imgAssetToggle" type="button" class="btn btn-secondary btn-sm">View available Images</button>
+    
+    <?= $form->field($model, 'imageFile', [
+        'errorOptions'  => [
+            'class' => 'form-control-invalid-feedback',
+        ],
+        'inputOptions'  => [
+            'class' => 'custom-file-input',
+        ],
+        'labelOptions'  => [
+            'class' => 'custom-file-label',
+        ],
+        'template' => '<div class="input-group mb-3" id="fileLinkGroup">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Upload</span>
+        </div>
+        <div class="custom-file">{input}{label}
+        </div></div>
+        {error}'
+    ])->fileInput(); ?>
+
+
+    <div class="form-group text-right">
+        <button type="button" id="cancelButn" class="btn btn-link">Cancel</button>
+        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => 'btn btn-success']) ?>
+    </div>
+
+    <?php ActiveForm::end(); ?>
+
+</div>
+
+<?php
+/*
+<button id="imgAssetToggle" type="button" class="btn btn-secondary btn-sm">View available Images</button>
     
     <div id="imgAssetContainer" class="m-3 p-3 border border-secondary rounded clearfix" style="display:none;">
         <div class="row staffImg">
@@ -156,11 +193,5 @@ $staffImage = '';
             </div>
         </div>
     </div>
-
-    <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
-    </div>
-
-    <?php ActiveForm::end(); ?>
-
-</div>
+*/
+?>

@@ -18,6 +18,7 @@ class myActionColumn extends ActionColumn {
                     'title' => Yii::t('yii', 'View'),
                     'aria-label' => Yii::t('yii', 'View'),
                     'data-pjax' => '0',
+                    'class' => 'btn btn-success btn-sm'
                 ], $this->buttonOptions);
                 return Html::a('<i class="fas fa-eye"></i>', $url, $options);
             };
@@ -29,6 +30,7 @@ class myActionColumn extends ActionColumn {
                         'title' => Yii::t('yii', 'Update'),
                         'aria-label' => Yii::t('yii', 'Update'),
                         'data-pjax' => '0',
+                        'class' => 'btn btn-primary btn-sm'
                     ], $this->buttonOptions);
                     return Html::a('<i class="fas fa-edit"></i>', $url, $options);
                 };
@@ -43,6 +45,7 @@ class myActionColumn extends ActionColumn {
                         'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
                         'data-method' => 'post',
                         'data-pjax' => '0',
+                        'class' => 'btn btn-danger btn-sm',
                     ], $this->buttonOptions);
                     return Html::a('<i class="fas fa-trash"></i>', $url, $options);
                 };

@@ -75,21 +75,21 @@ class SibleyController extends FrontendController
         //load staff
         $staff = Staff::find()
             ->select([
-                'staff.id','first_name','last_name','position','elected','email','phone', 'image_asset',
+                'staff.id','first_name','last_name','position','elected','email','phone', 'image',
                 'DATE_FORMAT(staff_elected.term_start, "%c/%e/%Y") as termStartFmtd','DATE_FORMAT(staff_elected.term_end, "%c/%e/%Y") as termEndFmtd'
             ])
             ->leftJoin('staff_elected', '`staff_elected`.`staff_id` = `staff`.`id`')->asArray()->all();
 
-        $imageAsset = new ImageAsset();
-        $imgAssets = $imageAsset->retrieveAssets();
+        //$imageAsset = new ImageAsset();
+        //$imgAssets = $imageAsset->retrieveAssets();
         //link up any set images
-        foreach ($staff as $idx => $person) {
-            foreach ($imgAssets as $imgAsset) {
-                if ($person['image_asset'] == $imgAsset['id'] && $person['image_asset'] != 0) {
-                    $staff[$idx]['image'] = $imgAsset;
-                }
-            }
-        }
+        //foreach ($staff as $idx => $person) {
+        //    foreach ($imgAssets as $imgAsset) {
+        //        if ($person['image_asset'] == $imgAsset['id'] && $person['image_asset'] != 0) {
+        //            $staff[$idx]['image'] = $imgAsset;
+        //        }
+        //    }
+        //}
 
         //load council meeting within the past month
         $monthAgo = date('Y-m-d', mktime(0, 0, 0, date('m')-1, date('d'), date('Y')));

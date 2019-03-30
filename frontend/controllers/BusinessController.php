@@ -226,6 +226,7 @@ class BusinessController extends Controller
                         if ($flag) {
                             $model->saveCategories();
                             $transaction->commit();
+                            Yii::$app->session->setFlash('success','The organization was successfully updated!');
                             return $this->redirect(['view', 'id' => $model->id]);
                         }
                     } catch (Exception $e) {

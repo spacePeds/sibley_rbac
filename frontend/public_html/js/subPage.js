@@ -7,7 +7,7 @@ var SubPage = new function() {
             e.preventDefault();
             var url="/sub-page/ajax-delete";
             var id = $(this).data('id');
-            console.log('delete clicked',url,id);
+            //console.log('delete clicked',url,id);
             $.ajax({
                 url: url,
                 type: 'POST',
@@ -38,7 +38,7 @@ var SubPageForm = new function() {
 
     this.init = function() {
         var self = this;
-        console.log('initing sub-page form');
+        //console.log('initing sub-page form');
         //hide type dependent fields
         $('.field-subpage-body').hide();
         $('.field-subpage-path').hide();
@@ -94,11 +94,11 @@ var SubPageForm = new function() {
     };
 
     this._displayImagePreview = function(input) {
-        console.log(input.files);
+        //console.log(input.files);
         if (input.files && input.files[0]) {
             var reader = new FileReader();
             reader.onload = function (e) {
-                console.log('onload:',e);
+                //console.log('onload:',e);
                 if (e.target.result.indexOf('application/pdf') >= 0) {
                     $('#img_preview').attr('src', '/img/pdf-placeholder.png');
                 } else {
@@ -124,7 +124,7 @@ var SubPageForm = new function() {
                 // do some loading options
             },
             success: function(data) {
-                console.log('callback:',data);
+                //console.log('callback:',data);
                 callback(data);
             },
             complete: function() {
@@ -179,15 +179,6 @@ var SubPageForm = new function() {
         }
     };
 
-/*
-      
-    };
-    
-    this.triggerType = function(subType) {
-        
-    };
-    
-    */
 };
 
 $(function(){
@@ -195,7 +186,7 @@ $(function(){
     if ($('#sub-page-form').length > 0) {
         SubPageForm.init();
     } 
-    console.log('initilizing subPage JS');
+    //console.log('initilizing subPage JS');
     SubPage.init();
 
     

@@ -23,7 +23,7 @@ class m181014_225653_create_table_staff extends Migration
             'elected' => "ENUM('1', '0')",
             'email' =>  $this->string(255),
             'phone' =>  $this->string(10),
-            'image_asset' => $this->integer(),
+            'image' => $this->string(255),
             
         ], $tableOptions);
 

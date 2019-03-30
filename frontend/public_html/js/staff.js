@@ -20,7 +20,22 @@ var Staff = new function() {
         } else {
             $('#electedElements').slideDown();
         }
+
+        //update file upload UI
+        $('#staff-imagefile').on('change',function(){
+            //get the file name
+            var fileName = $(this).val();
+            //replace the "Choose a file" label
+            $(this).next('.custom-file-label').html(fileName);
+            $('#link-name').val(fileName);
+        })
+
+        //cancel
+        $('#cancelButn').on('click', function() {
+            window.history.back();
+        });
         
+        /*
         $('#staffCarousel').carousel({
             'ride': false,
             'wrap': true,
@@ -49,6 +64,7 @@ var Staff = new function() {
                 $('#staffImgContainer').html('<img class="img-thumbnail img-fluid" src="'+imgSrc+'">');
             }
         });
+        */
     };
 
     

@@ -258,7 +258,7 @@ class SiteController extends FrontendController
             $recipients = [];
             foreach (Yii::$app->params['contactContacts'] as $group => $contacts) {
                 foreach ($contacts as $title => $contact) {
-                    $recipients[$title] = $contact['name'];
+                    $recipients[$contact['email']] = $title;
                 }
             }
 

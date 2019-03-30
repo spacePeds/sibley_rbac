@@ -40,16 +40,18 @@ function formatPhoneNumber($phoneNumber) {
 $this->title = Yii::t('app', 'Organizations');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<?php if (Yii::$app->user->can('create_business')) : ?>
-    <div class="adminFloater shadow-sm p-3 mb-5 bg-white rounded d-flex flex-column text-center">
-        <div class="p-2"><?= Html::a(Yii::t('app', 'Create Business'), [Url::to('/business/create')], ['class' => 'btn btn-success']) ?></div>
-        <?php if (Yii::$app->user->can('update_category')) : ?>
-            <div class="p-2"><?= Html::a(Yii::t('app', 'Update Categories'), [Url::to('/category')], ['class' => 'btn btn-success']) ?></div>
-        <?php endif; ?>
-    </div>
-<?php endif; ?>
+
 
 <div class="business-index container">
+
+    <?php if (Yii::$app->user->can('create_business')) : ?>
+        <div class="text-right adminFloaterRev2 shadow-sm p-1 mb-2 bg-white rounded">
+            <?= Html::a(Yii::t('app', 'Create Organization'), [Url::to('/business/create')], ['class' => 'btn btn-success']) ?>
+            <?php if (Yii::$app->user->can('update_category')) : ?>
+                <?= Html::a(Yii::t('app', 'Update Categories'), [Url::to('/category')], ['class' => 'btn btn-success']) ?>
+            <?php endif; ?>           
+        </div>
+    <?php endif; ?>
 
     <h1><?= Html::encode($this->title) ?></h1>
     

@@ -6,18 +6,18 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model common\models\Staff */
 
-$this->title = 'Create Staff';
+$this->title = 'Create Staff Member';
 $this->params['breadcrumbs'][] = ['label' => 'Staff', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="staff-create">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+<h3 class="p-3"><?= Html::encode($this->title) ?></h3>
 
     <?= $this->render('_form', [
         'model' => $model,
         'elected' => $elected,
-        'imgAssets' => $imgAssets
+        //'imgAssets' => $imgAssets
     ]) ?>
 
 </div>

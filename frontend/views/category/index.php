@@ -14,24 +14,21 @@ BusinessAsset::register($this);
 $this->title = Yii::t('app', 'Categories');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<?php if (Yii::$app->user->can('create_category')) : ?>
-    <div class="adminFloater shadow-sm p-3 mb-5 bg-white rounded d-flex flex-column text-center">
-        <div class="p-2">
-            <?= Html::button('Add Category', [
-                'value' => Url::to('@web/category/create'), 
-                'class' => 'btn btn-primary',
-                'id' => 'btnModalCategory']) ?>
-        </div>
-        
-    </div>
-<?php endif; ?>
+
 
 <?php //echo '<pre>' . print_r($model, true) . '</pre>' ?>
 
 <div class="category-index container">
+    <?php if (Yii::$app->user->can('create_category')) : ?>
+        <div class="text-right adminFloaterRev2 shadow-sm p-1 mb-2 bg-white rounded">
+            <?= Html::button('Create Category', [
+                'value' => Url::to('@web/category/create'), 
+                'class' => 'btn btn-success',
+                'id' => 'btnModalCategory']) ?>
+        </div>
+    <?php endif; ?>
 
     <h1><?= Html::encode($this->title) ?></h1>
-
 
     <table class="table table-striped table-bordered">
     <thead>

@@ -5,16 +5,16 @@ use yii\helpers\Html;
 <?php if (isset($page['linkedOrganizations'])): ?>
     <?php foreach ($page['linkedOrganizations'] as $organization): 
         if (!empty($organization['url'])) {
-            $organization['name'] = '<a target="_blank" href="'.$organization['url'].'"><i class="fas fa-link"></i> '.$organization['name'].'</a>';
+            $organization['name'] = '<a target="_blank" href="'.$organization['url'].'">'.$organization['name'].'</a>';
         }
     ?>
 
-        <div class="row border-bottom">
+        <div class="row row-bordered">
             <div class="col-md-2">
-                <img src="/img/assets/placeholder-image.jpg" alt="" class="img-thumbnail m-3 img-fluid" height="200">
+                <img src="/img/assets/placeholder-image.jpg" alt="" class="img-thumbnail m-2 img-fluid" height="200">
             </div>
             <div class="col-md-5">
-                <h4><?=$organization['name']?></h4>
+                <h4 class="mt-2"><?=$organization['name']?></h4>
                 <p><?=$organization['address1']?><?=!empty($organization['address2']) ? '<br/>' . $organization['address2'] : '' ?>
                     <br><?=$organization['city']?>, <?=$organization['state']?> <?=$organization['zip']?>
                 </p>
@@ -24,13 +24,16 @@ use yii\helpers\Html;
                             //set font-awesome icons
                             if ($contact['method'] == 'phone') {
                                 $contact['method'] = '<i class="fas fa-mobile-alt"></i>';
-                                $contact['description'] = format_phone('us', $contact['description']);
+                                
                             }
                             if ($contact['method'] == 'email') {
                                 $contact['method'] = '<i class="far fa-envelope"></i>';
                             }
+                            if (!empty($contact['description'])) {
+                                $contact['description'] = ': ' . $contact['description'];
+                            }
                         ?>
-                            <li><?=$contact['contact']?>: <?=$contact['method']?> <?=$contact['description']?></li>
+                            <li><?=$contact['method']?> <?=format_phone('us', $contact['contact'])?> <?=$contact['description']?></li>
                         <?php endforeach; ?>
                     </ul>
                 <?php endif; ?>
@@ -38,7 +41,8 @@ use yii\helpers\Html;
             </div>
             <?php if (!empty($organization['note'])): ?>
                 <div class="col-md-5">
-                    <div class="border rounded p-3">
+                    <div class="border rounded p-2 m-2">
+                        <div class="small text-muted">Additional Details:</div>
                         <p><?= $organization['note'] ?></p>
                     </div>
                 </div>
@@ -48,32 +52,3 @@ use yii\helpers\Html;
 <?php endif; ?>
 
 <?php
-function format_phone($country, $phone) {
-    $function = 'format_phone_' . $country;
-    if(function_exists($function)) {
-        return $function($phone);
-    }
-    return $phone;
-}
-
-function format_phone_us($phone) {
-    // note: making sure we have something
-    if(!isset($phone{3})) { return ''; }
-        // note: strip out everything but numbers 
-        $phone = preg_replace("/[^0-9]/", "", $phone);
-        $length = strlen($phone);
-        switch($length) {
-        case 7:
-            return preg_replace("/([0-9]{3})([0-9]{4})/", "$1-$2", $phone);
-        break;
-        case 10:
-            return preg_replace("/([0-9]{3})([0-9]{3})([0-9]{4})/", "($1) $2-$3", $phone);
-        break;
-        case 11:
-        return preg_replace("/([0-9]{1})([0-9]{3})([0-9]{3})([0-9]{4})/", "$1($2) $3-$4", $phone);
-        break;
-        default:
-            return $phone;
-        break;
-    }
-}

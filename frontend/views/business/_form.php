@@ -189,10 +189,9 @@ $this->registerJs($js);
         </div>
     </div>
 
-    <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', [
-            'class' => 'btn btn-primary'
-        ]) ?>
+    <div class="form-group text-right">
+        <button type="button" id="cancelButn" class="btn btn-link">Cancel</button>
+        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php DynamicFormWidget::end(); ?>

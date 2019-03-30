@@ -5,6 +5,7 @@ return [
     'user.passwordResetTokenExpire' => 3600,
     'media' => 'media/',
     'orgImagePath' => 'img/org/',
+    'staffImagePath' => 'img/staff/',
     'eventGroups' => [
         'city' => 'City of Sibley',
         'chamber' => 'Sibley Chamber of Commerce',
@@ -56,7 +57,7 @@ return [
         'site' => [
             'Website Administrator' => [
                 'name' => 'Lucas',
-                'email' => 'lpedley@gmail.com'
+                'email' => 'support@cityofsibley.com'
             ],
         ]
     ]

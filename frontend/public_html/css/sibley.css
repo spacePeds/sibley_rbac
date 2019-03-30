@@ -71,7 +71,13 @@ body {
     right:0;
     bottom:0;
     background-color:rgba(0,0,0,0.2);
-  }
+    transition: all .25s ease-in-out;
+    -moz-transition: all .25s ease-in-out;
+    -webkit-transition: all .25s
+}
+.carousel-caption:hover {
+    background-color:rgba(0,0,0,0);
+}
 
 /*yii2 and bootrap 4 quirk where when use template errors dont highlight*/
 .form-control-invalid-feedback {
@@ -385,6 +391,21 @@ img#img_preview {
     text-align: right;
     text-transform: uppercase;
 }
+
+/*row seperator. used with orgs grouped by categories*/
+.row-bordered {
+    position: relative;
+  }
+  
+  .row-bordered:after {
+    content: "";
+    display: block;
+    border-bottom: 1px solid #ccc;
+    position: absolute;
+    bottom: 0;
+    left: 15px;
+    right: 15px;
+  }
 /*
 
 

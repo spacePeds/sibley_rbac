@@ -12,7 +12,10 @@ use yii\web\ForbiddenHttpException;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\Html;
-use frontend\models\ImageAsset;
+use yii\web\UploadedFile;
+use yii\helpers\Url;
+use frontend\models\Audit;
+//use frontend\models\ImageAsset;
 
 /**
  * StaffController implements the CRUD actions for Staff model.
@@ -72,11 +75,28 @@ class StaffController extends Controller
         if (Yii::$app->user->can('create_staff')) {
             $model = new Staff();
             $elected = new StaffElected();
-            $imgAssets = ImageAsset::retrieveAssets();
+            //$imgAssets = ImageAsset::retrieveAssets();
 
             if ($model->load(Yii::$app->request->post()) && $elected->load(Yii::$app->request->post())) {
                 if ($model->save()) {
-                    Yii::$app->session->setFlash('success', 'The staff member was successfully created.');
+                    $audit = new Audit();
+                    $audit->table = 'staff';
+                    $audit->record_id = $model->id;
+                    $audit->field = 'Create';
+                    $audit->update_user = Yii::$app->user->identity->id;
+                    $audit->save(false);
+                    Yii::$app->session->setFlash('success', 'The staff member was successfully created.');  //<pre>' . print_r($model, true) . '</pre>
+                    //was image provided?
+                    $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+                    if (!empty($model->imageFile)) {
+                        if (!$model->upload($model->id)) {
+                            Yii::$app->session->setFlash('error', "Image failed to save.". $model->imageFile->name);
+                        } else {
+                            //save the image name
+                            $model->updateAttributes(['image' => $model->image]);
+                        }
+                    }
+
                     if ($model->elected == 1) {
                         $elected->staff_id = $model->id;
                         $elected->term_start = date("Y-m-d", strtotime($elected->term_start));
@@ -91,14 +111,13 @@ class StaffController extends Controller
                     Yii::$app->session->setFlash('error', 'An error occured while creating this staff memeber. No changes were saved:' . print_r(Html::error($model), true));
                 }    
                 
-
-                return $this->redirect(['sibley/staff']);
+                return $this->redirect(['/sibley/city']);
             }
 
             return $this->render('create', [
                 'model' => $model,
                 'elected' => $elected,
-                'imgAssets' => $imgAssets
+                //'imgAssets' => $imgAssets
             ]);
         } else {
             throw new ForbiddenHttpException('You do not have permission to access this page.');
@@ -120,44 +139,53 @@ class StaffController extends Controller
             if ($elected == null) {
                 $elected = new StaffElected();
             }
-            $imgAssets = ImageAsset::retrieveAssets();
-
+            
             if ($model->load(Yii::$app->request->post()) && $elected->load(Yii::$app->request->post())) {
-                if($model->validate() && $elected->validate()){
-                    if ($model->save(false)) {
-                        Yii::$app->session->setFlash('success', 'The staff form was successfully updated.');
-                        if ($model->elected == 1) {
-                            $elected->staff_id = $model->id;
-                            if (empty($elected->term_start)) {
-                                Yii::$app->session->setFlash('error', 'Term start is empty.');
-                                return $this->redirect(['staff/update/'.$id]);
-                            }
-                            $elected->term_start = date("Y-m-d", strtotime($elected->term_start));
-                            $elected->term_end = date("Y-m-d", strtotime($elected->term_end));
-                            if ($elected->save(false)) {
-                                Yii::$app->session->setFlash('success', 'The staff form was successfully updated.');
-                            } else {
-                                Yii::$app->session->setFlash('error', 'An error occured while attempting to save election information.');
-                            }
-                        }else {
-                            //delete elected data if exists
-                            $elected->delete();
+                if ($model->save()) {
+                    $audit = new Audit();
+                    $audit->table = 'staff';
+                    $audit->record_id = $model->id;
+                    $audit->field = 'Update';
+                    $audit->update_user = Yii::$app->user->identity->id;
+                    $audit->save(false);
+                    Yii::$app->session->setFlash('success', 'The staff member was successfully updated.');  //<pre>' . print_r($model, true) . '</pre>
+                    //was image provided?
+                    $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+                    if (!empty($model->imageFile)) {
+                        if (!$model->upload($model->id)) {
+                            Yii::$app->session->setFlash('error', "Image failed to save.". $model->imageFile->name);
+                        } else {
+                            //save the image name
+                            $model->updateAttributes(['image' => $model->image]);
                         }
-                    } else {
-                        Yii::$app->session->setFlash('error', 'An error occured while updating the staff form. ele: '.$model->elected.'. No changes were saved:' . print_r(Html::error($model,'elected'), true) . ', ' . print_r(Html::error($elected,'term_start'), true));
-                    }     
-                    return $this->redirect(['sibley/staff']);
-                }
-                Yii::$app->session->setFlash('error', 'An error occured while setting image asset:' . print_r(Html::error($model,'image_asset'), true));
-                Yii::$app->session->setFlash('error', 'An error occured while updating the staff form. ele: '.$model->elected.'. No changes were saved:' . print_r(Html::error($model,'elected'), true) . ', ' . print_r(Html::error($elected,'term_start'), true));
+                    }
+
+                    if ($model->elected == 1) {
+                        $elected->staff_id = $model->id;
+                        $elected->term_start = date("Y-m-d", strtotime($elected->term_start));
+                        $elected->term_end = date("Y-m-d", strtotime($elected->term_end));
+                        if ($elected->save()) {
+                            Yii::$app->session->setFlash('success', 'The elected staff member was successfully updated.');
+                        } else {
+                            Yii::$app->session->setFlash('error', 'An error occured while attempting to save election information.');
+                        }
+                    }
+                } else {
+                    Yii::$app->session->setFlash('error', 'An error occured while updating this staff memeber. No changes were saved:' . print_r(Html::error($model), true));
+                }    
+                
+                return $this->redirect(['/sibley/city']);
             }
     
-            $elected->term_start = date("m/d/Y", strtotime($elected->term_start));
-            $elected->term_end = date("m/d/Y", strtotime($elected->term_end));
+            if (!empty($elected->term_start)) {
+                $elected->term_start = date("m/d/Y", strtotime($elected->term_start));
+                $elected->term_end = date("m/d/Y", strtotime($elected->term_end));
+            }
+            
             return $this->render('update', [
                 'model' => $model,
                 'elected' => $elected,
-                'imgAssets' => $imgAssets
+                //'imgAssets' => $imgAssets
             ]);
         } else {
             throw new ForbiddenHttpException('You do not have permission to access this page.');
@@ -174,9 +202,27 @@ class StaffController extends Controller
     public function actionDelete($id)
     {
         if (Yii::$app->user->can('delete_staff')) {
-            $this->findModel($id)->delete();
+            $model = $this->findModel($id);
+            if (!empty($model->image)) {
+                $sysPath = '/' . Yii::$app->params['staffImagePath'] . $model->image;
+                if (file_exists(Url::to('@webroot') . $sysPath)) {
+                    unlink(Url::to('@webroot') . $sysPath);
+                }
+            }
+            
+            if ($this->findModel($id)->delete()) {
+                $audit = new Audit();
+                $audit->table = 'staff';
+                $audit->record_id = $model->id;
+                $audit->field = 'Delete';
+                $audit->update_user = Yii::$app->user->identity->id;
+                $audit->save(false);
+                Yii::$app->session->setFlash('success', 'City staff record deleted.');
+            } else {
+                Yii::$app->session->setFlash('error', 'An error occured while attempting to delete staff record: '.$id);
+            }
 
-            return $this->redirect(['index']);
+            return $this->redirect(['/sibley/city']);
         } else {
             throw new ForbiddenHttpException('You do not have permission to access this page.');
         }    

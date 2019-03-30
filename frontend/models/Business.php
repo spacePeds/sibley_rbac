@@ -128,7 +128,7 @@ class Business extends \yii\db\ActiveRecord
             $name = $businessRecordId.'.'.$this->imgFile->extension; 
             $sysPath = '/' . Yii::$app->params['orgImagePath'];
             $path = Yii::$app->params['orgImagePath'] . $name;
-            Yii::$app->session->setFlash('success', 'DEBUG: path exist? url webroot: ' . Yii::getAlias('@webroot') . ', url frontend: ' .Url::to('@frontend/web/') . ', param: ' . Yii::$app->params['orgImagePath']);
+            //Yii::$app->session->setFlash('success', 'DEBUG: path exist? url webroot: ' . Yii::getAlias('@webroot') . ', url frontend: ' .Url::to('@frontend/web/') . ', param: ' . Yii::$app->params['orgImagePath']);
                     
             //https://stackoverflow.com/questions/5246114/php-mkdir-permission-denied-problem
             //chown -R www-data:www-data /path/to/webserver/www
