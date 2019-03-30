@@ -12,9 +12,8 @@ use yii\helpers\Json;
 use yii\bootstrap4\ActiveForm;  //use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 use common\models\User;
-use common\models\Audit;
 use yii\helpers\Url;
-
+use frontend\models\Audit;
 /**
  * EventController implements the CRUD actions for Event model.
  */
@@ -38,9 +37,11 @@ class EventController extends Controller
     /**
      * Lists all Event models.
      * @return mixed
-    
+    */
     public function actionIndex()
     {
+        return $this->redirect(['/sibley/calendar']);
+        /*
         $events = Event::find()->all();
         $eventArr = [];
         foreach ($events as $event) 
@@ -63,8 +64,9 @@ class EventController extends Controller
         return $this->render('index', [
             'events' => $eventArr,
         ]);
+        */
     }
- */
+ 
     /**
      * Displays a single Event model.
      * @param integer $id
@@ -371,7 +373,14 @@ class EventController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $user_id = User::findByUsername(Yii::$app->user->identity->username)->getId();
+        //$user_id = User::findByUsername(Yii::$app->user->identity->username)->getId();
+
+        //make sure only owner or site admin can edit
+        $user_id = Yii::$app->user->identity->id;
+        if ($user_id != $model->user_id && $user_id != 1) {
+            Yii::$app->session->setFlash('error', "It does not appear you are the owner of this event. Edit request rejected.");
+            return $this->goBack(Yii::$app->request->referrer);
+        }
 
         //find document if exists
         $pdfFileInfo = $model->getAttachment($id);
@@ -465,6 +474,7 @@ class EventController extends Controller
         $endDate = $posted['endDate'];
 
         $model = $this->findModel($id);
+
         $model->start_dt = $startDate;
         $model->end_dt = $startDate;
         if (!empty($endDate)) {
@@ -472,10 +482,17 @@ class EventController extends Controller
         }
         $status = 'error';
         $message = 'Failed to update event: ' . $id;
-        if ($model->save()) {
+        
+        //make sure only owner or site admin can edit
+        $user_id = Yii::$app->user->identity->id;
+        if ($user_id != $model->user_id && $user_id != 1) {
+            $status = 'error';
+            $message = "It does not appear you are the owner of this event. Edit request rejected.";
+        } elseif ($model->save()) {
             $status = 'success';
             $message = '';
         }
+
         $result = [
             'status' => $status,
             'message' => $message,
@@ -498,6 +515,14 @@ class EventController extends Controller
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
+
+        //make sure only owner or site admin can delete
+        $user_id = Yii::$app->user->identity->id;
+        if ($user_id != $model->user_id && $user_id != 1) {
+            Yii::$app->session->setFlash('error', "It does not appear you are the owner of this event. Delete request rejected.");
+            return $this->goBack(Yii::$app->request->referrer);
+        }
+
         //find document if exists
         $pdfFileInfo = $model->getAttachment($id);
         if (!empty($pdfFileInfo) && file_exists(Url::to('@frontend/web') . $pdfFileInfo['path'] . $pdfFileInfo['name'])) {         

@@ -237,7 +237,7 @@ class SiteController extends FrontendController
             $recipient = '';
             foreach (Yii::$app->params['contactContacts'] as $group => $contacts) {
                 foreach ($contacts as $title => $contact) {
-                    if ($title == $model->recipient) {
+                    if ($contact['email'] == $model->recipient) {
                         $recipient = $contact['email'];
                         break;
                     }
