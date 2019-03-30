@@ -87,7 +87,7 @@ class Event extends \yii\db\ActiveRecord
      * @param integer $id
      * @return string
      */
-    public function getAttachment($id)
+    public static function getAttachment($id)
     {
         if (empty($id)) {
             return '';
