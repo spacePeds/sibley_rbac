@@ -17,13 +17,13 @@ var Cal = new function() {
 
     this.setIcsListener = function(icsData) {
         var self = this;
-        console.log('setting iccs listener');
+        //console.log('setting iccs listener');
        
         //self.calIcs.download('I am a test');
         
         
         $('.icsLink').on('click', function(e) {
-            console.log('clicked ics', self.icsData);
+            //console.log('clicked ics', self.icsData);
             e.preventDefault();
         
             self.calIcs = ics();
@@ -33,15 +33,15 @@ var Cal = new function() {
                 rrules = {rrule: icsData.rrule};
             }
             self.calIcs.addEvent(icsData.subject, icsData.description, icsData.location, icsData.startDt, icsData.endDt, rrules);
-            console.log(self.calIcs);
+            //console.log(self.calIcs);
             self.calIcs.download(icsData.subject);
         });
     };
 
     this.eventClick = function(calEvent, jsEvent, view, path) {
         var self = this;
-        console.log('Event: ',calEvent.id, "view:", view.name); 
-        console.log('Coordinates: ', jsEvent.pageX,jsEvent.pageY); 
+        //console.log('Event: ',calEvent.id, "view:", view.name); 
+        //console.log('Coordinates: ', jsEvent.pageX,jsEvent.pageY); 
 
         $.ajax({
             url: path + '/event/get-ajax-event',
@@ -49,9 +49,9 @@ var Cal = new function() {
             method: "get",
             dataType: "json",
         }).done(function(data) {
-            console.log(data);
+            //console.log(data);
             if (data.status == 'success') {
-                console.log('registered success');
+                //console.log('registered success');
                 var event = data.payload.event;
                 var ics = data.payload.ics;
                 var evt = '<div class="text-right font-weight-light small">Posted by: ' + event.group + '</div>'
@@ -124,6 +124,6 @@ var Cal = new function() {
     };
 };
 $(function(){
-    console.log('calendar standard JS');
+    //console.log('calendar standard JS');
     
 });

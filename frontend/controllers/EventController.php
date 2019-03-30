@@ -324,9 +324,9 @@ class EventController extends Controller
                     $audit = new Audit();
                     $audit->table = 'event';
                     $audit->record_id = Yii::$app->db->getLastInsertID();
-                    $audit->field = 'subject';
+                    $audit->field = 'Create';
                     $audit->new_value = $model->subject;
-                    $audit->update_user = $user->id;
+                    $audit->update_user = Yii::$app->user->identity->id;
                     $audit->save(false);
 
                     if ($model->pdfFile) {
@@ -404,6 +404,14 @@ class EventController extends Controller
             if ($model->validate()) {
                 if ($model->save(false)) {
                     //save event before uploading attachment so we have a ID to link to
+                    $audit = new Audit();
+                    $audit->table = 'event';
+                    $audit->record_id = $model->id;
+                    $audit->field = 'Update';
+                    $audit->new_value = $model->subject;
+                    $audit->update_user = Yii::$app->user->identity->id;
+                    $audit->save(false);
+
                     if ($model->pdfFile) {
                         if ($model->upload($model->id)) { 
                             Yii::$app->session->setFlash('success', "Event updated successfully with attachment: " . $model->pdfFile->name);
@@ -525,19 +533,29 @@ class EventController extends Controller
 
         //find document if exists
         $pdfFileInfo = $model->getAttachment($id);
-        if (!empty($pdfFileInfo) && file_exists(Url::to('@frontend/web') . $pdfFileInfo['path'] . $pdfFileInfo['name'])) {         
-            if (unlink(Url::to('@frontend/web') . $pdfFileInfo['path'] . $pdfFileInfo['name'])) {
-                $model->delete();
+        if (!empty($pdfFileInfo) && file_exists(Url::to('@webroot') . '/' . $pdfFileInfo['path'] . $pdfFileInfo['name'])) {         
+            if (unlink(Url::to('@webroot') . '/' . $pdfFileInfo['path'] . $pdfFileInfo['name'])) {  
                 Yii::$app->session->setFlash('success', "Successfully deleted event and and attached document.");
             } else {
-                Yii::$app->session->setFlash('error', "Unable to delete attached document: " . $pdfFileInfo['name']. ".");
+                $err = "Unable to delete attached document: " . $pdfFileInfo['name']. ".";
+                Yii::$app->session->setFlash('error', $err);
+                Yii::debug($err, __METHOD__);
             }
+        }
+        if ($model->delete()) {
+            $audit = new Audit();
+            $audit->table = 'event';
+            $audit->record_id = $model->id;
+            $audit->field = 'Delete';
+            $audit->new_value = $model->subject;
+            $audit->update_user = Yii::$app->user->identity->id;
+            $audit->save(false);
+            Yii::$app->session->setFlash('success', "Successfully deleted event $model->subject.");
         } else {
-            $this->findModel($id)->delete();
-            Yii::$app->session->setFlash('success', "Successfully deleted event $id.");
+            Yii::$app->session->setFlash('error', "Failed to delete event $model->subject.");
         }
         
-
+        
         return $this->redirect(['sibley/calendar']);
     }
 
