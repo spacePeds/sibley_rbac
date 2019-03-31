@@ -36,7 +36,7 @@ class AgendaMinutes extends \yii\db\ActiveRecord
             [['agenda_id'], 'integer'],
             [['body'], 'string'],
             [['create_dt'], 'safe'],
-            [['attend', 'absent'], 'string', 'max' => 255],
+            [['attend', 'absent','video'], 'string', 'max' => 255],
             [['agenda_id'], 'exist', 'skipOnError' => true, 'targetClass' => Agenda::className(), 'targetAttribute' => ['agenda_id' => 'id']],
         ];
     }
@@ -52,6 +52,7 @@ class AgendaMinutes extends \yii\db\ActiveRecord
             'attend' => Yii::t('app', 'Council Members Attending'),
             'absent' => Yii::t('app', 'Council Members Absent'),
             'body' => Yii::t('app', 'Minutes'),
+            'video' => Yii::t('app', 'Video URL'),
         ];
     }
 

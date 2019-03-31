@@ -20,7 +20,7 @@ class myActionColumn extends ActionColumn {
                     'data-pjax' => '0',
                     'class' => 'btn btn-success btn-sm'
                 ], $this->buttonOptions);
-                return Html::a('<i class="fas fa-eye"></i>', $url, $options);
+                return Html::a('<i class="far fa-eye"></i>', $url, $options);
             };
         }
         if (Yii::$app->user->can('update_business')) {

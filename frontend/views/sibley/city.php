@@ -166,8 +166,8 @@ if (!empty($page['fb_token'])):
                         <ul class="list-group">
                         <?php foreach ($meetings as $meeting ): ?>
                             <li class="list-group-item">
-                            <?php //echo print_r($event);
-                                echo '<h5>' . date('M jS', strtotime($meeting['date'])) .'</h5>';
+                            <?php //echo print_r($meetings);
+                                echo '<h5>' . $meeting['fmtdDt'] .'</h5>';
                                 echo '<div class=""><i class="fas fa-check"></i> ' . $meeting['type'] . ' meeting</div>';
                                 
                                 ?>

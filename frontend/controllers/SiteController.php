@@ -143,16 +143,16 @@ class SiteController extends FrontendController
         //$where .= " OR (start_date BETWEEN NOW() AND date_add(NOW(), INTERVAL $days DAY))";
         
         $yesterday = date('Y-m-d', mktime(0, 0, 0, date('m'), date('d')-1, date('Y')));
-        $twoMoFut = date('Y-m-d', mktime(0, 0, 0, date('m')+1, date('d'), date('Y')));
+        $futDt = date('Y-m-d', mktime(0, 0, 0, date('m'), date('d')+14, date('Y')));    //2 weeks
         $events = Event::find()->
         orderBy(['start_dt' => SORT_ASC])->    
         andFilterWhere(['and',
             ['>=', 'start_dt', $yesterday],
-            ['<=','start_dt', $twoMoFut]
+            ['<=','start_dt', $futDt]
         ])->
         orFilterWhere(['and',
             ['>=', 'end_dt', $yesterday],
-            ['<=','end_dt', $twoMoFut]
+            ['<=','end_dt', $futDt]
         ])->
         orFilterWhere(['and',
             ['<=', 'start_dt', date('Y-m-d')],
@@ -166,6 +166,7 @@ class SiteController extends FrontendController
         //)->
         asArray()->all();
         $enhancedEvents = $this->injectRepeatingEvents($events);
+        //print_r($enhancedEvents);
         $orderedEvents = $this->groupEventsByDate($enhancedEvents);
         ksort($orderedEvents);
 

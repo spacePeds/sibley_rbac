@@ -26,9 +26,7 @@ $siteRoot = ''; //Url::to('@web');
 $script = <<<EOF
 $(function(){
     defaultMeeting = $model->dfltAgenda;
-
     //initilize on load
-    console.log('meeting JS Init');
     Meeting.getBasePath('$siteRoot');
     
 });
@@ -39,7 +37,6 @@ if (Yii::$app->user->can('update_meeting')) {
     $adminScript = <<<EOF
 $(function(){   
     if (MeetingAdmin !== undefined) {
-        console.log('meetingadmin exists');
         MeetingAdmin.init();
     }
 });
@@ -47,17 +44,12 @@ EOF;
 Html::encode($adminScript);
 }
 
-
-//echo '<pre>' . print_r($model,true) . '</pre>';
-?>
+/*
 <div id="fb-root"></div>
 <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.2&appId=106901959404215&autoLogAppEvents=1"></script>
-
-<?php if (Yii::$app->user->can('create_meeting')) : ?>
-    <div class="adminFloater shadow-sm p-3 mb-5 bg-white rounded d-flex flex-column text-center">
-        <div class="p-2"> <button id="createAgenda" class="btn btn-success">Create Agenda</button></div>
-    </div>
-<?php endif; ?>
+*/
+//echo '<pre>' . print_r($model,true) . '</pre>';
+?>
 
 <div class="container">
     <div class="row">
@@ -82,16 +74,23 @@ Html::encode($adminScript);
                 <div class="accordion" id="meetingNavigation" role="tablist">
                     <div class="text-center"><i class="fas fa-spinner fa-pulse"></i></div>
                 </div>
+
+                
+
+                <?php if (Yii::$app->user->can('create_meeting')) : ?>
+                    <button id="createAgenda" class="btn btn-outline-success btn-sm btn-block"><i class="fas fa-plus-square"></i> Create Agenda</button>
+                <?php endif; ?>
+
             </div><!--end meetingmenuContainer-->
         </div>
         
         <div class="col-lg-9 mb-4">
-            <h2><?= Html::encode($this->title) ?></h2>
+            <h3><?= Html::encode($this->title) ?></h3>
 
             <div id="meetingContainer">
             
                 <div class="alert alert-info" role="alert" id="instructionsContainer">
-                    <h4 class="alert-heading">Please choose a meeting from the provided menu.</h4>
+                    <h5 class="alert-heading">Please choose a meeting from the provided menu.</h5>
                 </div>
 
             </div>

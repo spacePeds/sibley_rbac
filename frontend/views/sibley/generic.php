@@ -17,6 +17,10 @@ if (count($details) < 1) {
     $linkText = 'Edit ' . $this->title . ' Page';
 }
 $standardHeaderImages = [];
+
+//import phone# formatting functions
+$this->render('_helperFormatPhone', []);
+
 $this->params['breadcrumbs'][] = $title;
 ?>
 <?php //echo '<pre>' . print_r($details['headerImages'],true) . '</pre>' ?>
@@ -65,6 +69,7 @@ $this->params['breadcrumbs'][] = $title;
         }
     
         if ($headerImage['display'] != 'parallax') {
+            $style = '';
             if (!empty($offset)) {
                 $style = "margin-top:".$offset."px;";
             }

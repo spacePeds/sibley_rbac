@@ -21,6 +21,7 @@ class m180923_145727_create_table_minutes extends Migration
             'attend' =>  $this->string(255)->notNull(),
             'absent' =>  $this->string(255),
             'body' =>  $this->text()->notNull(),
+            'video' => $this->string(255),
             'create_dt' =>  $this->dateTime()->notNull(),
         ], $tableOptions);
         $this->addForeignKey('fk_agenda_minutes', '{{%agenda_minutes}}', 'agenda_id', '{{%agenda}}', 'id', 'CASCADE', 'CASCADE');

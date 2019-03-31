@@ -48,12 +48,14 @@ Yii::$app->assetManager->bundles = [
         ]
         
     ]) ?>
-</div>
+    </div>
+
+    <?= $form->field($model, 'video') ?>
 
     <div class="form-group text-right">
-        
+        <button type="button" class="btn btn-link" data-dismiss="modal" aria-label="Close">Cancel</button>
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), [
-            'class' => 'btn btn-primary'
+            'class' => 'btn btn-success'
         ]) ?>
     </div>
 

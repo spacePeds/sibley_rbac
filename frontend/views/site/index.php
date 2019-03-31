@@ -115,35 +115,41 @@ $this->title = 'Sibley: Highlight of Iowa!';
                 <p class="lead text-info font-weight-bold mt-2">This site is still under construction. Please pardon our mess while we finish putting the pieces together. In the meantime, visit our old site: <a href="http://www.sibleyiowa.net">sibleyiowa.net</a></p>
                 <p class="lead p-2">Sibley's real pride is in its people. The dedicated, professional, caring individuals who create the growth and spirit of opportunity make the community a great place to live</p>
                 
-                        <h3>Upcoming Events</h3>
-                        <ul class="list-group list-group-flush">
-                            <?php if (count($events) < 1): ?>
-                                <li class="list-group-item">There are currently no upcoming events on the calendar.</li>
-                            <?php endif; ?>
-                            <?php foreach ($events as $eventDate => $dayGroup): ?>
+                <div class="clearfix">
+                    <a href="<?= Url::to(['/sibley/calendar/']) ?>" class="btn btn-outline-primary btn-sm float-right" data-toggle="tooltip" data-placement="top" title="View Calendar"><i class="far fa-calendar-alt"></i></a>
+                    <h3>Upcoming Events</h3>
+                </div>
+                
+                <ul class="list-group list-group-flush">
+                    <?php if (count($events) < 1): ?>
+                        <li class="list-group-item">There are currently no upcoming events on the calendar.</li>
+                    <?php endif; ?>
+                    <?php foreach ($events as $eventDate => $dayGroup): ?>
 
-                                <?php if(strtotime($eventDate) < time()) { continue; } ?>
+                        <?php if(strtotime($eventDate) < time()) { continue; } ?>
 
-                                <li class="list-group-item">
-                                    <h4><?=date('l F jS', strtotime($eventDate))?></h4>
-                                    <div class="list-group">
-                                        <?php foreach ($dayGroup as $event): ?>
-                                            <div class="list-group-item list-group-item-action">
-                                                <div class="d-flex w-100 justify-content-between">
-                                                    <h5 class="mb-1"><?=$event['subject']?></h5>
-                                                    <small><span style="color:<?=$event['color']?>"><?=$event['icon']?></span></small>
-                                                </div>
-                                                <?=$event['description']?>
-                                                <?php if (!empty($event['attachment'])): ?>
-                                                    <small><a target="_blank" href="<?=$event['attachment']?>" class=""><i class="far fa-file-pdf"></i> View Document</a></small>
-                                                <?php endif; ?>
-                                            </div>
-                                        <?php endforeach; ?>
+                        <li class="list-group-item">
+                            <h4><?=date('l F jS', strtotime($eventDate))?></h4>
+                            <div class="list-group">
+                                <?php foreach ($dayGroup as $event): ?>
+                                    <div class="list-group-item list-group-item-action">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h5 class="mb-1">
+                                                <?=$event['subject']?>
+                                            </h5>
+                                            <span style="color:<?=$event['color']?>" data-toggle="tooltip" data-placement="top" title="<?=$event['groupDesc']?>"><?=$event['icon']?></span>
+                                        </div>
+                                        <?=$event['description']?>
+                                        <?php if (!empty($event['attachment'])): ?>
+                                            <small><a target="_blank" href="<?=$event['attachment']?>" class=""><i class="far fa-file-pdf"></i> View Document</a></small>
+                                        <?php endif; ?>
                                     </div>
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
-                        <?php //echo '<pre>' . print_r($events, true) . '</pre>'; ?>
+                                <?php endforeach; ?>
+                            </div>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+                <?php //echo '<pre>' . print_r($events, true) . '</pre>'; ?>
                    
             
             </div>

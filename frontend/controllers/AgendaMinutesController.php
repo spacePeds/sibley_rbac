@@ -6,9 +6,12 @@ use Yii;
 use frontend\models\AgendaMinutes;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\ForbiddenHttpException;
 use yii\bootstrap4\ActiveForm;
 use yii\filters\VerbFilter;
 use yii\helpers\Html;
+use frontend\models\Audit;
+
 
 /**
  * AgendaController implements the CRUD actions for Agenda model.
@@ -51,26 +54,37 @@ class AgendaMinutesController extends Controller
      */
     public function actionCreate($agendaId)
     {
-        $model = new AgendaMinutes();
-        $model->agenda_id = $agendaId;
+        if (Yii::$app->user->can('create_agenda')) {
+        
+            $model = new AgendaMinutes();
+            $model->agenda_id = $agendaId;
 
-        if ($model->load(Yii::$app->request->post())) {
+            if ($model->load(Yii::$app->request->post())) {
 
-            $model->create_dt = date('Y-m-d');
-            
-            if ($model->save()) {
-                Yii::$app->session->setFlash('success', "Minutes successfully posted for meeting.");
-            } else {
-                Yii::$app->session->setFlash('error', "Failed to post minutes. Error: " . Html::error($model,'date'));
+                $model->create_dt = date('Y-m-d');
+                
+                if ($model->save()) {
+                    $audit = new Audit();
+                    $audit->table = 'minutes';
+                    $audit->record_id = $model->id;
+                    $audit->field = 'Create';
+                    $audit->update_user = Yii::$app->user->identity->id;
+                    $audit->save(false);
+                    Yii::$app->session->setFlash('success', "Minutes successfully posted for meeting.");
+                } else {
+                    Yii::$app->session->setFlash('error', "Failed to post minutes. Error: " . Html::error($model,'date'));
+                }
+                return $this->redirect(['sibley/council', 'id' => $model->agenda_id]);
             }
-            return $this->redirect(['sibley/council', 'id' => $model->agenda_id]);
+
+            //print_r($model);
+
+            return $this->renderAjax('create', [
+                'model' => $model,
+            ]);
+        } else {
+            throw new ForbiddenHttpException('You do not have permission to perform this action.');
         }
-
-        //print_r($model);
-
-        return $this->renderAjax('create', [
-            'model' => $model,
-        ]);
     }
 
     /**
@@ -82,21 +96,32 @@ class AgendaMinutesController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        if (Yii::$app->user->can('update_agenda')) {
+        
+            $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post())) {
-            
-            if ($model->save()) {
-                Yii::$app->session->setFlash('success', "Minutes successfully updated.");
-            } else {
-                Yii::$app->session->setFlash('error', "An error occured while updating minutes. Your modifications were not saved.");
+            if ($model->load(Yii::$app->request->post())) {
+                
+                if ($model->save()) {
+                    $audit = new Audit();
+                    $audit->table = 'minutes';
+                    $audit->record_id = $model->id;
+                    $audit->field = 'Update';
+                    $audit->update_user = Yii::$app->user->identity->id;
+                    $audit->save(false);
+                    Yii::$app->session->setFlash('success', "Minutes successfully updated.");
+                } else {
+                    Yii::$app->session->setFlash('error', "An error occured while updating minutes. Your modifications were not saved.");
+                }
+                return $this->redirect(['sibley/council', 'id' => $model->agenda_id]);
             }
-            return $this->redirect(['sibley/council', 'id' => $model->agenda_id]);
-        }
 
-        return $this->renderAjax('update', [
-            'model' => $model,
-        ]);
+            return $this->renderAjax('update', [
+                'model' => $model,
+            ]);
+        } else {
+            throw new ForbiddenHttpException('You do not have permission to perform this action.');
+        }
     }
 
     /**
@@ -108,13 +133,25 @@ class AgendaMinutesController extends Controller
      */
     public function actionDelete($id)
     {
-        if ($this->findModel($id)->delete()) {
-            Yii::$app->session->setFlash('success', "Minutes successfully deleted.");
-        } else {
-            Yii::$app->session->setFlash('error', "The minutes were not deleted due to an error.");
-        }
+        if (Yii::$app->user->can('delete_agenda')) {
+        
+            if ($this->findModel($id)->delete()) {
+                $audit = new Audit();
+                $audit->table = 'minutes';
+                $audit->record_id = $id;
+                $audit->field = 'Delete';
+                $audit->update_user = Yii::$app->user->identity->id;
+                $audit->save(false);
+                Yii::$app->session->setFlash('success', "Minutes successfully deleted.");
+            } else {
+                Yii::$app->session->setFlash('error', "The minutes were not deleted due to an error.");
+            }
 
-        return $this->redirect(['sibley/council']);
+            return $this->redirect(['sibley/council']);
+
+        } else {
+            throw new ForbiddenHttpException('You do not have permission to perform this action.');
+        }
     }
 
     /**

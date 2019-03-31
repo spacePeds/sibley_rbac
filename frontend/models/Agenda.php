@@ -40,7 +40,7 @@ class Agenda extends \yii\db\ActiveRecord
         return [
             //default scenario
             [['type', 'date', 'body'], 'required'],
-            [['date', 'create_dt'], 'safe'],            
+            [['date', 'create_dt','created_by'], 'safe'],            
             [['body'], 'string'],
             [['type'], 'string', 'max' => 100],
             [['date'], 'compareMeetingDates', 'on' => 'create']

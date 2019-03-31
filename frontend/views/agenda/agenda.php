@@ -24,9 +24,20 @@ use yii\helpers\Url;
         <div class="tab-pane fade show active" id="agenda" role="tabpanel" aria-labelledby="agenda-tab">
         
             <div class="card-body">
-                <span class="float-right small"><?=ucfirst($agenda['type'])?> Meeting</br>Created: <?=date("m/d/Y", strtotime($agenda['aCreateDt']))?></span>
+                <span class="float-right small">
+                    <div><?=ucfirst($agenda['type'])?> Meeting</div>
+                    <div>Created: <?=date("m/d/Y", strtotime($agenda['aCreateDt']))?></div>
+                    <div>Uploaded By: <?=$agenda['uFname']?> <?=$agenda['uLname']?></div>
+                    <?php if (!empty($agenda['mId'])): ?>
+                        <p class="text-right">
+                            <a class="btn btn-outline-secondary" id="minutesButn" href="#minutes">View Minutes</a>
+                        </p>
+                    <?php endif; ?>
+                </span>
                 <h4>Agenda: <?=date('l F jS Y',strtotime($agenda['date']))?></h4>
                 <div class="card-text"><?=$agenda['aBody']?></div>
+
+                
             </div>
             <?php if (Yii::$app->user->can('update_meeting')) : ?>
                 <div class="card-footer text-right">
@@ -65,6 +76,12 @@ use yii\helpers\Url;
                         <h6 class="card-subtitle mb-2 text-muted">Council Members attending: <?=$agenda['attend']?></h6>
                         <h6 class="card-subtitle mb-2 text-muted">Council Members absent: <?=$agenda['absent']?></h6>
                         
+                        <?php if (!empty($agenda['mVideo'])): ?>
+                            <div class="embed-responsive embed-responsive-16by9">
+                                <iframe class="embed-responsive-item" src="<?=$agenda['mVideo']?>" allowfullscreen></iframe>
+                            </div>
+                        <?php endif; ?>
+
                         <div class="card-text"><?=$agenda['mBody']?></div>
                     </div>
 

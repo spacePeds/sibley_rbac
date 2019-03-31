@@ -7,18 +7,18 @@ var Meeting = new function() {
     this.getBasePath = function(path) {
         var self = this;
         self.basePath = path;
-        console.log('basepath is:',self.basePath);
+        //console.log('basepath is:',self.basePath);
         self.init();
     }
     this.init = function() {
         var self = this;
-        console.log('initilizing meeting menu');
+        //console.log('initilizing meeting menu');
 
         //load meeting menu for current year
         self.generateMeetingMenu(new Date().getFullYear());
 
         //check if a meeting agenda is provided
-        console.log('default meeting:',defaultMeeting);
+        //console.log('default meeting:',defaultMeeting);
         if (parseInt(defaultMeeting) > 0) {
             self._retrieveAgenda(defaultMeeting);
         }
@@ -84,11 +84,10 @@ var Meeting = new function() {
     this.generateMeetingMenu = function(yr) {
         var self = this;
         var ajaxPath = self.basePath + '/agenda/generate-menu';
-        console.log('generateMeetingMenu',ajaxPath);
+        //console.log('generateMeetingMenu',ajaxPath);
 
         $.get(ajaxPath,{'yr':yr})
             .done(function(data){
-                console.log('replae the thign');
                 $('#meetingNavigation').html(data);
 
             $('#meetingNavigation').on('click','a',function(e) {
@@ -104,7 +103,10 @@ var Meeting = new function() {
      */
     this._retrieveAgenda = function(agendaId) {
         var self = this;
-        console.log('clicked agenda',agendaId);
+        //console.log('clicked agenda',agendaId);
+        if (agendaId === undefined) {
+            return;
+        }
         var ajaxPath = self.basePath + '/agenda/get-agenda';
         $.get(ajaxPath,{'id':agendaId})
             .done(function(data){
@@ -132,6 +134,12 @@ var Meeting = new function() {
                 var agendaDt = $('#editMinutes').data('date');
                 $('#editMinutes').on('click', function() {
                     MeetingAdmin.editMinutes(id, agendaDt);
+                });    
+            }
+
+            if ($('#minutesButn').length > 0) {
+                $('#minutesButn').on('click', function() {
+                    $('#minutes-tab').tab('show');
                 });
                 
             }

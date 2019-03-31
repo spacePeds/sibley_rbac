@@ -5,8 +5,6 @@ use yii\bootstrap4\ActiveForm;
 use dosamigos\ckeditor\CKEditor;
 use yii\helpers\Url;
 
-
-
 Yii::$app->assetManager->bundles = [
     'yii\bootstrap\BootstrapPluginAsset' => false,
     'yii\bootstrap\BootstrapAsset' => false,
@@ -17,14 +15,6 @@ Yii::$app->assetManager->bundles = [
 /* @var $this yii\web\View */
 /* @var $model common\models\Agenda */
 /* @var $form yii\widgets\ActiveForm */
-$js = <<<EOF
-console.log('initing datepicker');
-$('.date').datepicker({
-    format: 'mm/dd/yyyy',
-    todayHighlight: true
-});
-EOF;
-$this->registerJs($js);
 ?>
 
 <div class="agenda-form">
@@ -67,7 +57,8 @@ $this->registerJs($js);
 </div>
 
     <div class="form-group text-right">
-        <?php if ($model->id > 0 && Yii::$app->user->can('delete_cheeseburger')): ?>
+        <button type="button" class="btn btn-link" data-dismiss="modal" aria-label="Close">Cancel</button>
+        <?php if ($model->id > 0 && Yii::$app->user->can('delete_agenda')): ?>
             <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
                 'class' => 'btn btn-outline-danger',
                 'data' => [
@@ -77,7 +68,7 @@ $this->registerJs($js);
             ]) ?>
         <?php endif; ?>
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), [
-            'class' => 'btn btn-primary'
+            'class' => 'btn btn-success'
         ]) ?>
     </div>
 

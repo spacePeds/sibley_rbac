@@ -2,8 +2,6 @@ var MeetingAdmin = new function() {
 
     this.init = function() {
         var self = this;
-
-        console.log('initillzing adminf js');
         
         $('#createAgenda').on('click', function() {
             $.ajax({
@@ -14,6 +12,10 @@ var MeetingAdmin = new function() {
                 //console.log(data);
                 $('#formModal').modal('show').find('#modalContent').html(data);
                 $('#formModal').find('.modal-title').html('Create Meeting Agenda');
+                $('.date').datepicker({
+                    format: 'mm/dd/yyyy',
+                    todayHighlight: true
+                });
             }).fail(function( jqXHR, textStatus ) {
                 alert( "Request failed: " + textStatus );
                 console.log(jqXHR);
@@ -35,6 +37,10 @@ var MeetingAdmin = new function() {
             //console.log(data);
             $('#formModal').modal('show').find('#modalContent').html(data);
             $('#formModal').find('.modal-title').html('Editing Agenda');
+            $('.date').datepicker({
+                format: 'mm/dd/yyyy',
+                todayHighlight: true
+            });
         }).fail(function( jqXHR, textStatus ) {
             alert( "Request failed: " + textStatus );
             console.log(jqXHR);
