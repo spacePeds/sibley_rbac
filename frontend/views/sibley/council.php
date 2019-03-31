@@ -11,7 +11,7 @@ use frontend\assets\MeetingStandardAsset;
 use frontend\assets\BootstrapDatepickerAsset;
 
 $siteRoot = Url::to('@web');
-if (Yii::$app->user->can('update_meeting')) {
+if (Yii::$app->user->can('update_agenda')) {
     MeetingStandardAsset::register($this);
     MeetingAdminAsset::register($this);
     BootstrapDatepickerAsset::register($this);
@@ -33,7 +33,7 @@ $(function(){
 EOF;
 Html::encode($script);
 
-if (Yii::$app->user->can('update_meeting')) {
+if (Yii::$app->user->can('update_agenda')) {
     $adminScript = <<<EOF
 $(function(){   
     if (MeetingAdmin !== undefined) {
@@ -77,7 +77,7 @@ Html::encode($adminScript);
 
                 
 
-                <?php if (Yii::$app->user->can('create_meeting')) : ?>
+                <?php if (Yii::$app->user->can('create_agenda')) : ?>
                     <button id="createAgenda" class="btn btn-outline-success btn-sm btn-block"><i class="fas fa-plus-square"></i> Create Agenda</button>
                 <?php endif; ?>
 
@@ -121,6 +121,6 @@ echo '<div id="modalContent"></div>';
 Modal::end();
 
 $this->registerJs($script);
-if (Yii::$app->user->can('update_meeting')) {
+if (Yii::$app->user->can('update_agenda')) {
     $this->registerJs($adminScript);
 }

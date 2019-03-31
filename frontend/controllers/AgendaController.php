@@ -101,7 +101,14 @@ class AgendaController extends Controller
             'agenda' => $model
         ]);
     }
-
+    /**
+     * Lists all Link models.
+     * @return mixed
+     */
+    public function actionIndex()
+    {
+        return $this->render('/sibley/council');
+    }
     /**
      * Displays a single Agenda model.
      * @param integer $id
@@ -215,6 +222,7 @@ class AgendaController extends Controller
 
             //make sure only owner or site admin can update
             $user_id = Yii::$app->user->identity->id;
+            $model = $this->findModel($id);
             if ($user_id != $model->created_by && $user_id != 1) {
                 Yii::$app->session->setFlash('error', "It does not appear you created this agenda. Delete request rejected.");
                 return $this->goBack(Yii::$app->request->referrer);
@@ -227,7 +235,7 @@ class AgendaController extends Controller
                 $audit->field = 'Delete';
                 $audit->update_user = Yii::$app->user->identity->id;
                 $audit->save(false);
-                Yii::$app->session->setFlash('success', "Agenda successfully deleted.");
+                Yii::$app->session->setFlash('success', "Agenda successfully deleted. Any associated minutes have also been deleted.");
             } else {
                 Yii::$app->session->setFlash('error', "An error occured while deleting this agenda");
             }

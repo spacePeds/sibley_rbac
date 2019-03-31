@@ -29,9 +29,9 @@ use yii\helpers\Url;
                     <div>Created: <?=date("m/d/Y", strtotime($agenda['aCreateDt']))?></div>
                     <div>Uploaded By: <?=$agenda['uFname']?> <?=$agenda['uLname']?></div>
                     <?php if (!empty($agenda['mId'])): ?>
-                        <p class="text-right">
+                        <div>
                             <a class="btn btn-outline-secondary" id="minutesButn" href="#minutes">View Minutes</a>
-                        </p>
+                        </div>
                     <?php endif; ?>
                 </span>
                 <h4>Agenda: <?=date('l F jS Y',strtotime($agenda['date']))?></h4>
@@ -39,9 +39,9 @@ use yii\helpers\Url;
 
                 
             </div>
-            <?php if (Yii::$app->user->can('update_meeting')) : ?>
+            <?php if (Yii::$app->user->can('update_agenda')) : ?>
                 <div class="card-footer text-right">
-                    <?php if (Yii::$app->user->can('delete_meeting')) : ?>
+                    <?php if (Yii::$app->user->can('delete_agenda')) : ?>
                         <a href="<?= Url::to(['/agenda/delete']) .'/' . $agenda['aId'] ?>" role="button" class="btn btn-outline-danger" data-confirm="Are you sure you want to delete this agenda? Any associated minutes will also be deleted!" data-method="post">Delete</a>
                         
                     <?php endif; ?>
@@ -58,7 +58,7 @@ use yii\helpers\Url;
 
                     <div class="alert alert-secondary clearfix" role="alert">
                         
-                        <?php if (Yii::$app->user->can('create_minutes')) : ?>
+                        <?php if (Yii::$app->user->can('create_agenda')) : ?>
                             <span class="float-right">
                                 <button id="createMinutes" data-agenda="<?=$agenda['aId']?>" data-date="<?=date('l F jS',strtotime($agenda['date']))?>" class="btn btn-success">Create Minutes</button>
                             </span>    
@@ -85,9 +85,9 @@ use yii\helpers\Url;
                         <div class="card-text"><?=$agenda['mBody']?></div>
                     </div>
 
-                    <?php if (Yii::$app->user->can('update_minutes')) : ?>
+                    <?php if (Yii::$app->user->can('update_agenda')) : ?>
                         <div class="card-footer text-right">
-                            <?php if (Yii::$app->user->can('delete_minutes')) : ?>
+                            <?php if (Yii::$app->user->can('delete_agenda')) : ?>
                                 <a href="<?= Url::to(['/agenda-minutes/delete']) .'/' . $agenda['mId'] ?>" role="button" class="btn btn-outline-danger" data-confirm="Are you sure you want to delete these minutes?" data-method="post">Delete</a>
                         
                             <?php endif; ?>
