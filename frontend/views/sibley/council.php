@@ -58,15 +58,15 @@ Html::encode($adminScript);
             <div id="meetingMenuContainer">
                 
                 <div class="row">
-                    <div class="col-md-3 m-0">
+                    <div class="col-3 m-0">
                         <button class="btn btn-outline-secondary" id="previousYear"><i class="fas fa-angle-left"></i></button>
                     </div>
-                    <div class="col-md-6 m-0">
+                    <div class="col-6 m-0">
                         <?php $form = ActiveForm::begin([ 'id' => 'meetingYearForm']); ?>
                         <?php echo $form->field($model, 'yearToggle')->dropDownList($model->yearList )->label(false); ?>
                         <?php ActiveForm::end(); ?>
                     </div>
-                    <div class="col-md-3 m-0">
+                    <div class="col-3 m-0 text-right">
                         <button class="btn btn-outline-secondary" id="nextYear"><i class="fas fa-angle-right"></i></button>
                     </div>
                 </div>

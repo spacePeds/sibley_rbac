@@ -233,6 +233,9 @@ class SibleyController extends FrontendController
             if ($event['group'] == 'chamber') {
                 $e->backgroundColor = Yii::$app->params['eventGroupColor']['chamber'];
             }
+            if ($event['group'] == 'hol') {
+                $e->backgroundColor = Yii::$app->params['eventGroupColor']['hol'];
+            }
             $eventArr[] = $e;
             
         }
