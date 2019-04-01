@@ -192,7 +192,11 @@ class EventController extends Controller
                 'ics' => $ics
             ]
         ];
-        echo Json::encode($result);
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        \Yii::$app->response->data  =  $result;
+
+        //echo Json::encode($result);
+        //Yii::$app->end();
 
     }
     /**
