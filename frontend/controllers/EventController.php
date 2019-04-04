@@ -6,6 +6,7 @@ use Yii;
 use frontend\models\Event;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\ForbiddenHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 use yii\helpers\Json;
@@ -94,10 +95,12 @@ class EventController extends Controller
         $ics = [];
         $status = 'error';
         $message = 'No event found';
+        $notes = '';
 
         if ($event) {
             $status = 'success';
             $message = 'Event Found';
+            
             //duration
             if (!empty($event->end_dt)) {
                 $duration = '';
@@ -114,8 +117,9 @@ class EventController extends Controller
                     $ics['startDt'] = date('m/d/Y h:i a', strtotime($event->start_dt));
                     $ics['endDt'] = date('m/d/Y h:i a', strtotime($event->end_dt));
 
-                    $event->start_dt = date("M j, Y h:ia", strtotime($event->start_dt));
-                    $event->notes = $duration;
+                    //$event->start_dt = date("M j, Y h:ia", strtotime($event->start_dt));
+                    $event->start_dt = date("M j, Y", strtotime($event->start_dt));
+                    $notes = $duration;
                     
                 } else {                   
                     $ics['startDt'] = date('m/d/Y h:i a', strtotime($event->start_dt));
@@ -130,13 +134,13 @@ class EventController extends Controller
                 $ics['endDt'] = date('m/d/Y h:i a', strtotime($event->start_dt));
             }
             
-            if($event->all_day == 1) {
+            if($event->all_day) {
                 //define JS vals first before overwriting start_dt param
                 $ics['startDt'] = date('m/d/Y', strtotime($event->start_dt));
                 $ics['endDt'] = date('m/d/Y', strtotime($event->end_dt));
 
                 //$event->start_dt = date("F j, Y", strtotime($event->start_dt)) . ' (All Day)';
-                $event->notes .= ' (All Day)';
+                $notes .= ' (All Day)';
             }
 
             //apply user-friendly group label
@@ -154,7 +158,7 @@ class EventController extends Controller
                 }
             }
 
-            $ics['notes'] = $event->notes;
+            $ics['notes'] = $notes;
             $ics['location'] = $event->location;
             $ics['description'] = strip_tags($event->description);
             $ics['subject'] = $event->subject;
@@ -189,6 +193,7 @@ class EventController extends Controller
             'message' => $message,
             'payload' => [
                 'event' => ArrayHelper::toArray($event),
+                'note' => $notes,
                 'ics' => $ics
             ]
         ];

@@ -129,7 +129,21 @@ SlickCarouselAsset::register($this);
                             <a href="/recreation/fishing" class="dropdown-item">Fishing Opportunities</a>
                         </div>
                     </li>
-
+                    <?php if (Yii::$app->user->can('view_admin')): ?>
+                        <li class="nav-item dropdown mr-3">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                                Admin
+                            </a>
+                            <div class="dropdown-menu">
+                                
+                                <a href="/sibley/tutorial" id="tutorials" class="dropdown-item"> Tutorials</a>
+                                
+                                <?php if (Yii::$app->user->can('create_alert')) : ?>
+                                    <a href="#" id="createSiteWideAlert" class="dropdown-item"> Add Site-Wide Alert</a>
+                                <?php endif; ?>
+                            </div>
+                        </li>
+                    <?php endif; ?>
                     <li class="nav-item dropdown mr-3">
                         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
                             I would Like to...
@@ -140,9 +154,6 @@ SlickCarouselAsset::register($this);
                             <a href="<?= Url::to(['/sibley/council']) ?>" class="dropdown-item"> View Council Meeting Agendas</a>
                             <a href="<?= Url::to(['/sibley/spiritual-centers']) ?>" class="dropdown-item"> View Community Spiritual Centers</a>
                             <a href="settings.html" class="dropdown-item"> Pay A Utility Bill</a>
-                            <?php if (Yii::$app->user->can('create_alert')) : ?>
-                                <a href="#" id="createSiteWideAlert" class="dropdown-item"> Add Site-Wide Alert</a>
-                            <?php endif; ?>
                         </div>
                     </li>
                 </ul>

@@ -53,10 +53,20 @@ var Cal = new function() {
             if (data.status == 'success') {
                 //console.log('registered success');
                 var event = data.payload.event;
+                var note = data.payload.note;
                 var ics = data.payload.ics;
                 var evt = '<div class="text-right font-weight-light small">Posted by: ' + event.group + '</div>'
-                        + '<p class="lead">'+event.start_dt+'</p>'
-                        + '<div class="contanier">'
+                        + '<p class="lead">'+event.start_dt+'</p>';
+                if (note !== '') {
+                    evt += '<div class="small"><span class="text-muted">Duration:</span> '+note+'</div>';
+                }
+                if (event.location !== '') {
+                    evt += '<div class="small">Location: '+event.location+'</div>';
+                }
+                if (event.description !== '') {
+                    evt += '<div class="small">'+event.description+'</div>';
+                }
+                evt += '<div class="contanier">'
                         + '<div class="row">'
                         + '<div class="col-md-6">';
                 if (ics.pdf) {

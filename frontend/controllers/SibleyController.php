@@ -12,6 +12,7 @@ use frontend\models\Event;
 use frontend\models\Agenda;
 use frontend\models\Document;
 use yii\base\InvalidParamException;
+use yii\web\ForbiddenHttpException;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -205,7 +206,7 @@ class SibleyController extends FrontendController
             if ($event['all_day']) {
                 $e->allDay = 1;
                 //cut off time-stamp
-                $e->start = date('Y-m-d\TH:i:s\Z', strtotime($event['start_dt']));
+                $e->start = date('Y-m-d', strtotime($event['start_dt']));
             }
             if (isset($event['end_dt'])) {
                 //cut off time-stamp before comparison
@@ -301,6 +302,19 @@ class SibleyController extends FrontendController
         ]);
     }
 
+    /**
+     * Displays tutorials page.
+     *
+     * @return mixed
+     */
+    public function actionTutorial()
+    {
+        if (Yii::$app->user->can('view_admin')) {
+            return $this->render('tutorial');
+        } else {
+            throw new ForbiddenHttpException('You do not have permission to access this page.');
+        }
+    }
     
     /**
      * Displays sibley generic lodging page.
@@ -351,6 +365,7 @@ class SibleyController extends FrontendController
             'subSections' => $subSections
         ]);
     }
+
     /**
      * Displays sibley recreation department page.
      *

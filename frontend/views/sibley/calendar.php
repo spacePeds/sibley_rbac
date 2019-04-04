@@ -112,6 +112,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             */
             'clientOptions' => [ 
+                'googleCalendar' => 'sibley.rec%40gmail.com',
                 'selectable' => true,
                 'editable' => $calendar['canEdit'],
                 'eventLimit'=> true,
