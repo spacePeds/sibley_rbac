@@ -194,7 +194,7 @@ $this->title = 'Sibley: Highlight of Iowa!';
                 <?php endforeach; ?> 
                 <?php if (Yii::$app->user->can('create_link')) : ?>
                     <div class="card">
-                        <a class="btn btn-outline-success btn-sm" href="<?= Url::to(['/link/create']) ?>" data-toggle="tooltip" data-placement="top" title="Create New Link" aria-label="Create"><i class="fas fa-plus-square"></i></a>
+                        <a class="btn btn-outline-success btn-sm" href="<?= Url::to(['/link/create']) ?>" data-toggle="tooltip" data-placement="top" title="Create New Link" aria-label="Create"><i class="fas fa-plus-square"></i> Create Qucik-Link</a>
                     </div>                  
                 <?php endif;?>
                 

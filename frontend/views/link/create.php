@@ -5,13 +5,13 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model frontend\models\Link */
 
-$this->title = 'Create Link';
+$this->title = 'Create Quick-Link';
 $this->params['breadcrumbs'][] = ['label' => 'Links', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="link-create">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h3 class="ml-3"><?= Html::encode($this->title) ?></h3>
 
     <?= $this->render('_form', [
         'model' => $model,

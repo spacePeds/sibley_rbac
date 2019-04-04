@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\bootstrap4\ActiveForm;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $model frontend\models\Link */
@@ -122,8 +123,9 @@ $slOptions['new'] = 'Specify New Group';
 
     <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
 
-    <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+    <div class="form-group text-right">
+        <a role="button" id="cancelButn" class="btn btn-link" href="<?= Url::to(['/']) ?>">Cancel</a>
+        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

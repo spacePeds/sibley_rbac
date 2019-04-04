@@ -57,6 +57,9 @@ var Cal = new function() {
                 var ics = data.payload.ics;
                 var evt = '<div class="text-right font-weight-light small">Posted by: ' + event.group + '</div>'
                         + '<p class="lead">'+event.start_dt+'</p>';
+                if (event.repeat_interval) {
+                    evt += '<div class="small">'+event.repeat_interval+'</div>';
+                }
                 if (note !== '') {
                     evt += '<div class="small"><span class="text-muted">Duration:</span> '+note+'</div>';
                 }

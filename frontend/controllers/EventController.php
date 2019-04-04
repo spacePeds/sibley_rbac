@@ -104,22 +104,25 @@ class EventController extends Controller
             //duration
             if (!empty($event->end_dt)) {
                 $duration = '';
+                //are times different?
+                $date1 = new \DateTime($event->end_dt);
+                $date2 = new \DateTime($event->start_dt);
+                $interval = $date1->diff($date2);
+                if ($date1 > $date2) {
+                    $duration = 'Duration: ' . $interval->h . ' hours, ' . $interval->i . ' minutes';
+                }
+                if ($interval->h > 0 || $interval->i > 0) {
+                    $notes = $duration;
+                }
+                
+
                 if (date('mdY', strtotime($event->start_dt)) == date('mdY', strtotime($event->end_dt))) {
-                    
-                    //same dates, are times different?
-                    $date1 = new \DateTime($event->end_dt);
-                    $date2 = new \DateTime($event->start_dt);
-                    $interval = $date1->diff($date2);
-                    if ($date1 > $date2) {
-                        $duration = 'Duration: ' . $interval->h . ' hours, ' . $interval->i . ' minutes';
-                    }
-                    
+
                     $ics['startDt'] = date('m/d/Y h:i a', strtotime($event->start_dt));
                     $ics['endDt'] = date('m/d/Y h:i a', strtotime($event->end_dt));
 
                     //$event->start_dt = date("M j, Y h:ia", strtotime($event->start_dt));
                     $event->start_dt = date("M j, Y", strtotime($event->start_dt));
-                    $notes = $duration;
                     
                 } else {                   
                     $ics['startDt'] = date('m/d/Y h:i a', strtotime($event->start_dt));
@@ -146,6 +149,11 @@ class EventController extends Controller
             //apply user-friendly group label
             $groups = Yii::$app->params['eventGroups'];
             $event->group = $groups[$event->group];
+            $intervals = Yii::$app->params['eventRepition'];
+            if ($event->repeat_interval > 0) {
+                $event->repeat_interval = $intervals[$event->repeat_interval] . ' until ' . date("M j, Y", strtotime($event->end_dt));
+            }
+            
             $ics['group'] = $event->group;
             
             //find document if exists

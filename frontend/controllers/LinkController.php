@@ -39,6 +39,8 @@ class LinkController extends Controller
      */
     public function actionIndex()
     {
+        return $this->redirect(['/sibley/calendar']);
+        /*
         $searchModel = new LinkSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -46,6 +48,7 @@ class LinkController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
+        */
     }
 
     /**
@@ -141,7 +144,7 @@ class LinkController extends Controller
 
             //make sure only owner or site admin can update
             $user_id = Yii::$app->user->identity->id;
-            if ($user_id != $model->created_by && $user_id != 1) {
+            if ($user_id != $model->created_by && $user_id != 1 && $model->created_by != 1) {
                 Yii::$app->session->setFlash('error', "It does not appear you are the owner of this link. Update request rejected.");
                 return $this->goBack(Yii::$app->request->referrer);
             }
@@ -231,7 +234,7 @@ class LinkController extends Controller
         $model = $this->findModel($id);
         //make sure only owner or site admin can delete
         $user_id = Yii::$app->user->identity->id;
-        if ($user_id != $model->created_by && $user_id != 1) {
+        if ($user_id != $model->created_by && $user_id != 1 && $model->created_by != 1) {
             Yii::$app->session->setFlash('error', "It does not appear you are the owner of this link. Delete request rejected.");
             return $this->goBack(Yii::$app->request->referrer);
         }
