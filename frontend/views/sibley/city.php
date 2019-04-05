@@ -16,8 +16,12 @@ $this->params['breadcrumbs'][] = $this->title;
 //echo '<pre>' . print_r($subSections) . '</pre>';
 $standardHeaderImages = [];
 
-$user_id = Yii::$app->user->identity->id;
-$role = \Yii::$app->authManager->getRolesByUser($user_id);
+$user_id = '';
+$role = [];
+if (isset(Yii::$app->user->identity->id)) {
+    $role = \Yii::$app->authManager->getRolesByUser($user_id);
+}
+
 
 //import phone# formatting functions
 $this->render('_helperFormatPhone', []);

@@ -15,6 +15,7 @@ use yii\behaviors\SluggableBehavior;
  * @property string $slug
  * @property string $fb_token
  * @property string $fb_link
+ * @property int $sub_pages
  * @property string $last_edit_dt
  * @property int $user_id
  *
@@ -41,7 +42,7 @@ class Page extends \yii\db\ActiveRecord
             [['route', 'title', 'body'], 'required'],
             [['body','slug','fb_token','fb_link'], 'string'],
             [['last_edit_dt'], 'safe'],
-            [['user_id'], 'integer'],
+            [['user_id','sub_pages'], 'integer'],
             [['route', 'title'], 'string', 'max' => 255],
         ];
     }
@@ -60,6 +61,7 @@ class Page extends \yii\db\ActiveRecord
             'fb_link' => Yii::t('app', 'Facebook Page ID'),
             'last_edit_dt' => Yii::t('app', 'Last Edit Dt'),
             'user_id' => Yii::t('app', 'User ID'),
+            'sub_pages' => Yii::t('app','Create Sub-Sections within page?'),
         ];
     }
 

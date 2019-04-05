@@ -168,6 +168,11 @@ BootstrapSelectAsset::register($this);
     </div>
     
 
+    <?= $form->field($model, 'sub_pages')->dropDownList([
+        '0' => 'No', 
+        '1' => 'Yes',
+    ], ['prompt' => '']) ?>
+
 
     <div class="form-group text-right">
     <button type="button" id="cancelButn" class="btn btn-link">Cancel</button>
