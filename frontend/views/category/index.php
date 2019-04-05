@@ -21,6 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="category-index container">
     <?php if (Yii::$app->user->can('create_category')) : ?>
         <div class="text-right adminFloaterRev2 shadow-sm p-1 mb-2 bg-white rounded">
+            <?= Html::a(Yii::t('app', 'View Organization List'), [Url::to('/business/list')], ['class' => 'btn btn-link']) ?>
             <?= Html::button('Create Category', [
                 'value' => Url::to('@web/category/create'), 
                 'class' => 'btn btn-success',

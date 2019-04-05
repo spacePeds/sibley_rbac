@@ -48,7 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="text-right adminFloaterRev2 shadow-sm p-1 mb-2 bg-white rounded">
             <?= Html::a(Yii::t('app', 'Create Organization'), [Url::to('/business/create')], ['class' => 'btn btn-success']) ?>
             <?php if (Yii::$app->user->can('update_category')) : ?>
-                <?= Html::a(Yii::t('app', 'Update Categories'), [Url::to('/category')], ['class' => 'btn btn-success']) ?>
+                <?= Html::a(Yii::t('app', 'View Category Details'), [Url::to('/category')], ['class' => 'btn btn-success']) ?>
             <?php endif; ?>           
         </div>
     <?php endif; ?>
@@ -86,6 +86,7 @@ $this->params['breadcrumbs'][] = $this->title;
             //'firstPageLabel' => '&nbsp;',
             //'lastPageLabel' => '&nbsp;',
         ],
+        'options' => [ 'style' => 'table-layout:fixed;' ],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             //'id',
@@ -148,7 +149,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             // 'business.contact_method.method',
-            ['class' => 'frontend\views\MyActionColumn'],
+            ['class' => 'frontend\views\MyActionColumn',
+                'contentOptions' => ['style' => 'width:135px; white-space: normal;'],
+            ],
+            
         ],
     ]); ?>
 </div>

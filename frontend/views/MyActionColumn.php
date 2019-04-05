@@ -21,6 +21,7 @@ class myActionColumn extends ActionColumn {
                     'class' => 'btn btn-success btn-sm'
                 ], $this->buttonOptions);
                 return Html::a('<i class="far fa-eye"></i>', $url, $options);
+                //return '<a class="btn btn-success btn-sm" href=""><i class="far fa-eye"></i></a>&nbsp;';
             };
         }
         if (Yii::$app->user->can('update_business')) {
