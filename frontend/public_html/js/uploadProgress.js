@@ -1,5 +1,5 @@
 $(function() {
-    console.log('initied JS');
+    //console.log('initied JS');
 
     var imagesPreview = function(input, placeToInsertImagePreview) {
 
@@ -7,7 +7,7 @@ $(function() {
             var filesAmount = input.files.length;
 
             for (i = 0; i < filesAmount; i++) {
-                console.log('loop',i);
+                //console.log('loop',i);
                 var reader = new FileReader();
                 reader.onload = function(event, i) {
                     var rand = Math.floor(Math.random() * 1000);
@@ -22,7 +22,7 @@ $(function() {
     };
    
     $("#fileUploader").change(function(){
-        console.log('triggered');
+        //console.log('triggered');
         imagesPreview(this, '#imagePreview');
         $('#imagePreview').addClass('border border-secondary rounded p-1');
     });

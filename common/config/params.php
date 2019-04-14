@@ -6,6 +6,7 @@ return [
     'media' => 'media/',
     'orgImagePath' => 'img/org/',
     'staffImagePath' => 'img/staff/',
+    'assetPath' => 'img/assets/',
     'eventGroups' => [
         'city' => 'City of Sibley',
         'chamber' => 'Sibley Chamber of Commerce',
@@ -30,6 +31,16 @@ return [
         'rec' => '<i class="fas fa-flag-checkered"></i>',
         'chamber' => '<i class="far fa-building"></i>',
         'hol' => '<i class="fas fa-calendar-alt"></i>',
+    ],
+    'govPayNet' => [
+        'rec' => [
+            'description' => 'Click on the button below to pay program and rental fees, or to purchase a pool pass.',
+            'link' => 'https://www.govpaynow.com/gps/user/plc/a001y7',
+        ],
+        'city' => [
+            'description' => 'Click on the button below to pay city utility fees.',
+            'link' => 'https://www.govpaynow.com/gps/user/cyg/plc/a001y8',
+        ],
     ],
     'contactContacts' => [
         'city' => [

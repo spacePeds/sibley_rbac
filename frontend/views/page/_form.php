@@ -18,14 +18,15 @@ BootstrapSelectAsset::register($this);
 //$this->registerJs("CKEDITOR.plugins.addExternal('simage', '".Yii::getAlias('@web')."/plugins/simage_1.3/plugin.js', '');");
 //$this->registerJs("CKEDITOR.plugins.addExternal('font', '".Yii::getAlias('@web')."/plugins/font_4.10.1/font/plugin.js', '');");
 
+
 ?>
-<div class="adminFloater shadow-sm p-3 mb-5 bg-white rounded d-flex flex-column text-center">
-    
-    <?php if (Yii::$app->user->can('update_asset')) : ?>
-        <div class="p-2"><?= Html::a(Yii::t('app', 'Add / Remove Image Assets'), [Url::to('multiple')], ['class' => 'btn btn-primary']) ?></div>
-    <?php endif; ?>
-</div>
+
 <div class="page-form container">
+    <div class="container bg-white clearfix">
+        <div class="text-right adminFloaterRev2 shadow-sm p-1 mb-2 bg-white rounded">
+            <?= Html::a(Yii::t('app', 'Add / Remove Image Assets'), [Url::to('multiple')], ['class' => 'btn btn-primary text-right'])?>
+        </div>
+    </div>
 
     <?php 
     $form = ActiveForm::begin([
@@ -69,16 +70,19 @@ BootstrapSelectAsset::register($this);
                     <div class="card" data-id="<?=$headImage['id']?>">
                         <img class="card-img-top img-thumbnail" style="max-height:100px;object-fit:cover;" src="<?=$headImage['image_path']?>">
                         <div class="card-body p-0 text-center">
-                            <a href="#" class="small deleteHeaderImage" data-id="<?=$headImage['id']?>">Delete</a>
+                            <a href="#" class="deleteHeaderImage btn btn-outline-danger btn-sm" data-id="<?=$headImage['id']?>">Delete</a>
+                            <a href="#" class="updateHeaderImage btn btn-outline-success btn-sm" data-id="<?=$headImage['id']?>">Update</a>
                         </div>
                     </div>
                 <?php endforeach; ?>
+
             </div>
 
             <div class="row">
                 <div class="col-md-6">
                     <div class="uploadMessage"></div>
                     <button type="button" data-title="<?=$model->title?>" data-id="<?=$model->id?>" id="headerImageFormTrigger" class="btn btn-outline-primary">Add Image</button>
+                    <div class="small text-muted">Images displayed here are just previews and do not represent how the image will be displayed on a live page</div>
                 </div>
                 
             </div>
@@ -88,49 +92,50 @@ BootstrapSelectAsset::register($this);
     
     <div class="invalidFix">
         <?= $form->field($model, 'body')->widget(CKEditor::className(), [
-        'options' => ['rows' => '6'],
-        'preset' => 'custom',
-        'clientOptions' => [
-            'toolbarGroups' => [
-                ['name' => 'document', 'groups' => [ 'mode', 'document', 'doctools' ]],
-                ['name' => 'clipboard', 'groups' => [ 'clipboard', 'undo' ]],
-                ['name' => 'editing', 'groups' => [ 'find', 'selection', 'spellchecker', 'editing' ]],
-                '/',
-                ['name' => 'basicstyles', 'groups' => [ 'basicstyles', 'cleanup' ]],
-                ['name' => 'paragraph', 'groups' => [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ]],
-                ['name' => 'insert', 'groups' => [ 'insert' ]],
-                '/',
-                ['name' => 'styles', 'groups' => [ 'styles' ]],
-                ['name' => 'colors', 'groups' => [ 'colors' ]],
-		        ['name' => 'tools', 'groups' => [ 'tools' ]],
-		        ['name' => 'links', 'groups' => [ 'links' ]],
-		        ['name' => 'others', 'groups' => [ 'others' ]],
-		        ['name' => 'about', 'groups' => [ 'about' ]]
-            ],
-            'removeButtons' => 'Flash,Iframe,Language,Save,NewPage',
-            //'contentsCss' => ['http://sibleyfront.test/assets/7a577269/js/bootstrap.bundle.js'],
-            'allowedContent' => true
-        ]
-        /*
-        'clientOptions' => [
-            'extraPlugins' => 'font',   //['simage','font']
-            'toolbarGroups' => [
-               
-                //['name' => 'simage'], // <--- OUR NEW PLUGIN YAY!
-                ['name' => 'font']
+            'options' => ['rows' => '6'],
+            'preset' => 'custom',
+            'clientOptions' => [
+                'toolbarGroups' => [
+                    ['name' => 'document', 'groups' => [ 'mode', 'document', 'doctools' ]],
+                    ['name' => 'clipboard', 'groups' => [ 'clipboard', 'undo' ]],
+                    ['name' => 'editing', 'groups' => [ 'find', 'selection', 'spellchecker', 'editing' ]],
+                    '/',
+                    ['name' => 'basicstyles', 'groups' => [ 'basicstyles', 'cleanup' ]],
+                    ['name' => 'paragraph', 'groups' => [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ]],
+                    ['name' => 'insert', 'groups' => [ 'insert' ]],
+                    '/',
+                    ['name' => 'styles', 'groups' => [ 'styles' ]],
+                    ['name' => 'colors', 'groups' => [ 'colors' ]],
+                    ['name' => 'tools', 'groups' => [ 'tools' ]],
+                    ['name' => 'links', 'groups' => [ 'links' ]],
+                    ['name' => 'others', 'groups' => [ 'others' ]],
+                    ['name' => 'about', 'groups' => [ 'about' ]]
+                ],
+                'removeButtons' => 'Flash,Iframe,Language,Save,NewPage',
+                //'contentsCss' => ['http://sibleyfront.test/assets/7a577269/js/bootstrap.bundle.js'],
+                'allowedContent' => true
             ]
-        ]
-        */
-    ]) ?>
+            /*
+            'clientOptions' => [
+                'extraPlugins' => 'font',   //['simage','font']
+                'toolbarGroups' => [
+                
+                    //['name' => 'simage'], // <--- OUR NEW PLUGIN YAY!
+                    ['name' => 'font']
+                ]
+            ]
+            */
+        ])->hint('Hint: To embed images in with text, first add the image to the available assets. This can be done by clicking the, "Add / Remove Image Assets" button at the top of this page.') ?>
     </div>
 
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="fbToggle">
-        <label class="form-check-label" for="fbToggle">Include <i class="fab fa-facebook-square"></i> Page Feed?</label>
-    </div>
-
-    <div class="card" id="fbOptions" style="display:none;">
-        <div class="row card-body">
+    <div class="card" id="fbOptions">
+        <div class="card-header">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="fbToggle">
+                <label class="form-check-label" for="fbToggle">Include <i class="fab fa-facebook-square"></i> Page Feed?</label>
+            </div>
+        </div>
+        <div class="row card-body" style="display:none;">
             <div class="col">
                 <?= $form->field($model, 'fb_token')->textInput(['maxlength' => true, 'placeholder' => 'Expl: 123456789123456']) ?>
             </div>
@@ -140,33 +145,37 @@ BootstrapSelectAsset::register($this);
         </div>
     </div>
     
+    <p>&nbsp;</p>
 
-    <div class="row">
-        <div class="col">
-            <?= $form->field($model, 'category_ids')->listBox($categories, [
-                'multiple' => true,
-                'class' => 'form-control selectpicker',
-                'data-live-search' => 'true',
-                'data-max-options' => 4,
-                'data-size' => 6,
-                'title' => 'Choose up to 4 categories'
-            ])
-            /* or, you may use a checkbox list instead */
-            /* ->checkboxList($categories) */
-            ->hint('Selecting a category will automatically retrieve all organizations matching that category and list them for you on this page.');?>
+    <div class="card">
+        <div class="row card-body">
+            <div class="col">
+                <?= $form->field($model, 'category_ids')->listBox($categories, [
+                    'multiple' => true,
+                    'class' => 'form-control selectpicker',
+                    'data-live-search' => 'true',
+                    'data-max-options' => 4,
+                    'data-size' => 6,
+                    'title' => 'Choose up to 4 categories'
+                ])
+                /* or, you may use a checkbox list instead */
+                /* ->checkboxList($categories) */
+                ->hint('Selecting a category will automatically retrieve all organizations matching that category and list them for you on this page.');?>
+            </div>
+            <div class="col">
+                <?php if (Yii::$app->user->can('update_category')) : ?>
+                    <div class="p-2 text-right"><?= Html::a(Yii::t('app', 'Update Categories'), [Url::to('/category')], ['class' => 'btn btn-outline-primary']) ?></div>
+                <?php endif; ?>
+            </div>
         </div>
-        <div class="col">
-            <?php if (Yii::$app->user->can('update_category')) : ?>
-                <div class="p-2 text-right"><?= Html::a(Yii::t('app', 'Update Categories'), [Url::to('/category')], ['class' => 'btn btn-outline-primary']) ?></div>
-            <?php endif; ?>
-        </div>
-    </div>
-    <div class="row">
-        <div id="categoryDetails" class="col">
+        <div class="card-footer">
+            <div id="categoryDetails">
 
+            </div>
         </div>
     </div>
     
+    <p>&nbsp;</p>
 
     <?= $form->field($model, 'sub_pages')->dropDownList([
         '0' => 'No', 

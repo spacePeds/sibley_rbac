@@ -8,6 +8,8 @@ use frontend\models\Event;
 use frontend\models\Page;
 use frontend\models\Business;
 use frontend\models\HeaderImage;
+use frontend\models\SubPage;
+use frontend\models\Document;
 
 class FrontendController extends \yii\web\Controller
 {
@@ -184,6 +186,7 @@ class FrontendController extends \yii\web\Controller
         return $eventList;
     }
 
+
     /**
      * Construct array of retrieved page elements
      * @param integer $pageKey
@@ -200,7 +203,8 @@ class FrontendController extends \yii\web\Controller
         if (isset($page['last_edit_dt'])) {
             $page['last_edit_dt'] = date("m/d/Y @ g:ia", strtotime($page['last_edit_dt']));
             $page['linkedOrganizations'] = [];
-        }    
+        }
+        $page['id'] = $pageKey;
         //load all business with found categories
         //$business = Business::find()->joinWith(['business_category','contact_method'])->where(['business_category.category_id' => $page['category_id']])->asArray()->all();
         $organizations = [];
@@ -233,9 +237,143 @@ class FrontendController extends \yii\web\Controller
         //load any header images
         $page['headerImages'] = [];
         $headImages = HeaderImage::find()->where(['image_idx'=>'page_'.$pageKey])->asArray()->all();
-        foreach($headImages as $headImage) {
-            $page['headerImages'][] = $headImage;
+        foreach($headImages as $headerImage) {
+            $class = '';
+            $style = '';
+            if ($headerImage['display'] == 'rounded') {
+                $class = 'rounded-circle';
+            }
+            if (!empty($headerImage['offset'])) {
+                $style = "margin-top:".$headerImage['offset']."px;";
+            }
+            if (!empty($headerImage['position'])) {
+                if ($headerImage['position'] == 'center') {
+                    $class .= ' mx-auto d-block';
+                }
+                if ($headerImage['position'] == 'right') {
+                    $class .= ' float-right';
+                }
+                if ($headerImage['position'] == 'left') {
+                    $class .= ' float-left';
+                }
+            }
+            if ($headerImage['display'] == 'parallax') {
+                $style = 'min-height:'.$headerImage['height'].'px;';
+                $style .= "background: url('".$headerImage['image_path']."');";
+                $style .= 'background-position:center;background-size: cover;'; //background-position:'.$offset.',0
+                $style .= 'text-align:center;color:#fff;position: relative;background-attachment: fixed;background-repeat: no-repeat;';
+            }
+            $page['headerImages'][$headerImage['display']][] = [
+                'image' => $headerImage,
+                'class' => $class,
+                'style' => $style,
+            ];
         }
+
+        //load sub-sections
+        $page['subSections'] = [];
+        if ($page['sub_pages']) {
+            $subSections = SubPage::find()->where(['page_id' => $pageKey])->orderBy(['sort_order' => SORT_ASC])->asArray()->all();
+        
+            //append subsection documents (if any)
+            foreach($subSections as $idx => $subSection) {
+                $subSections[$idx]['documents'] = [];
+                $documents = Document::find()->where(['table_record' => 'subPage_'.$subSection['id']])->asArray()->all();
+                if (!empty($documents)) {
+                    $subSections[$idx]['documents'] = $documents;
+                }
+            }  
+            $page['subSections'] = $subSections;
+        }
+
+        //set govPayNet variable
+        $page['govPayNet'] = [];
+
+        //load rec specific data
+        $page['events'] = [];
+        if (strpos($page['route'], '/sibley/recreation') !== false) {
+            //rec
+            $page['events'] = $this->loadRecEvents();
+            $page['govPayNet']['description'] = Yii::$app->params['govPayNet']['rec']['description'];
+            $page['govPayNet']['link'] = Yii::$app->params['govPayNet']['rec']['link'];
+        }
+        
+        //load city specific data
+        $page['meetings'] = [];
+        $page['staff'] = [];
+        if (strpos($page['route'], '/sibley/city') !== false) {
+            //city
+            $page['meetings'] = $this->loadCityMeetings();
+            $page['staff'] = $this->loadCityStaff();
+            $page['govPayNet']['description'] = Yii::$app->params['govPayNet']['city']['description'];
+            $page['govPayNet']['link'] = Yii::$app->params['govPayNet']['city']['link'];
+        }
+        
         return $page;
     }
+    /**
+     * Helper function
+     */
+    public static function format_phone($country, $phone) {
+        $function = 'format_phone_' . $country;
+        if(function_exists($function)) {
+            return $function($phone);
+        }
+        return $phone;
+    }
+    /**
+     * Helper function
+     */
+    public static function format_phone_us($phone) {
+        // note: making sure we have something
+        if(!isset($phone{3})) { return ''; }
+            // note: strip out everything but numbers 
+            $phone = preg_replace("/[^0-9]/", "", $phone);
+            $length = strlen($phone);
+            switch($length) {
+            case 7:
+                return preg_replace("/([0-9]{3})([0-9]{4})/", "$1-$2", $phone);
+            break;
+            case 10:
+                return preg_replace("/([0-9]{3})([0-9]{3})([0-9]{4})/", "($1) $2-$3", $phone);
+            break;
+            case 11:
+            return preg_replace("/([0-9]{1})([0-9]{3})([0-9]{3})([0-9]{4})/", "$1($2) $3-$4", $phone);
+            break;
+            default:
+                return $phone;
+            break;
+        }
+    }
+
+    /*
+foreach ($details['headerImages'] as $headerImage) {
+        
+        if ($headerImage['display'] == 'parallax') {
+            $style = 'min-height:'.$headerImage['height'].'px;';
+            $style .= "background: url('".$imgPath."');";
+            $style .= 'background-position:center;background-size: cover;'; //background-position:'.$offset.',0
+            $style .= 'text-align:center;color:#fff;position: relative;background-attachment: fixed;background-repeat: no-repeat;';
+            ?>
+            <section class="p-3" style="<?=$style?>">
+                <div class="parallax-overlay" style="background: rgba(0,0,0,<?=$headerImage['brightness']?>);">
+                    <div class="row">
+                        <div class="col">
+                            <div class="container pt-5">
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </section>
+            <?php
+        }
+    
+        if ($headerImage['display'] != 'parallax') {
+            $style = '';
+            if (!empty($offset)) {
+                $style = "margin-top:".$offset."px;";
+            }
+            $standardHeaderImages[] = '<img src="'.$imgPath.'" height="'.$height.'" class="'.$class.'" style="'.$style.'">';  
+    */
+
 }

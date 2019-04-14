@@ -281,6 +281,16 @@ class SiteController extends FrontendController
     }
 
     /**
+     * Displays about page.
+     *
+     * @return mixed
+     */
+    public function actionDisclaimer()
+    {
+        return $this->render('disclaimer');
+    }
+
+    /**
      * Signs user up.
      *
      * @return mixed

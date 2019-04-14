@@ -35,7 +35,7 @@ class ImageAsset extends \yii\db\ActiveRecord
         return [
             [['path', 'type', 'size', 'name'], 'required'],
             [['size'], 'integer'],
-            [['created_dt'], 'safe'],
+            [['created_dt','created_by'], 'safe'],
             [['path'], 'string', 'max' => 1024],
             [['type', 'name'], 'string', 'max' => 255],
         ];
@@ -66,18 +66,20 @@ class ImageAsset extends \yii\db\ActiveRecord
     {
         
         $assets = (new Query())
-            ->select(['id','path','type','size','name','DATE_FORMAT(created_dt,"%m/%d/%Y") as upldDt'])
+            ->select(['id','path','type','size','name','DATE_FORMAT(created_dt,"%m/%d/%Y") as upldDt'], 'created_by')
             ->from('image_asset')
             ->all();
         if (count($assets) < 1) {
+            $sysPath = Url::to('@web') . '/' . Yii::$app->params['assetPath'];
             $assets = [
                 0 => [
                     'id' => 0,
                     'name' => '',
-                    'path' => Url::to('@web/img/assets/') . 'placeholder-image.jpg',
+                    'path' => $sysPath . 'placeholder-image.jpg',
                     'size' => '',
                     'type' => '',
-                    'upldDt' => ''
+                    'upldDt' => '',
+                    'created_by' => '',
                 ]
             ];
         }

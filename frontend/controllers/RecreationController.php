@@ -59,9 +59,10 @@ class RecreationController extends FrontendController
         $slug = '';
         $pageKey = 11;
         $page = $this->getGenericPage($pageKey);
-        return $this->render('/sibley/generic', [
-            'details' => $page,
-            'key' => $pageKey
+        return $this->render('/sibley/genericMaster', [
+            'page' => $page,
+            'key' => $pageKey,
+            
         ]);
     }
 
@@ -76,9 +77,10 @@ class RecreationController extends FrontendController
         $slug = '';
         $pageKey = 10;
         $page = $this->getGenericPage($pageKey);
-        return $this->render('/sibley/generic', [
-            'details' => $page,
-            'key' => $pageKey
+        return $this->render('/sibley/genericMaster', [
+            'page' => $page,
+            'key' => $pageKey,
+            
         ]);
     }
 
@@ -93,9 +95,10 @@ class RecreationController extends FrontendController
         $slug = '';
         $pageKey = 12;
         $page = $this->getGenericPage($pageKey);
-        return $this->render('/sibley/generic', [
-            'details' => $page,
-            'key' => $pageKey
+        return $this->render('/sibley/genericMaster', [
+            'page' => $page,
+            'key' => $pageKey,
+            
         ]);
     }
     
@@ -110,9 +113,10 @@ class RecreationController extends FrontendController
         $slug = '';
         $pageKey = 13;
         $page = $this->getGenericPage($pageKey);
-        return $this->render('/sibley/generic', [
-            'details' => $page,
-            'key' => $pageKey
+        return $this->render('/sibley/genericMaster', [
+            'page' => $page,
+            'key' => $pageKey,
+            
         ]);
     }
 
@@ -127,9 +131,10 @@ class RecreationController extends FrontendController
         $slug = '';
         $pageKey = 14;
         $page = $this->getGenericPage($pageKey);
-        return $this->render('/sibley/generic', [
-            'details' => $page,
-            'key' => $pageKey
+        return $this->render('/sibley/genericMaster', [
+            'page' => $page,
+            'key' => $pageKey,
+            
         ]);
     }
 }

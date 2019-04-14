@@ -65,7 +65,7 @@ if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') {
             //'enableClientValidation' => false
         ]); ?>
 
-        <?= $form->field($upload, 'imageFiles[]')->fileInput(['multiple'=>true, 'accept' => 'image/*', 'id' => 'fileUploader']) ?>
+        <?= $form->field($upload, 'imageFiles[]')->fileInput(['multiple'=>true, 'accept' => 'image/*', 'id' => 'fileUploader'])->hint('Click, "Choose Files" to browse one or more image on your computer to upload.') ?>
 
         <?= $form->errorSummary($upload) ?>
 

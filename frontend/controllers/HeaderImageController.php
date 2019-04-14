@@ -123,11 +123,33 @@ class HeaderImageController extends Controller
      */
     public function actionUpdate($id)
     {
+        
         $model = $this->findModel($id);
-
         if (Yii::$app->user->can('update_page')) {
             
-            //@todo!!
+            
+            if ($model->load(Yii::$app->request->post())) {
+                
+                $model->last_edit = date('Y-m-d H:i:s');
+
+                if ($model->save()) {
+                    
+                    $audit = new Audit();
+                    $audit->table = 'header_image';
+                    $audit->record_id = $id;
+                    $audit->field = 'Update';
+                    $audit->update_user = Yii::$app->user->identity->id;
+                    $audit->save(false);
+
+                    $data = ArrayHelper::toArray($model);
+                    $model->ajaxResult['form'] = $data;
+                    $model->ajaxResult = ['status' => 'success','message' => 'Edit successful.'];
+                } else {
+                    $model->ajaxResult = ['status' => 'error','message' => 'Failed to save record.','errors' => $model->errors];
+                }
+                    
+                return $this->asJson($model->ajaxResult);
+            }
 
             return $this->renderAjax('update', [
                 'model' => $model,

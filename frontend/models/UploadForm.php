@@ -31,12 +31,13 @@ class UploadForm extends Model
         if ($this->validate()) { 
             foreach ($this->imageFiles as $image) {
                 $model = new ImageAsset();
-                $model->path = $path;
+                $model->path = '/'. $path;
                 $model->type = $image->extension;
                 $model->size = $image->size;
                 $model->name = time().rand(100,999).'.'.$image->extension;
+                $model->created_by = $user_id = Yii::$app->user->identity->id;
                 if($model->save(false)) {
-                    $image->saveAs(Url::to('@frontend/web') . $path . $model->name);
+                    $image->saveAs($path . $model->name);
                     //$image->saveAs('uploads/' . $file->baseName . '.' . $file->extension);
                 } else {
                     Yii::$app->session->setFlash('error', 'Could not save image: ' . $path . $model->name);

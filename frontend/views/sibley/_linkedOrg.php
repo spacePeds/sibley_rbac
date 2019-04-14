@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\Html;
+use frontend\components\FrontendController;
 ?>
 
 <?php if (isset($page['linkedOrganizations'])): ?>
@@ -33,7 +34,7 @@ use yii\helpers\Html;
                                 $contact['description'] = ': ' . $contact['description'];
                             }
                         ?>
-                            <li><?=$contact['method']?> <?=format_phone('us', $contact['contact'])?> <?=$contact['description']?></li>
+                            <li><?=$contact['method']?> <?=FrontendController::format_phone('us', $contact['contact'])?> <?=$contact['description']?></li>
                         <?php endforeach; ?>
                     </ul>
                 <?php endif; ?>

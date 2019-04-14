@@ -53,10 +53,11 @@ class PageController extends Controller
         $searchModel = new PageSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+        //return $this->render('index', [
+        //    'searchModel' => $searchModel,
+        //    'dataProvider' => $dataProvider,
+        //]);
+        return $this->redirect(['/']);
     }
 
     /**
@@ -142,33 +143,38 @@ class PageController extends Controller
     {
         $model = new UploadForm();
         $assets = $this->retrieveImgAssets();
-        $user_id = User::findByUsername(Yii::$app->user->identity->username)->getId();
+        $user_id = Yii::$app->user->identity->id;
 
-        if (Yii::$app->request->isPost) {
-            $model->imageFiles = UploadedFile::getInstances($model, 'imageFiles');
-            
-            if (!file_exists(Url::to('@frontend/web/img/assets/'))) {
-                mkdir(Url::to('@frontend/web/img/assets/'),0777,true);
-            }
-            $path = Url::to('/img/assets/');
+        if (Yii::$app->user->can('update_page')) {
+            if (Yii::$app->request->isPost) {
+                $model->imageFiles = UploadedFile::getInstances($model, 'imageFiles');
 
-            if ($model->upload($path)) {
-                //file uploaded successfully
-                Yii::$app->session->setFlash('success', 'Successfully Uploaded image(s).');
-                return $this->redirect([Yii::$app->request->post('route')]);
-            } else {             
-                return $this->redirect([Yii::$app->request->post('route')]);
+                $sysPath = '/' . Yii::$app->params['assetPath'];
+                if (!is_dir(Url::to('@webroot') . $sysPath)) {
+                    mkdir(Url::to('@webroot') . $sysPath); 
+                }
+
+                
+
+                if ($model->upload(Yii::$app->params['assetPath'])) {
+                    //file uploaded successfully
+                    Yii::$app->session->setFlash('success', "Successfully Uploaded image(s) to $sysPath.");
+                    return $this->redirect([Yii::$app->request->post('route')]);
+                } else {             
+                    return $this->redirect([Yii::$app->request->post('route')]);
+                }
+            } 
+            else
+            {
+                return $this->render('multiple',[
+                    'upload' => $model,
+                    'role' => \Yii::$app->authManager->getRolesByUser($user_id),
+                    'assets' => $assets
+                ]);
             }
-        } 
-        else
-        {
-            return $this->render('multiple',[
-                'upload' => $model,
-                'role' => \Yii::$app->authManager->getRolesByUser($user_id),
-                'assets' => $assets
-            ]);
+        } else {
+            throw new ForbiddenHttpException('You do not have permission to perform this action.');
         }
-        
     }
 
     /**
@@ -257,11 +263,20 @@ class PageController extends Controller
     public function actionDelete2($id)
     {
         if (($model = ImageAsset::findOne($id)) !== null) {
+
+            //make sure only owner or site admin can delete
+            $user_id = Yii::$app->user->identity->id;
+            if ($user_id != $model->created_by && $user_id != 1 && $model->created_by != 1) {
+                Yii::$app->session->setFlash('error', "It does not appear you are the owner of this asset. Delete request rejected.");
+                return $this->goBack(Yii::$app->request->referrer);
+            }
+
             $imgName = $model->name;
             if ($model->delete()) {
-                if (file_exists(Url::to('@frontend/web/img/assets/'.$imgName))) {
-                    if (!unlink(Url::to('@frontend/web/img/assets/'.$imgName))) {
-                        Yii::$app->session->setFlash('warning', 'Unable to delete image: '. Url::to('@frontend/web/img/assets/') . $imgName.'. Please conteact your website administrator to correct this.');                        
+                $sysPath = '/' . Yii::$app->params['assetPath'];
+                if (file_exists(Url::to($sysPath) . $imgName)) {
+                    if (!unlink(Url::to($sysPath.$imgName))) {
+                        Yii::$app->session->setFlash('warning', 'Unable to delete image: '. Url::to($sysPath) . $imgName.'. Please conteact your website administrator to correct this.');                        
                     }                   
                 }
                 Yii::$app->session->setFlash('success', 'Image '.$imgName .' deleted successfully.');
@@ -281,41 +296,42 @@ class PageController extends Controller
 public function actionAjaxOrganizationDetails() {
 
     $posted = Yii::$app->request->post();
-    $categories = $posted['categories'];
+    if (isset($posted['categories'])) {
+        $categories = $posted['categories'];
 
-    $result['orgs'] = '';
-    $result['status'] = 'error';
-    $result['message'] = 'No matching Organizations';
-    
-    $organizations = Business::find()
-        ->select('business.id as bid, business.*, business_category.*, contact_method.*')
-        ->leftJoin('business_category', '`business_category`.`business_id` = `business`.`id`')
-        ->leftJoin('contact_method', '`contact_method`.`business_id` = `business`.`id`')
-        ->where(['in', 'business_category.category_id', $categories])->asArray()->all();
-
-    if (!empty($organizations)) {
-        foreach ($organizations as $organization) {
-            $bid = $organization['bid'];
-            $page['linkedOrganizations'][$bid]['name'] = $organization['name'];
-            $page['linkedOrganizations'][$bid]['address1'] = $organization['address1'];
-            $page['linkedOrganizations'][$bid]['address2'] = $organization['address2'];
-            $page['linkedOrganizations'][$bid]['city'] = $organization['city'];
-            $page['linkedOrganizations'][$bid]['state'] = $organization['state'];
-            $page['linkedOrganizations'][$bid]['zip'] = $organization['zip'];
-            $page['linkedOrganizations'][$bid]['url'] = $organization['url'];
-            $page['linkedOrganizations'][$bid]['note'] = $organization['note'];
-            $page['linkedOrganizations'][$bid]['member'] = $organization['member'];
-            $page['linkedOrganizations'][$bid]['contact'][] = [
-                'method' => $organization['method'],
-                'contact'=> $organization['contact'],
-                'description' => $organization['description']
-            ];
-        }
-        return $this->renderAjax('/sibley/_linkedOrg', ['page' => $page,]);
-        //$result['status'] = 'success';
-        //$result['message'] = '';
-    }
+        $result['orgs'] = '';
+        $result['status'] = 'error';
+        $result['message'] = 'No matching Organizations';
         
+        $organizations = Business::find()
+            ->select('business.id as bid, business.*, business_category.*, contact_method.*')
+            ->leftJoin('business_category', '`business_category`.`business_id` = `business`.`id`')
+            ->leftJoin('contact_method', '`contact_method`.`business_id` = `business`.`id`')
+            ->where(['in', 'business_category.category_id', $categories])->asArray()->all();
+
+        if (!empty($organizations)) {
+            foreach ($organizations as $organization) {
+                $bid = $organization['bid'];
+                $page['linkedOrganizations'][$bid]['name'] = $organization['name'];
+                $page['linkedOrganizations'][$bid]['address1'] = $organization['address1'];
+                $page['linkedOrganizations'][$bid]['address2'] = $organization['address2'];
+                $page['linkedOrganizations'][$bid]['city'] = $organization['city'];
+                $page['linkedOrganizations'][$bid]['state'] = $organization['state'];
+                $page['linkedOrganizations'][$bid]['zip'] = $organization['zip'];
+                $page['linkedOrganizations'][$bid]['url'] = $organization['url'];
+                $page['linkedOrganizations'][$bid]['note'] = $organization['note'];
+                $page['linkedOrganizations'][$bid]['member'] = $organization['member'];
+                $page['linkedOrganizations'][$bid]['contact'][] = [
+                    'method' => $organization['method'],
+                    'contact'=> $organization['contact'],
+                    'description' => $organization['description']
+                ];
+            }
+            return $this->renderAjax('/sibley/_linkedOrg', ['page' => $page,]);
+            //$result['status'] = 'success';
+            //$result['message'] = '';
+        }
+    }
     //echo Json::encode($result);
 }
 

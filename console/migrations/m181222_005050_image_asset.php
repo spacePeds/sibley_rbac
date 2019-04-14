@@ -22,6 +22,7 @@ class m181222_005050_image_asset extends Migration
             'size' => $this->integer()->notNull(),
             'name' =>  $this->string(255)->notNull(),
             'created_dt' => $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP'),
+            'created_by' => $this->integer()->notNull(),
             
         ], $tableOptions);
     }

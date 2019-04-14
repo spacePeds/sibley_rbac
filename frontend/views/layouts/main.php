@@ -27,6 +27,16 @@ SlickCarouselAsset::register($this);
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
 <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-137978125-1"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-137978125-1');
+    </script>
+
     <meta charset="<?= Yii::$app->charset ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <?= Html::csrfMetaTags() ?>
@@ -182,7 +192,7 @@ SlickCarouselAsset::register($this);
     <div class="container">
         <p class="text-center">
             &copy; <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?>
-            <br/><span class="text-muted small">Information herein deemed reliable but not guaranteed</span>
+            <br/><span class="text-muted small"><a href="<?= Url::to(['/site/disclaimer']) ?>">Disclaimer and Privacy Statement</a></span>
         </p>
 
         <?php 

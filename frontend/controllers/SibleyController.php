@@ -6,11 +6,9 @@ use Yii;
 use frontend\models\Staff;
 use common\models\User;
 use frontend\models\Page;
-use frontend\models\SubPage;
 use frontend\models\Business;
 use frontend\models\Event;
 use frontend\models\Agenda;
-use frontend\models\Document;
 use yii\base\InvalidParamException;
 use yii\web\ForbiddenHttpException;
 use yii\web\BadRequestHttpException;
@@ -61,7 +59,12 @@ class SibleyController extends FrontendController
         $slug = '';
         $pageKey = 4;
         $page = $this->getGenericPage($pageKey);
-        
+
+        return $this->render('genericMaster', [
+            'page' => $page,
+            'key' => $pageKey,
+        ]);
+/*        
         //load sub-sections
         $subSections = SubPage::find()->where(['page_id' => $pageKey])->orderBy(['sort_order' => SORT_ASC])->asArray()->all();
         //append subsection documents (if any)
@@ -81,16 +84,6 @@ class SibleyController extends FrontendController
             ])
             ->leftJoin('staff_elected', '`staff_elected`.`staff_id` = `staff`.`id`')->asArray()->all();
 
-        //$imageAsset = new ImageAsset();
-        //$imgAssets = $imageAsset->retrieveAssets();
-        //link up any set images
-        //foreach ($staff as $idx => $person) {
-        //    foreach ($imgAssets as $imgAsset) {
-        //        if ($person['image_asset'] == $imgAsset['id'] && $person['image_asset'] != 0) {
-        //            $staff[$idx]['image'] = $imgAsset;
-        //        }
-        //    }
-        //}
 
         //load council meeting within the past month
         $monthAgo = date('Y-m-d', mktime(0, 0, 0, date('m')-1, date('d'), date('Y')));
@@ -105,6 +98,7 @@ class SibleyController extends FrontendController
             'subSections' => $subSections,
             'meetings' => $meetings
         ]);
+        */
     }
     /**
      * Displays sibley homepage.
@@ -280,9 +274,9 @@ class SibleyController extends FrontendController
         $slug = '';
         $pageKey = 2;
         $page = $this->getGenericPage($pageKey);
-        return $this->render('generic', [
-            'details' => $page,
-            'key' => $pageKey
+        return $this->render('genericMaster', [
+            'page' => $page,
+            'key' => $pageKey,
         ]);
     }
     /**
@@ -295,10 +289,11 @@ class SibleyController extends FrontendController
         //define semantic url for page
         $slug = '';
         $pageKey = 6;
+        
         $page = $this->getGenericPage($pageKey);
-        return $this->render('generic', [
-            'details' => $page,
-            'key' => $pageKey
+        return $this->render('genericMaster', [
+            'page' => $page,
+            'key' => $pageKey,
         ]);
     }
 
@@ -328,11 +323,10 @@ class SibleyController extends FrontendController
         $pageKey = 5;
         $page = $this->getGenericPage($pageKey);
 
-        //echo '<pre>' . print_r($page, true) . '</pre>';
-        //echo '<pre>' . print_r($organizations, true) . '</pre>';
-        return $this->render('lodging', [
-            'details' => $page,
-            'key' => $pageKey
+        return $this->render('genericMaster', [
+            'page' => $page,
+            'key' => $pageKey,
+            
         ]);
     }
 
@@ -348,7 +342,7 @@ class SibleyController extends FrontendController
         $pageKey = 7;
         $page = $this->getGenericPage($pageKey);
         //echo '<pre>' . print_r($page) . '</pre>';
-
+/*
         $subSections = SubPage::find()->where(['page_id' => $pageKey])->orderBy(['sort_order' => SORT_ASC])->asArray()->all();
         //append subsection documents (if any)
         foreach($subSections as $idx => $subSection) {
@@ -358,11 +352,11 @@ class SibleyController extends FrontendController
                 $subSections[$idx]['documents'] = $documents;
             }
         }
-
-        return $this->render('chamber', [
+*/
+        return $this->render('genericMaster', [
             'page' => $page,
             'key' => $pageKey,
-            'subSections' => $subSections
+            
         ]);
     }
 
@@ -377,7 +371,13 @@ class SibleyController extends FrontendController
         $slug = '';
         $pageKey = 9;
         $page = $this->getGenericPage($pageKey);
-
+        
+        return $this->render('genericMaster', [
+            'page' => $page,
+            'key' => $pageKey,
+            
+        ]);
+/*
         $subSections = SubPage::find()->where(['page_id' => $pageKey])->orderBy(['sort_order' => SORT_ASC])->asArray()->all();
         
         //append subsection documents (if any)
@@ -418,6 +418,25 @@ class SibleyController extends FrontendController
             'events' =>$enhancedEvents,
             'subSections' => $subSections
         ]);
+    */
+    }
+
+
+
+    /**
+     * TEst page
+     */
+    public function actionSpiritualCenters() {
+        //define semantic url for page
+        $slug = '';
+        $pageKey = 15;
+        $page = $this->getGenericPage($pageKey);
+
+        return $this->render('genericMaster', [
+            'page' => $page,
+            'key' => $pageKey,
+            
+        ]);
     }
 
     /**
@@ -439,8 +458,58 @@ class SibleyController extends FrontendController
             'key' => $pageKey
         ]);
     }
-    
-    
+    /**
+     * Load all recreation events for the current week
+     * @return array
+     */
+    protected function loadRecEvents() {
+        $dayOfWeek = date('w');
+        if ($dayOfWeek == 0) {
+            $sunday = strtotime("today");
+            $saturday = strtotime("next Saturday");
+        } else if ($dayOfWeek == 6){    
+            $sunday = strtotime("last sunday");
+            $saturday = strtotime("today");
+        } else {
+            $sunday = strtotime("last sunday");
+            $saturday = strtotime("next saturday");
+        }
+        $recEvents = Event::find()
+            ->orderBy(['start_dt' => SORT_ASC])
+            ->where(['group' => 'rec'])
+            ->andWhere(['>=', 'start_dt', strftime('%Y-%m-%d', $sunday)])
+            ->andWhere(['<=','start_dt', strftime('%Y-%m-%d', $saturday)])
+            ->asArray()->all();
+        $enhancedEvents = $this->injectRepeatingEvents($recEvents);
+        return $enhancedEvents;
+    }
+    /** 
+     * Load all city council meetings within the past month
+     * @return array
+     */
+    protected function loadCityMeetings() {
+        //load council meeting within the past month
+        $monthAgo = date('Y-m-d', mktime(0, 0, 0, date('m')-1, date('d'), date('Y')));
+        $tomorrow = date('Y-m-d', mktime(0, 0, 0, date('m'), date('d')+1, date('Y')));
+        $meetings = Agenda::find()->select(['id','type','DATE_FORMAT(date, "%W %M %D") as fmtdDt'])->where(
+            ['between', 'date', $monthAgo, $tomorrow ])->orderBy('date')->asArray()->all();
+        return $meetings;
+    }
+
+    /** 
+     * Load city staff
+     * @return array
+     */
+    protected function loadCityStaff() {
+        $staff = Staff::find()
+            ->select([
+                'staff.id','first_name','last_name','position','elected','email','phone', 'image',
+                'DATE_FORMAT(staff_elected.term_start, "%c/%e/%Y") as termStartFmtd','DATE_FORMAT(staff_elected.term_end, "%c/%e/%Y") as termEndFmtd'
+            ])
+            ->leftJoin('staff_elected', '`staff_elected`.`staff_id` = `staff`.`id`')->asArray()->all();
+        return $staff;
+    }
+
     /**
      * https://stackoverflow.com/questions/3028491/php-weeks-between-2-dates
      * @param

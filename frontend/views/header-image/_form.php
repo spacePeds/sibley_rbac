@@ -50,7 +50,7 @@ use yii\helpers\Url;
                     'class' => 'form-control-invalid-feedback',
                 ],
                 'template' => '{label}{input}
-                <small id="url_exHelp" class="form-text text-muted">Darken the image by entering a decimal value between 0 (lightest) to 1 (darkest)</small>
+                <small id="url_exHelp" class="form-text text-muted">Darken the image by entering a decimal value between 0 (normal) to 1 (darkest)</small>
                 {error}'
             ])->textInput(['maxlength' => true]) ?>
         </div>
@@ -67,20 +67,29 @@ use yii\helpers\Url;
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-md-6">
+        <?= $form->field($model, 'height')->textInput()->hint('Image height in pixels.') ?>
+        </div>
+
+        <div class="col-md-6">
+            <?= $form->field($model, 'position')->dropDownList([
+                'left' => 'Left', 
+                'right' => 'Right',
+                'center' => 'Center',
+            ], ['prompt' => 'Choose how you would like the image to be alligned']) ?>
+        </div>
+    </div>
     
-    <?= $form->field($model, 'height')->textInput() ?>
     
-    <?= $form->field($model, 'position')->dropDownList([
-        'left' => 'Left', 
-        'right' => 'Right',
-        'center' => 'Center',
-    ], ['prompt' => 'Choose how you would like the image to be alligned']) ?>
+    
     
     <?= $form->field($model, 'sequence')->textInput() ?>
 
     <div class="form-group text-right">
         <button type="button" class="btn btn-link" data-dismiss="modal" aria-label="Close">Cancel</button>
-        <?= Html::button(Yii::t('app', 'Save'), ['class' => 'btn btn-success','id' => 'headerImgSubmit']) ?>
+        <?= Html::button($model->isNewRecord ? 'Save' : 'Update', ['class' => 'btn btn-success','id' => 'headerImgSubmit']) ?>
+        
     </div>
 
     <?php ActiveForm::end(); ?>
