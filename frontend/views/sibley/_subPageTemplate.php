@@ -14,7 +14,7 @@ if (isset($page['headerImages']['parallax'])) {
     <div class="row">
         <div class="col-md-3 bg-sidebar">
 
-        <?php if (isset($role['superAdmin']) || (Yii::$app->user->can('update_page') && Yii::$app->user->can('update_page_rec'))): ?>
+        <?php if (isset($role['superAdmin']) || (Yii::$app->user->can('update_page') && Yii::$app->user->can('update_page'.$page['adminKey']))): ?>
         
             <div class="list-group my-3">
                 <a href="<?= Url::to(['/page/update']) . '/'.$page['id'] ?>" role="button" class="btn btn-primary">Edit Page</a>
@@ -39,7 +39,7 @@ if (isset($page['headerImages']['parallax'])) {
                 <?php endif; ?>
             <?php endforeach; ?>
 
-            <?php if (isset($role['superAdmin']) || (Yii::$app->user->can('update_page_rec') && Yii::$app->user->can('create_subPage'))): ?>
+            <?php if (isset($role['superAdmin']) || (Yii::$app->user->can('update_page'.$page['adminKey']) && Yii::$app->user->can('create_subPage'))): ?>
                 <a href="<?=Url::to('/sub-page/create')?>/<?=$page['id']?>" class="list-group-item btn btn-outline-success btn-sm"><i class="fas fa-plus-square"></i> Create Section</a>
             <?php endif; ?>
 

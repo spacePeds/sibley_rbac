@@ -286,6 +286,9 @@ class FrontendController extends \yii\web\Controller
             $page['subSections'] = $subSections;
         }
 
+        //define page admin key to restrict admin rights
+        $page['adminKey'] = '';
+
         //set govPayNet variable
         $page['govPayNet'] = [];
 
@@ -296,6 +299,7 @@ class FrontendController extends \yii\web\Controller
             $page['events'] = $this->loadRecEvents();
             $page['govPayNet']['description'] = Yii::$app->params['govPayNet']['rec']['description'];
             $page['govPayNet']['link'] = Yii::$app->params['govPayNet']['rec']['link'];
+            $page['adminKey'] = '_rec';
         }
         
         //load city specific data
@@ -307,8 +311,12 @@ class FrontendController extends \yii\web\Controller
             $page['staff'] = $this->loadCityStaff();
             $page['govPayNet']['description'] = Yii::$app->params['govPayNet']['city']['description'];
             $page['govPayNet']['link'] = Yii::$app->params['govPayNet']['city']['link'];
+            $page['adminKey'] = '_city';
         }
-        
+        if (strpos($page['route'], '/sibley/chamber') !== false) {
+            $page['adminKey'] = '_chamber';
+        }
+
         return $page;
     }
     /**
