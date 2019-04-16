@@ -69,12 +69,3 @@ $this->params['breadcrumbs'][] = $this->title;
     </tbody>
     </table>  
 </div>
-<?php
-    Modal::begin([
-        
-        'id' => 'genericModal'
-    ]);
-    echo '<div id="modalContent"></div>';
-    Modal::end();
-
-?>

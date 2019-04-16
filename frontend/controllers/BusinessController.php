@@ -181,6 +181,7 @@ class BusinessController extends Controller
         $modelsContact = $model->contactMethods;
         $model->loadCategories();
 
+
         if (Yii::$app->user->can('update_business')) {
         
             if ($model->load(Yii::$app->request->post())) {
@@ -236,7 +237,7 @@ class BusinessController extends Controller
             }
             
             
-            $sysPath = Url::to('@frontend/web/') . Yii::$app->params['orgImagePath'];
+            $sysPath = Url::to('@webroot/') . Yii::$app->params['orgImagePath'];
             if (file_exists($sysPath . $model->image)) {
                 $model->imgFileUrl = Yii::$app->params['orgImagePath'] . $model->image;
             }

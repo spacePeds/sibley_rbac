@@ -106,16 +106,16 @@ if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') {
                             <div class="card-body">
                                 <div class="card-text small"><?= $asset['name'] ?> <br/>Size: <?= formatSizeUnits($asset['size']) ?></div>
                                 <span class="imgLink"><div class="card-text text-truncate small">URL: <?= $protocol . $_SERVER['SERVER_NAME'] ?><?= $asset['path'] ?><?= $asset['name'] ?> </div></span>
-                                <?php if ($role['superAdmin']) : ?>
-                                <div class="card-footer">
-                                    <?= Html::a(Yii::t('app', 'Delete'), ['delete2', 'id' => $asset['id']], [
-                                        'class' => 'btn btn-danger btn-sm',
-                                        'data' => [
-                                            'confirm' => Yii::t('app', 'Are you sure you want to delete this image?'),
-                                            'method' => 'post',
-                                        ],
-                                    ]) ?>
-                                </div>
+                                <?php if ($role['superAdmin'] || Yii::$app->user->can('delete_asset') && $asset['created_by'] == Yii::$app->user->identity->id) : ?>
+                                    <div class="card-footer">
+                                        <?= Html::a(Yii::t('app', 'Delete'), ['delete2', 'id' => $asset['id']], [
+                                            'class' => 'btn btn-danger btn-sm',
+                                            'data' => [
+                                                'confirm' => Yii::t('app', 'Are you sure you want to delete this image?'),
+                                                'method' => 'post',
+                                            ],
+                                        ]) ?>
+                                    </div>
                                 <?php endif; ?>
                             </div>
                         </div>

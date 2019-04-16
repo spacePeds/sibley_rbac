@@ -366,8 +366,8 @@ public function actionAjaxOrganizationDetails() {
             $assets = [
                 0 => [
                     'id' => 0,
-                    'name' => 'N/A',
-                    'path' => 'img/assets/placeholder-image.jpg',    //Url::to('@web/img/assets/')
+                    'name' => 'placeholder-image.jpg',
+                    'path' => 'img/assets/',    //Url::to('@web/img/assets/')
                     'size' => 0,
                     'type' => '',
                     'upldDt' => ''

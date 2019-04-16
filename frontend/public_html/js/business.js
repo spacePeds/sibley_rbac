@@ -5,12 +5,14 @@ $(function(){
         $('#genericModal').modal('show')
             .find('#modalContent')
             .load($(this).attr('value'));
+        $('#genericModalLabel').html('Create Category');
     });
 
     $('.btnModalCategoryEdit').on('click',function() {
         $('#genericModal').modal('show')
             .find('#modalContent')
             .load($(this).attr('value'));
+            $('#genericModalLabel').html('Edit Category');
     });
     
     //reset
