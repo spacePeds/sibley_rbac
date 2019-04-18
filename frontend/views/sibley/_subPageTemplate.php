@@ -151,7 +151,7 @@ if (isset($page['headerImages']['parallax'])) {
 
             <?= $this->render('_subSectionView', [
                 'subSections' => $page['subSections'],
-                'adminGroup' => 'rec'            
+                'adminGroup' => $page['adminKey']            
             ]) ?>
 
             <?php if (isset($page['linkedOrganizations'])): ?>

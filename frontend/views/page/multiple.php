@@ -47,7 +47,10 @@ function formatSizeUnits($bytes)
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Pages'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => 'Asset Upload', 'url' => ''];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
-
+$role = [];
+if (isset(Yii::$app->user->identity->id)) {
+    $role = \Yii::$app->authManager->getRolesByUser(Yii::$app->user->identity->id);
+}
 $protocol = 'http://';
 if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') {
     $protocol = 'https://';
@@ -106,7 +109,7 @@ if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') {
                             <div class="card-body">
                                 <div class="card-text small"><?= $asset['name'] ?> <br/>Size: <?= formatSizeUnits($asset['size']) ?></div>
                                 <span class="imgLink"><div class="card-text text-truncate small">URL: <?= $protocol . $_SERVER['SERVER_NAME'] ?><?= $asset['path'] ?><?= $asset['name'] ?> </div></span>
-                                <?php if ($role['superAdmin'] || Yii::$app->user->can('delete_asset') && $asset['created_by'] == Yii::$app->user->identity->id) : ?>
+                                <?php if (isset($role['superAdmin']) || Yii::$app->user->can('delete_asset') && $asset['created_by'] == Yii::$app->user->identity->id) : ?>
                                     <div class="card-footer">
                                         <?= Html::a(Yii::t('app', 'Delete'), ['delete2', 'id' => $asset['id']], [
                                             'class' => 'btn btn-danger btn-sm',

@@ -40,10 +40,10 @@ class SubPage extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['page_id', 'title', 'type', 'created_by'], 'required'],
+            [['page_id', 'title', 'type'], 'required'],
             [['page_id', 'created_by'], 'integer'],
             [['body','ajax_file_label'], 'string'],
-            [['last_edit'], 'safe'],
+            [['last_edit', 'created_by'], 'safe'],
             [['title', 'path'], 'string', 'max' => 255],
             [['type'], 'string', 'max' => 25],
             [['page_id'], 'exist', 'skipOnError' => true, 'targetClass' => Page::className(), 'targetAttribute' => ['page_id' => 'id']],

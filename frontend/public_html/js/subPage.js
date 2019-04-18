@@ -15,14 +15,14 @@ var SubPage = new function() {
                 datatype: 'json'
             }).done(function(data ) {
                 if (data.status == 'success') {
-                    console.log('fadeing out', $('div').find('[data-id="'+id+'"]').length);
+                    //console.log('fadeing out', $('div').find('[data-id="'+id+'"]').length);
                     $('div').find('[data-id="'+id+'"]').remove();
                 } else {
                     $(this).closest('div').append(data.message);
                 }
-                console.log(data);
+                //console.log(data);
             }).fail(function( jqXHR, textStatus, errorThrown ) {
-                console.log(jqXHR, textStatus, errorThrown);
+                //console.log(jqXHR, textStatus, errorThrown);
                 alert(errorThrown);
             }).always(function( data, textStatus, errorThrown ) { 
                 //console.log(data, textStatus, errorThrown);
@@ -65,9 +65,15 @@ var SubPageForm = new function() {
                 if(data.status=='success'){
                     $('.im_progress').fadeOut();
                     var doc = $('#img_preview').attr('src');
-                    console.log('doc:',doc);
-                    $('.All_images').append('<div class="border border-success rounded"><img class="img-thumbnail" width="100" src="'+ doc +'">'+data.label+'</div>');
+                    //console.log('doc:',doc);
+                    var imgRslt = '<div class="border border-success rounded">'
+                                + '<img class="img-thumbnail" width="100" src="'+ doc +'">'
+                                + '<div>' + data.label+'</div>'
+                            //    + '<div><a href="#" class="doDelete" data-id="">Delete</a></div>'
+                                + '</div>';
+                    $('.All_images').append(imgRslt);
                     $(".img_preview").hide();
+                    $(".deleteNote").show();
                 }else{
                     alert("Something went wrong.Please try again.");
                     $('#uploadMessages').html('<div class="alert alert-danger">' + data.message + '</div>');
@@ -90,6 +96,11 @@ var SubPageForm = new function() {
             //replace the "Choose a file" label
             $(this).next('.custom-file-label').html(fileName);
             $('#link-name').val(fileName);
+        });
+
+        //cancel
+        $('#cancelButn').on('click', function() {
+            window.history.back();
         });
     };
 

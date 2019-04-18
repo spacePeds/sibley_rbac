@@ -22,12 +22,7 @@ BootstrapSelectAsset::register($this);
 ?>
 
 <div class="page-form container">
-    <div class="container bg-white clearfix">
-        <div class="text-right adminFloaterRev2 shadow-sm p-1 mb-2 bg-white rounded">
-            <?= Html::a(Yii::t('app', 'Add / Remove Image Assets'), [Url::to('multiple')], ['class' => 'btn btn-primary text-right'])?>
-        </div>
-    </div>
-
+    
     <?php 
     $form = ActiveForm::begin([
         'id' => 'page-form',

@@ -77,14 +77,6 @@ class SubPageController extends Controller
             $model = new SubPage();
             $model->pageLabel = $page->title;
             $model->page_id = $id;
-            
-            //make sure only owner or site admin can delete
-            $user_id = Yii::$app->user->identity->id;
-            if ($user_id != $model->created_by && $user_id != 1) {
-                
-                Yii::$app->session->setFlash('error', "It does not appear you are the user who created this. Edit request rejected.");
-                return $this->goBack(Yii::$app->request->referrer);
-            }
 
             if ($model->load(Yii::$app->request->post())) {
                 $model->last_edit = date('Y-m-d H:i:s');
@@ -134,6 +126,7 @@ class SubPageController extends Controller
             $model->last_edit = date('Y-m-d H:i:s');
 
             $user_id = Yii::$app->user->identity->id;
+            $page = Page::findOne($model->page_id);
 
             // $command = (new \yii\db\Query())
             // ->select(['username'])
@@ -141,9 +134,13 @@ class SubPageController extends Controller
             // ->where(['id' => $model->created_by])
             // ->createCommand();
             // $rows = $command->queryAll();
+
+            //append subsection documents (if any)  
+            $documents = Document::find()->where(['table_record' => 'subPage_'.$id])->asArray()->all();
+                
             
-            if ($user_id != $model->created_by && $user_id != 1) {
-                Yii::$app->session->setFlash('error', "It does not appear you are the person who create this record. Edit request rejected.");
+            if ($user_id != $model->created_by && $user_id != 1 && $model->created_by != 1) {
+                Yii::$app->session->setFlash('error', "It does not appear you are the person who created this record. Edit request rejected.");
                 return $this->goBack(Yii::$app->request->referrer);
             }
             
@@ -162,7 +159,7 @@ class SubPageController extends Controller
                         $documentModel->update();
                     }
 
-                    Yii::$app->session->setFlash('success', 'Section Insert successful.');  //New id is: ' . $newId
+                    Yii::$app->session->setFlash('success', 'Section Update successful.');  //New id is: ' . $newId
                 } else {
                     Yii::$app->session->setFlash('error', 'Sub-page did not save successfully.');
                 }
@@ -173,6 +170,7 @@ class SubPageController extends Controller
 
             return $this->render('update', [
                 'model' => $model,
+                'documents' => $documents
             ]);
         } else {
             throw new ForbiddenHttpException('You either do not have the correct access or you did not specify the correct parameters');

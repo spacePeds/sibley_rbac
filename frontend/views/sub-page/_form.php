@@ -10,10 +10,6 @@ SubPageAsset::register($this);
 /* @var $this yii\web\View */
 /* @var $model frontend\models\SubPage */
 /* @var $form yii\widgets\ActiveForm */
-$js = <<<JS
-    
-JS;
-
 ?>
 
 <div id="sub-page-form" class="container">
@@ -91,27 +87,53 @@ JS;
                         </div>
                     </div>
                     
-                    <div class="All_images"></div>
-                    
+                    <div class="All_images">
+                        
+                        <?php foreach ($documents as $document): ?>
+                            <?php 
+                            $path = '/'.$document['path'] . $document['name'];
+                            $size = $document['size'];
+                            $label = $document['label'];
+                            $pos = strpos($document['type'], 'image');
+                            if ($pos !== false) {
+                                //image
+                                ?>
+                                <div data-id="<?=$document['id']?>">
+                                    <img class="rounded mx-auto" width="75" src="<?=$path?>">
+                                </div>
+                                <?php
+                            }
+                            $pos = strpos($document['type'], 'pdf');
+                            if ($pos !== false) {
+                                //pdf 
+                                ?>
+                                <div data-id="<?=$document['id']?>">
+                                    <a role="button" class="btn btn-outline-primary mx-auto" target="_blank" href="<?=$path?>"><i class="far fa-file-pdf"></i> <?=$label?></a>
+                                
+                                </div>
+                                <?php
+                            }
+                            ?>
+                        <?php endforeach; ?>
+                
                     </div>
+                    
                     <div class="col-md-4">
-
+                        <div class="small text-muted deleteNote">Delete of attachments can be done from view</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    
 
-    <div class="form-group">
-        <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
+    <div class="form-group text-right mr-3">
+        <button type="button" id="cancelButn" class="btn btn-link">Cancel</button>
+        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
 
 </div>
-
-<?= $this->registerJs($js); ?>
 
 <?php
 /*

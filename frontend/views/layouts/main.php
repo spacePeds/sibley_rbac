@@ -151,6 +151,7 @@ SlickCarouselAsset::register($this);
                                 <?php if (Yii::$app->user->can('create_alert')) : ?>
                                     <a href="#" id="createSiteWideAlert" class="dropdown-item"> Add Site-Wide Alert</a>
                                 <?php endif; ?>
+                                <?=Html::a(Yii::t('app', 'Add / Remove Image Assets'), [Url::to('multiple')], ['class' => 'dropdown-item'])?>
                             </div>
                         </li>
                     <?php endif; ?>
