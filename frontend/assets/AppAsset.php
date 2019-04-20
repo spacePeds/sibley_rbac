@@ -14,10 +14,10 @@ class AppAsset extends AssetBundle
     public $css = [
         '//use.fontawesome.com/releases/v5.3.1/css/all.css',
         //'css/site.css',
-        YII_ENV_DEV ? 'css/sibley.css' : 'css/sibley.min.css',
+        'css/sibley.css',
     ];
     public $js = [
-        YII_ENV_DEV ? 'js/sibley.js' : 'js/sibley.min.js',
+        'js/sibley.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',
