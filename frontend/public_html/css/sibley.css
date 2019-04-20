@@ -31,30 +31,30 @@ body {
     background-size: cover;
 }
 
-.carousel-item {
+#myCarousel .carousel-item {
     height: 450px;
 }
-.carousel-image-1 {
+#myCarousel .carousel-image-1 {
     background:url('../img/carousel/courthouse.jpg');
     background-size: cover;
 }
-.carousel-image-2 {
+#myCarousel .carousel-image-2 {
     background:url('../img/carousel/downtown.jpg');
     background-size: cover;
 }
-.carousel-image-3 {
+#myCarousel .carousel-image-3 {
     background:url('../img/carousel/golfCourse.jpg');
     background-size: cover;
 }
-.carousel-image-4 {
+#myCarousel .carousel-image-4 {
     background:url('../img/carousel/schools.jpg');
     background-size: cover;
 }
-.carousel-image-5 {
+#myCarousel .carousel-image-5 {
     background:url('../img/carousel/golf.jpg');
     background-size: cover;
 }
-.carousel-item:after {
+#myCarousel .carousel-item:after {
     content:"";
     display:block;
     position:absolute;
@@ -64,7 +64,7 @@ body {
     right:0;
     background:rgba(0,0,0,0.3);
 }
-.carousel-caption{
+#myCarousel .carousel-caption{
     width:100%;
     height:100%;
     left:0;
@@ -75,8 +75,28 @@ body {
     -moz-transition: all .25s ease-in-out;
     -webkit-transition: all .25s
 }
-.carousel-caption:hover {
+#myCarousel .carousel-caption:hover {
     background-color:rgba(0,0,0,0);
+}
+
+/*4up carousel*/
+/*
+.carousel4Up .carousel-indicators {
+	left: 0;
+	top: auto;
+    bottom: -40px;
+}
+*/
+/* The colour of the indicators */
+.carousel4Up .carousel-indicators li {
+    background: #a3a3a3;
+    border-radius: 50%;
+    width: 8px;
+    height: 8px;
+}
+
+.carousel4Up .carousel-indicators .active {
+background: #707070;
 }
 
 /*yii2 and bootrap 4 quirk where when use template errors dont highlight*/
@@ -406,10 +426,11 @@ img#img_preview {
     left: 15px;
     right: 15px;
   }
+
+/*Sortable*/
+.ui-state-highlight { height: 2em; line-height: 1.7em; }
+
 /*
-
-
-
   .Container {
     padding: 0 15px;
   }

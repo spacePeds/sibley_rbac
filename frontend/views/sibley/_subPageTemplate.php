@@ -14,18 +14,18 @@ if (isset($page['headerImages']['parallax'])) {
     <div class="row">
         <div class="col-md-3 bg-sidebar">
 
-        <?php if (isset($role['superAdmin']) || (Yii::$app->user->can('update_page') && Yii::$app->user->can('update_page'.$page['adminKey']))): ?>
+        <?php if (isset($role['superAdmin']) ||  Yii::$app->user->can('update_page'.$page['adminKey'])): ?>
         
             <div class="list-group my-3">
                 <a href="<?= Url::to(['/page/update']) . '/'.$page['id'] ?>" role="button" class="btn btn-primary">Edit Page</a>
             </div>
         <?php endif; ?>
 
-        <div class="list-group my-3">
+        <div class="list-group my-3" id="sortable" data-page="<?=$page['id']?>">
 
-            <?php if (!empty($page['fb_token']) && !empty($page['fb_link'])): ?>
-                <a href="#facebook" class="list-group-item list-group-item-action">Facebook Feed</a>
-            <?php endif; ?>
+            <?php //if (!empty($page['fb_token']) && !empty($page['fb_link'])): ?>
+                <!--<a href="#facebook" class="list-group-item list-group-item-action">Facebook Feed</a>-->
+            <?php //endif; ?>
 
             <?php if(!empty($page['staff'])): ?>
                 <a href="#cityStaff" class="list-group-item list-group-item-action">City Staff</a>
@@ -33,9 +33,20 @@ if (isset($page['headerImages']['parallax'])) {
             
             <?php foreach ($page['subSections'] as $subSection): ?>
                 <?php if ($subSection['type'] == 'xlink'): ?>
-                    <a href="<?= $subSection['path']?>" target="_blank" class="list-group-item list-group-item-action"><?= $subSection['title']?></a>
+                    <a href="<?= $subSection['path']?>" target="_blank" id="<?=$subSection['id']?>_<?=$subSection['sort_order']?>" class="list-group-item list-group-item-action">
+                    <?= $subSection['title']?>
+                    <?php if(Yii::$app->user->can('update_page'.$page['adminKey'])): ?>
+                        <span class="badge badge-light float-right handle border border-secondary"><i class="fas fa-bars"></i></span>
+                        <span class="sr-only">Sort <?=$subSection['sort_order']?></span></a>
+                    <?php endif ?>
                 <?php else: ?>
-                    <a href="<?= $subSection['path']?>" class="list-group-item list-group-item-action"><?= $subSection['title']?></a>
+                    <a href="<?= $subSection['path']?>" id="<?=$subSection['id']?>_<?=$subSection['sort_order']?>" class="list-group-item list-group-item-action">
+                    <?= $subSection['title']?>
+                    <?php if(Yii::$app->user->can('update_page'.$page['adminKey'])): ?>
+                        <span class="badge badge-light float-right handle border border-secondary"><i class="fas fa-bars"></i></span>
+                        <span class="sr-only">Sort <?=$subSection['sort_order']?></span></a>
+                    <?php endif ?>
+                    </a>
                 <?php endif; ?>
             <?php endforeach; ?>
 
@@ -132,17 +143,6 @@ if (isset($page['headerImages']['parallax'])) {
             ?>
             <?= $page['body'] ?>
 
-            <?php if (!empty($page['fb_token']) && !empty($page['fb_link'])): ?>
-                <section class="text-center" id="facebook">
-                <h4 class="text-left"><?=$page['title']?> Facebook Feed</h4>
-                <div class="fb-page" data-href="https://www.facebook.com/<?=$page['fb_link']?>" data-tabs="timeline" data-width="500" data-small-header="true" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true">
-                    <blockquote cite="https://www.facebook.com/<?=$page['fb_link']?>" class="fb-xfbml-parse-ignore">
-                        <a href="https://www.facebook.com/<?=$page['fb_link']?>"><?=$page['title']?></a>
-                    </blockquote>
-                </div>
-                </section>
-            <?php endif; ?>
-
             <?php if (count($page['staff']) > 0): ?>
                 <?= $this->render('_cityStaff', [
                     'staff' => $page['staff'],           
@@ -151,7 +151,8 @@ if (isset($page['headerImages']['parallax'])) {
 
             <?= $this->render('_subSectionView', [
                 'subSections' => $page['subSections'],
-                'adminGroup' => $page['adminKey']            
+                'adminGroup' => $page['adminKey'],
+                'facebook' => ['fb_link' => $page['fb_link'],'title' => $page['title']]
             ]) ?>
 
             <?php if (isset($page['linkedOrganizations'])): ?>

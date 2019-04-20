@@ -29,7 +29,8 @@
         "tebazil/yii2-db-seeder": "^0.0.0",
         "grekts/rss-parser": ">=1.0.1",
         "davidjeddy/yii2-rss-reader": "*",
-        "yurkinx/yii2-rss": "dev-master"
+        "yurkinx/yii2-rss": "dev-master",
+        "components/jqueryui": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

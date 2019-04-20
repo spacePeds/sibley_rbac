@@ -3,11 +3,15 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use frontend\assets\SubPageAsset;
+use frontend\assets\SortableAsset;
+use frontend\assets\EkkoLightboxAsset;
 
 if (Yii::$app->user->can('update_subPage')) {
     SubPageAsset::register($this); 
+    SortableAsset::register($this); 
 }
 
+EkkoLightboxAsset::register($this);
 $title = isset($page['title']) ? $page['title'] : 'Page Not Found.';
 
 //echo '<pre>' . print_r($page,true) . '</pre>';

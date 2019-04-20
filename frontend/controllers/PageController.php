@@ -22,7 +22,7 @@ use yii\db\Query;
 use frontend\models\Audit;
 use frontend\models\Business;
 use yii\helpers\Json;
-
+use frontend\models\SubPage;
 
 /**
  * PageController implements the CRUD actions for Page model.
@@ -92,6 +92,19 @@ class PageController extends Controller
                 $model->last_edit_dt = date('Y-m-d H:i:s');
                 $model->user_id = $user_id;
                 if ($model->save()) {
+                
+                    //special FB sub-page?
+                    if ($model->sub_pages > 0 && !empty($model->fb_token) && !empty($model->fb_link)) {
+                        $subPage = new SubPage();
+                        $subPage->page_id = $this->id;  //Yii::$app->db->getLastInsertID();
+                        $subPage->title = 'Facebook';
+                        $subPage->path = '#facebook';
+                        $subPage->type = 'fb';
+                        $subPage->last_edit = date('Y-m-d H:i:s');
+                        $subPage->created_by = $user_id;
+                        $subPage->save();
+                    }
+
                     $audit = new Audit();
                     $audit->table = 'page';
                     $audit->record_id = $model->id;
@@ -99,6 +112,7 @@ class PageController extends Controller
                     $audit->update_user = Yii::$app->user->identity->id;
                     $audit->save(false);
                     $model->saveCategories();
+
                     Yii::$app->session->setFlash('success', 'Insert successful.');
                     return $this->redirect([Yii::$app->request->post('route')]);
                 }
@@ -154,8 +168,6 @@ class PageController extends Controller
                     mkdir(Url::to('@webroot') . $sysPath); 
                 }
 
-                
-
                 if ($model->upload(Yii::$app->params['assetPath'])) {
                     //file uploaded successfully
                     Yii::$app->session->setFlash('success', "Successfully Uploaded image(s) to $sysPath.");
@@ -202,6 +214,20 @@ class PageController extends Controller
                     $audit->update_user = Yii::$app->user->identity->id;
                     $audit->save(false);
                     $model->saveCategories();
+
+                    //special FB sub-page?
+                    SubPage::deleteAll(['page_id' => $model->id,'type' => 'fb']);
+                    if ($model->sub_pages > 0 && !empty($model->fb_token) && !empty($model->fb_link)) {
+                        $subPage = new SubPage();
+                        $subPage->page_id = $model->id;
+                        $subPage->title = 'Facebook';
+                        $subPage->path = '#facebook';
+                        $subPage->type = 'fb';
+                        $subPage->last_edit = date('Y-m-d H:i:s');
+                        $subPage->created_by = $user_id;
+                        $subPage->save();
+                    }
+
                     Yii::$app->session->setFlash('success', 'Update of "'.Yii::$app->request->post('PageWithCategories')['title'].'" successful.');
                     //echo '<pre>' . print_r($_POST, true) . '</pre>';
                     return $this->redirect(Yii::$app->request->post('PageWithCategories')['route']);

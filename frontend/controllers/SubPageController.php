@@ -105,6 +105,7 @@ class SubPageController extends Controller
     
             return $this->render('create', [
                 'model' => $model,
+                'documents' => [],
             ]);
         } else {
             throw new ForbiddenHttpException('You either do not have the correct access or you did not specify the correct parameters');
@@ -271,6 +272,50 @@ class SubPageController extends Controller
             }
             return $this->asJson($jResult);
         }
+    }
+    /**
+    * Sort a sub-page attached document
+    * @param array 
+    * @return json
+    */
+    public function actionAjaxSort() {
+        $data = Yii::$app->request->post();
+        $sequence = $data['sequence'];
+        $parentPageId = $data['parentPageId'];
+        $jResult['payload']['original'] = $sequence;
+        $arr = [];
+        
+        foreach ($sequence as $idx => $subPageKey) {
+            if (!empty($subPageKey)) {
+                $subIdArr = explode('_', $subPageKey);
+                $subPgId = $subIdArr[0];
+                $subPgNewSeq = $subIdArr[1];
+                $arr[$subPgNewSeq] = $subPgId;
+            }
+        }
+        $count = 1;
+        foreach($arr as $idx => $subPageId) {
+            if (isset($sequence[$idx]) && $idx == $sequence[$idx]) {
+                //skip
+                $count++;
+                continue;
+            }
+            $subPgModel = $this->findModel($subPageId);
+            $subPgModel->sort_order = $count;
+            $subPgModel->save();
+            $count++;
+        }
+
+        if (!isset($jResult['status'])) {
+            //must habe been successful
+            //just refresh here
+            return $this->redirect(Yii::$app->request->referrer);
+
+            $jResult['status'] = 'success';
+            $jResult['message'] = 'Sort completed successfully!';
+        }
+
+        return $this->asJson($jResult);
     }
     /**
      * Finds the SubPage model based on its primary key value.

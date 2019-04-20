@@ -258,9 +258,13 @@ class FrontendController extends \yii\web\Controller
                 }
             }
             if ($headerImage['display'] == 'parallax') {
+                $offset = 0;
+                if (!empty($headerImage['offset'])) {
+                    $offset = $headerImage['offset'];
+                }
                 $style = 'min-height:'.$headerImage['height'].'px;';
                 $style .= "background: url('".$headerImage['image_path']."');";
-                $style .= 'background-position:center;background-size: cover;'; //background-position:'.$offset.',0
+                $style .= 'background-position:0px '.$offset.'px;background-size: cover;'; //background-position:'.$offset.',0
                 $style .= 'text-align:center;color:#fff;position: relative;background-attachment: fixed;background-repeat: no-repeat;';
             }
             $page['headerImages'][$headerImage['display']][] = [

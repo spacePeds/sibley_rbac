@@ -29,6 +29,47 @@ var SubPage = new function() {
             });
         }); 
 
+        $( "#sortable" ).sortable({
+            connectWith: '#sortable',
+            placeholder: "ui-state-highlight",
+            handle: ".handle",
+            cursor: "move",
+            update: function( event, ui ) {
+                var changedList = this.id;
+                var order = $(this).sortable('toArray');
+                var positions = order.join(';');
+                var parentPageId = $('#sortable').data('page');
+                //console.log({
+                //    'order':order,
+                //    'parent':parentPageId
+                //});
+
+                
+                $.ajax({
+                    url: "/sub-page/ajax-sort",
+                    type: 'POST',
+                    data: {'sequence':order, 'parentPageId': parentPageId},
+                    datatype: 'json'
+                }).done(function(data ) {
+                    //console.log(data);
+                    if (data.status == 'success') {
+                        //location.reload();
+
+                    }
+                    //console.log(data);
+                }).fail(function( jqXHR, textStatus, errorThrown ) {
+                    console.log(jqXHR, textStatus, errorThrown);
+                    //alert(errorThrown);
+                });
+            }
+        });
+
+        $(document).on('click', '[data-toggle="lightbox"]', function(event) {
+            event.preventDefault();
+            $(this).ekkoLightbox();
+
+        });
+
     };
 };
 
