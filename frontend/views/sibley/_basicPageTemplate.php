@@ -19,7 +19,7 @@ if (isset($page['headerImages']['parallax'])) {
 }
 ?>
 <div class="container bg-white clearfix">
-    <?php if (Yii::$app->user->can('update_location')) : ?>
+    <?php if (Yii::$app->user->can('update_page')) : ?>
         <div class="text-right adminFloaterRev2 shadow-sm p-1 mb-2 bg-white rounded">
             <a href="<?= $url ?>" role="button" class="btn btn-primary"><?=$linkText?></a>
         </div>
