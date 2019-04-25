@@ -161,7 +161,6 @@ SlickCarouselAsset::register($this);
                         </a>
                         <div class="dropdown-menu">
                             <a href="<?= Url::to(['/sibley/calendar']) ?>" class="dropdown-item">View Local Events</a>
-                            <a href="profile.html" class="dropdown-item"> Find Campground Information</a>
                             <a href="<?= Url::to(['/sibley/council']) ?>" class="dropdown-item"> View Council Meeting Agendas</a>
                             <a href="<?= Url::to(['/sibley/spiritual-centers']) ?>" class="dropdown-item"> View Community Spiritual Centers</a>
                             <a href="<?=Yii::$app->params['govPayNet']['city']['link']?>" target="_blank" class="dropdown-item"> Pay A Utility Bill</a>

@@ -47,7 +47,7 @@ class SubPage extends \yii\db\ActiveRecord
             [['title', 'path'], 'string', 'max' => 255],
             [['type'], 'string', 'max' => 25],
             [['page_id'], 'exist', 'skipOnError' => true, 'targetClass' => Page::className(), 'targetAttribute' => ['page_id' => 'id']],
-            [['ajax_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, pdf'],
+            [['ajax_file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg, pdf'],
         ];
     }
 
