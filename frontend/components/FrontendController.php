@@ -40,6 +40,7 @@ class FrontendController extends \yii\web\Controller
             //}
 
             //anchor day for recurrance
+
             switch ($event['repeat_interval']) {
                 case 1: //weekly
                     $newEvents =  $this->buildWeeklyEvents($event);
@@ -67,7 +68,13 @@ class FrontendController extends \yii\web\Controller
                     }
                     break;
                 default:
-                    $eventList[] = $event;
+                    
+                if (isset($event['group']) && isset(Yii::$app->params['eventGroups'][$event['group']])) {
+                    $event['groupDesc'] = Yii::$app->params['eventGroups'][$event['group']];
+                    $event['color'] = Yii::$app->params['eventGroupColor'][$event['group']];
+                    $event['icon'] = Yii::$app->params['eventGroupIcon'][$event['group']];
+                } 
+                $eventList[] = $event;
             }
         }
         return $eventList;

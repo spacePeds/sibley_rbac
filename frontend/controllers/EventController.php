@@ -601,13 +601,13 @@ class EventController extends Controller
         $group = [];
         $user_id = User::findByUsername(Yii::$app->user->identity->username)->getId();            
         $role = \Yii::$app->authManager->getRolesByUser($user_id);
-        if ($role['superAdmin']) {
+        if (isset($role['superAdmin'])) {
             $group = Yii::$app->params['eventGroups'];
-        } else if ($role['cityAdmin']) {
+        } else if (isset($role['cityAdmin'])) {
             $group = ['city'];
-        } else if ($role['chamberAdmin']) {
+        } else if (isset($role['chamberAdmin'])) {
             $group = ['chamber'];
-        } else if ($role['recAdmin']) {
+        } else if (isset($role['recAdmin'])) {
             $group = ['rec'];
         }
         return $group;

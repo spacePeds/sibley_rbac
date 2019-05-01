@@ -29,6 +29,9 @@ class Event extends \yii\db\ActiveRecord
     public $pdfFile;
     public $pdfFileName;
     public $notes;
+    public $groupDesc;
+      //              $event['color'] = Yii::$app->params['eventGroupColor'][$event['group']];
+       //             $event['icon']
     /**
      * {@inheritdoc}
      */
