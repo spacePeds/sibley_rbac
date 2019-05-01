@@ -48,6 +48,9 @@ phpunit.phar
 /frontend/public_html/img/org
 /frontend/public_html/img/staff
 /frontend/web
+/frontend/test
 
 #oops, my bad
 #.composer.lock
+
+/frontend/controllers/GoogleApiController.php

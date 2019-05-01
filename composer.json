@@ -30,7 +30,9 @@
         "grekts/rss-parser": ">=1.0.1",
         "davidjeddy/yii2-rss-reader": "*",
         "yurkinx/yii2-rss": "dev-master",
-        "components/jqueryui": "*"
+        "components/jqueryui": "*",
+        "google/apiclient": "^2.0",
+        "bitcko/yii2-bitcko-google-calendar-api": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

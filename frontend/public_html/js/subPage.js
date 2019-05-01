@@ -29,40 +29,42 @@ var SubPage = new function() {
             });
         }); 
 
-        $( "#sortable" ).sortable({
-            connectWith: '#sortable',
-            placeholder: "ui-state-highlight",
-            handle: ".handle",
-            cursor: "move",
-            update: function( event, ui ) {
-                var changedList = this.id;
-                var order = $(this).sortable('toArray');
-                var positions = order.join(';');
-                var parentPageId = $('#sortable').data('page');
-                //console.log({
-                //    'order':order,
-                //    'parent':parentPageId
-                //});
+        if ($( "#sortable" ).length > 0) {
+            $( "#sortable" ).sortable({
+                connectWith: '#sortable',
+                placeholder: "ui-state-highlight",
+                handle: ".handle",
+                cursor: "move",
+                update: function( event, ui ) {
+                    var changedList = this.id;
+                    var order = $(this).sortable('toArray');
+                    var positions = order.join(';');
+                    var parentPageId = $('#sortable').data('page');
+                    //console.log({
+                    //    'order':order,
+                    //    'parent':parentPageId
+                    //});
 
-                
-                $.ajax({
-                    url: "/sub-page/ajax-sort",
-                    type: 'POST',
-                    data: {'sequence':order, 'parentPageId': parentPageId},
-                    datatype: 'json'
-                }).done(function(data ) {
-                    //console.log(data);
-                    if (data.status == 'success') {
-                        //location.reload();
+                    
+                    $.ajax({
+                        url: "/sub-page/ajax-sort",
+                        type: 'POST',
+                        data: {'sequence':order, 'parentPageId': parentPageId},
+                        datatype: 'json'
+                    }).done(function(data ) {
+                        //console.log(data);
+                        if (data.status == 'success') {
+                            //location.reload();
 
-                    }
-                    //console.log(data);
-                }).fail(function( jqXHR, textStatus, errorThrown ) {
-                    console.log(jqXHR, textStatus, errorThrown);
-                    //alert(errorThrown);
-                });
-            }
-        });
+                        }
+                        //console.log(data);
+                    }).fail(function( jqXHR, textStatus, errorThrown ) {
+                        console.log(jqXHR, textStatus, errorThrown);
+                        //alert(errorThrown);
+                    });
+                }
+            });
+        }
 
         $(document).on('click', '[data-toggle="lightbox"]', function(event) {
             event.preventDefault();
@@ -100,21 +102,31 @@ var SubPageForm = new function() {
         $(document).on('change','#Fileinput',function(){
             var imgpreview = self._displayImagePreview(this);
             $(".img_preview").show();
+            $('#attachUploadButn').attr('disabled',false);
+            //console.log('vallback?',data);
+        });
+
+        //upload button clicked
+        $('#attachUploadButn').on('click', function() {
             var url="/sub-page/ajax-upload";
+            $('.im_progress').fadeIn();
             self.ajaxFormSubmit(url,'#Ajaxform',function(data){
                 //var data=JSON.parse(output);
                 if(data.status=='success'){
                     $('.im_progress').fadeOut();
                     var doc = $('#img_preview').attr('src');
                     //console.log('doc:',doc);
-                    var imgRslt = '<div class="border border-success rounded">'
-                                + '<img class="img-thumbnail" width="100" src="'+ doc +'">'
-                                + '<div>' + data.label+'</div>'
+                    var imgRslt = '<li class="list-group list-group-flush p-1">'
+                                + '<div data-id="">'
+                                + '<img class="rounded mx-auto" width="75" src="'+ doc +'">'
+                                + '&nbsp;' + data.label
                             //    + '<div><a href="#" class="doDelete" data-id="">Delete</a></div>'
-                                + '</div>';
+                                + '</div>'
+                                + '</li>';
                     $('.All_images').append(imgRslt);
                     $(".img_preview").hide();
                     $(".deleteNote").show();
+                    $('#attachUploadButn').attr('disabled',true);
                 }else{
                     alert("Something went wrong.Please try again.");
                     $('#uploadMessages').html('<div class="alert alert-danger">' + data.message + '</div>');

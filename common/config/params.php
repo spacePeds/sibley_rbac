@@ -71,5 +71,11 @@ return [
                 'email' => 'support@cityofsibley.com'
             ],
         ]
-    ]
+    ],
+    'googleKeys' => [
+        'sibleyTestKey' => 'AIzaSyABvb9K86PFYpyelJkhrwXP1VaxtcqrtXc'
+    ],
+    'googleCalendars' => [
+        'holidayId' => 'en.usa#holiday@group.v.calendar.google.com'
+    ],
 ];

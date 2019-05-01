@@ -74,52 +74,69 @@ SubPageAsset::register($this);
         <div class="card-body container-items">
             <div class="item">
                 <div class="row">
-                    <div class="col-md-8">
+                    <div class="col-md-8 border rounded">
                         <?= $form->field($model, 'ajax_file_label')->textInput(['maxlength' => true]) ?>
-
-                        <?= $form->field($model, 'ajax_file')->fileInput(['id'=>"Fileinput"])->label(false) ?>
-                        <div id="uploadMessages"></div>
-                        <div class="img_preview">
-                            <div class="im_progress">
-                                <img class="loader_img" src="/img/ajax-loader.gif">
+                        <div class="row">
+                            <div class="col">
+                                <?= $form->field($model, 'ajax_file')->fileInput(['id'=>"Fileinput"])->label(false) ?>
+                                <div id="uploadMessages"></div>
+                                <div class="img_preview">
+                                    <div class="im_progress" style="display:none;">
+                                        <img class="loader_img" src="/img/ajax-loader.gif">
+                                    </div>
+                                    <img src="" id="img_preview">
+                                </div>
                             </div>
-                            <img src="" id="img_preview">
+                            <div class="col text-right">
+                                <button type="button" id="attachUploadButn" class="btn btn-success" disabled><i class="fas fa-upload"></i> Upload</button>
+                            </div>
                         </div>
+                        
+
+                        
                     </div>
                     
-                    <div class="All_images">
-                        
-                        <?php foreach ($documents as $document): ?>
-                            <?php 
-                            $path = '/'.$document['path'] . $document['name'];
-                            $size = $document['size'];
-                            $label = $document['label'];
-                            $pos = strpos($document['type'], 'image');
-                            if ($pos !== false) {
-                                //image
-                                ?>
-                                <div data-id="<?=$document['id']?>">
-                                    <img class="rounded mx-auto" width="75" src="<?=$path?>">
-                                </div>
-                                <?php
-                            }
-                            $pos = strpos($document['type'], 'pdf');
-                            if ($pos !== false) {
-                                //pdf 
-                                ?>
-                                <div data-id="<?=$document['id']?>">
-                                    <a role="button" class="btn btn-outline-primary mx-auto" target="_blank" href="<?=$path?>"><i class="far fa-file-pdf"></i> <?=$label?></a>
-                                
-                                </div>
-                                <?php
-                            }
-                            ?>
-                        <?php endforeach; ?>
-                
-                    </div>
+                    
                     
                     <div class="col-md-4">
-                        <div class="small text-muted deleteNote">Delete of attachments can be done from view</div>
+                        
+                        <div class="All_images card">
+                            <ul class="list-group list-group-flush">
+                                <?php foreach ($documents as $document): ?>
+                                    <?php 
+                                    $path = '/'.$document['path'] . $document['name'];
+                                    $size = $document['size'];
+                                    $label = $document['label'];
+                                    $pos = strpos($document['type'], 'image');
+                                    if ($pos !== false) {
+                                        //image
+                                        ?>
+                                        <li class="list-group-item p-1">
+                                            <div data-id="<?=$document['id']?>" class="">
+                                                
+                                                <span class="badge badge-warning float-right"><a data-id="<?=$document['id']?>" data-confirm="Are you sure you wish to delete this image?" class="text-muted doDelete" href="#">Delete</a></span>
+                                                <img class="rounded mx-auto" width="75" src="<?=$path?>"> <?=$label?>
+                                                
+                                            </div>
+                                        </li>
+                                        <?php
+                                    }
+                                    $pos = strpos($document['type'], 'pdf');
+                                    if ($pos !== false) {
+                                        //pdf 
+                                        ?>
+                                        <li class="list-group-item p-1">
+                                            <div data-id="<?=$document['id']?>">
+                                                <span class="badge badge-warning float-right"><a data-id="<?=$document['id']?>" data-confirm="Are you sure you wish to delete this PDF?" class="text-muted doDelete" href="#">Delete</a></span>
+                                                <a role="button" class="btn btn-outline-primary mx-auto" target="_blank" href="<?=$path?>"><i class="far fa-file-pdf"></i> <?=$label?></a>                                            
+                                            </div>
+                                        </li>
+                                        <?php
+                                    }
+                                    ?>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>

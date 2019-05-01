@@ -96,12 +96,15 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?php
     /**/
-        echo \yii2fullcalendar\yii2fullcalendar::widget(array(
+    $googleHolidayEvents = Yii::$app->params['googleCalendars']['holidayId'];
+    $googleApiKey = Yii::$app->params['googleKeys']['sibleyTestKey'];
+
+    echo \yii2fullcalendar\yii2fullcalendar::widget(array(
             'themeSystem' => 'bootstrap4',
             'events' => $events,
+            
             'options' => [
-                'id' =>'eventCalendar',
-                
+                'id' =>'eventCalendar',    
             ],
             /*
             'eventSource' => [
@@ -110,7 +113,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 'className' => 'gcal-event', 
                 'currentTimezone' => 'America/Chicago'
             ],
+            
+            'eventSource' => [
+                'googleCalendarApiKey' => $googleApiKey,
+                'events' => [
+                    'googleCalendarId' => $googleHolidayEvents,
+                    'className' => 'gcal-event' // an option!
+                ],
+            ],
             */
+
             'clientOptions' => [ 
                 'googleCalendar' => 'sibley.rec%40gmail.com',
                 'selectable' => true,

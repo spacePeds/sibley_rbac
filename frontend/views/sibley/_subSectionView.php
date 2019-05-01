@@ -26,17 +26,18 @@ use yii\helpers\Url;
         <?php if ($subSection['type'] == 'section'): ?>
             <h4><?= $subSection['title'] ?></h4>
             <?= $subSection['body'] ?>
-            <?php //echo '<pre>' . print_r($subSection['documents']) . '</pre>'; ?>
 
             <?php if (!empty($subSection['documents'])): ?>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div id="sectionCarousel<?=$subSection['id']?>" class="carousel slide carousel4Up" data-ride="carousel" data-interval="false">
+                
+                        <?php //echo '<pre>' . print_r($subSection['documents'], true) . '</pre>'; ?>
+                        <div id="sectionCarousel<?=$subSection['id']?>" class="carousel slide carousel4Up border border-dark rounded p-2" data-ride="carousel" data-interval="false">
 
+                        <?php if (count($subSection['documents']) > 4): ?>
                             <ol class="carousel-indicators">
                                 <li data-target="#sectionCarousel<?=$subSection['id']?>" data-slide-to="0" class="active"></li>
                                 <li data-target="#sectionCarousel<?=$subSection['id']?>" data-slide-to="1"></li>
                             </ol>
+                        <?php endif; ?>
 
                             <!-- Carousel items -->
                             <div class="carousel-inner">
@@ -44,6 +45,7 @@ use yii\helpers\Url;
                                     <div class="row">
                                         <?php 
                                         $first = true;
+                                        $count = 0;
                                         foreach ($subSection['documents'] as $idx=> $document) {
                                             $path = '/'.$document['path'] . $document['name'];
                                             $size = $document['size'];
@@ -72,30 +74,31 @@ use yii\helpers\Url;
 
                                                             </div>
                                                         </div>
-                                                    <?php endif; ?>
+                                                    <?php else: ?>
 
-                                                    <?php $pos = strpos($document['type'], 'pdf'); ?>
-                                                    <?php if ($pos !== false): ?>
+                                                    
                     
                                                         <div data-id="<?=$document['id']?>">
-                                                        <a role="button" class="btn btn-outline-primary mx-auto" target="_blank" href="<?=$path?>"><img data-id="<?=$idx?>" src="/img/pdf-placeholder.png" alt="<?=$label?>" style="max-width:100%;"></a>
-                                                        
-                                                        <div class="card-body text-center p-1">
-                                                            <div class="d-none d-md-block small text-dark">
-                                                                <div><?=$label?></div>
-                                                                <?php if (isset($role['superAdmin']) || (Yii::$app->user->can('update_subPage') && Yii::$app->user->can('update_page'.$adminGroup))): ?>
-                                                                    <div><a data-id="<?=$document['id']?>" data-confirm="Are you sure you wish to delete this image?" class="text-muted doDelete" href="#">Delete</a></div>
-                                                                <?php endif; ?>
+                                                            <a role="button" class="btn btn-outline-primary mx-auto" target="_blank" href="<?=$path?>"><img data-id="<?=$idx?>" src="/img/pdf-placeholder.png" alt="<?=$label?>" style="max-width:100%;"></a>
+                                                            
+                                                            <div class="card-body text-center p-1">
+                                                                <div class="d-none d-md-block small text-dark">
+                                                                    <div><?=$label?></div>
+                                                                    <?php if (isset($role['superAdmin']) || (Yii::$app->user->can('update_subPage') && Yii::$app->user->can('update_page'.$adminGroup))): ?>
+                                                                        <div><a data-id="<?=$document['id']?>" data-confirm="Are you sure you wish to delete this image?" class="text-muted doDelete" href="#">Delete</a></div>
+                                                                    <?php endif; ?>
 
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     <?php endif;?>
-                                                        
-                                                        
+                                                               
                                                     
                                                 </div>
+                                                
                                             </div>
                                         <?php    
+                                            $count ++;
                                         } 
                                         ?>
                                     </div>
@@ -103,21 +106,20 @@ use yii\helpers\Url;
                             </div>
 
                             <!--.carousel-inner-->
-                            <a class="carousel-control-prev" href="#sectionCarousel<?=$subSection['id']?>" role="button" data-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Previous</span>
-                            </a>
+                            <?php if ($count > 4): ?>
+                                <a class="carousel-control-prev" href="#sectionCarousel<?=$subSection['id']?>" role="button" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                                </a>
 
-                            <a class="carousel-control-next" href="#sectionCarousel<?=$subSection['id']?>" role="button" data-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
-                            </a>
-
+                                <a class="carousel-control-next" href="#sectionCarousel<?=$subSection['id']?>" role="button" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                                </a>
+                            <?php endif; ?>
                         </div>
                         <!--.Carousel-->
 
-                    </div>
-                </div>
             <?php endif; ?>
 
 

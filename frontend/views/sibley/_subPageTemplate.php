@@ -63,10 +63,8 @@ if (isset($page['headerImages']['parallax'])) {
             ]) ?>
         <?php endif; ?> 
 
-        <?php if (strpos($page['route'],'recreation') !== false): ?>
+        <?php if (strpos($page['route'],'sibley/recreation') !== false): ?>
             
-            
-
             <div class="card text-center">
                 <div class="card-header bg-dark text-white">
                     <h4>This Week: <br><i>"At the Rec"</i></h4> 

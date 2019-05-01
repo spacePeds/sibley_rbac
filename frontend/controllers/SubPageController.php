@@ -140,10 +140,10 @@ class SubPageController extends Controller
             $documents = Document::find()->where(['table_record' => 'subPage_'.$id])->asArray()->all();
                 
             
-            if ($user_id != $model->created_by && $user_id != 1 && $model->created_by != 1) {
-                Yii::$app->session->setFlash('error', "It does not appear you are the person who created this record. Edit request rejected.");
-                return $this->goBack(Yii::$app->request->referrer);
-            }
+            //if ($user_id != $model->created_by && $user_id != 1 && $model->created_by != 1) {
+            //    Yii::$app->session->setFlash('error', "It does not appear you are the person who created this record. Edit request rejected.");
+            //    return $this->goBack(Yii::$app->request->referrer);
+            //}
             
             if ($model->load(Yii::$app->request->post())) {
                 $model->last_edit = date('Y-m-d H:i:s');
