@@ -19,6 +19,26 @@ return [
         2 => 'Repeat Bi-Weekly',
         3 => 'Repeat Monthly',
         4 => 'Repeat Annually',
+        5 => 'Repeat Multi / Week',
+    ],
+    'eventDays' => [
+        '' => '',
+        'SU' => 'Sunday',
+        'MO' => 'Monday',
+        'TU' => 'Tuesday',
+        'WE' => 'Wednesday',
+        'TH' => 'Thursday',
+        'FR' => 'Friday',
+        'SA' => 'Saturday',
+    ],
+    'dayIds' => [
+        1 => 'MO',
+        2 => 'TU',
+        3 => 'WE',
+        4 => 'TH',
+        5 => 'FR',
+        6 => 'SA',
+        7 => 'SU',
     ],
     'eventGroupColor' => [
         'city' => '#e76b32', //orange

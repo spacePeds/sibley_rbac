@@ -174,11 +174,7 @@ class SibleyController extends FrontendController
      */
     public function actionCalendar()
     {
-        //load google events
-        $clientId = '832709068340-rflvrar328ufh8g931o5jc9mra7lijsr.apps.googleusercontent.com';
-        $clientSecret = 'Xzq12WSOyqIU6AHLVxHJMP0V';
-        
-        
+                
         $calendar = [
             'canEdit' => false,
             'canDrag' => false,

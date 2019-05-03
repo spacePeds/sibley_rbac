@@ -12,6 +12,16 @@ var Cal = new function() {
                 $('#genericModal').modal('show')
                     .find('.modal-body')
                     .html(data);
+            $(".selectpicker").selectpicker(
+                {"BootstrapVersion":4}
+            );
+            $('#event-repeat_interval').on('change',function() {
+                if ($(this).val() == 5) {
+                    $('.repeatDaysContainer').show();
+                } else {
+                    $('.repeatDaysContainer').hide();
+                }
+            });
         });
     };
 
@@ -30,6 +40,18 @@ var Cal = new function() {
             //console.log(data);
             $('#genericModal').modal('show').find('.modal-body').html(data);
             $('#genericModal').find('.modal-title').html('Updating Event: ' + calEvent.id);
+            $(".selectpicker").selectpicker(
+                {"BootstrapVersion":4}
+            );
+
+            $('#event-repeat_interval').on('change',function() {
+                if ($(this).val() == 5) {
+                    $('.repeatDaysContainer').show();
+                } else {
+                    $('.repeatDaysContainer').hide();
+                }
+            });
+
         }).fail(function( jqXHR, textStatus ) {
             alert( "Request failed: " + textStatus );
             //console.log(jqXHR);
@@ -88,7 +110,9 @@ var Cal = new function() {
     };
 };
 $(function(){
-    console.log('calendar admin JS');
+    //console.log('calendar admin JS');
+
+    
 
     //modal default to large modal-lg
     $('#genericModal').find('.modal-dialog').addClass('modal-lg');

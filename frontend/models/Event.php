@@ -18,6 +18,7 @@ use yii\helpers\Url;
  * @property string $end_dt
  * @property int $all_day
  * @property int $repeat_interval
+ * @property string $repeat_days
  * @property string $last_edit_dt
  * @property int $user_id
  *
@@ -48,7 +49,7 @@ class Event extends \yii\db\ActiveRecord
         return [
             [['subject', 'group', 'start_dt'], 'required'],
             [['description', 'group','location'], 'string'],
-            [['start_dt', 'end_dt', 'last_edit_dt'], 'safe'],
+            [['start_dt', 'end_dt', 'last_edit_dt','repeat_days','googleId'], 'safe'],
             [['user_id', 'all_day','repeat_interval'], 'integer'],
             [['subject'], 'string', 'max' => 200],
             [['location'], 'string', 'max' => 255],
@@ -74,6 +75,7 @@ class Event extends \yii\db\ActiveRecord
             'end_dt' => Yii::t('app', 'End Date (optional)'),
             'all_day' => Yii::t('app', 'All Day (optional)'),
             'repeat_interval' => Yii::t('app', 'Repeat Interval (optional)'),
+            'repeat_days' => Yii::t('app', 'Repeat Days'),
             'pdfFile'  => Yii::t('app', 'Attach a PDF (optional)'),
         ];
     }

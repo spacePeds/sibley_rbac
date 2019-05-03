@@ -17,6 +17,7 @@ class m180903_150530_create_table_event extends Migration
         }
         $this->createTable('{{%event}}', [
             'id' => $this->primaryKey(),
+            'googleId' => $this->string(45),
             'subject' =>  $this->string(200)->notNull(),
             'description' =>  $this->text(),
             'location' =>  $this->string(255),
@@ -25,6 +26,7 @@ class m180903_150530_create_table_event extends Migration
             'end_dt' =>  $this->dateTime()->notNull(),
             'all_day' =>  $this->integer()->notNull(),
             'repeat_interval' =>  $this->integer()->notNull(),
+            'repeat_days' => $this->string(45),
             'last_edit_dt' =>  $this->dateTime()->notNull(),
             'user_id' =>  $this->integer()->notNull()
             

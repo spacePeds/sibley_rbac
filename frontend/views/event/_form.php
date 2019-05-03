@@ -99,6 +99,21 @@ $this->registerJs($js);
         </div>
         <div class="col-md-4">
             <?= $form->field($model, 'repeat_interval')->dropDownList($repition,['default'=>0]) ?>
+            
+            <div class="repeatDaysContainer" style="display:none;">
+                <?= $form->field($model, 'repeat_days')
+                    ->listBox($eventDays, [
+                        'multiple' => true,
+                        'class' => 'form-control selectpicker',
+                        'data-live-search' => 'true',
+                        'data-max-options' => 4,
+                        'data-size' => 9,
+                        'title' => 'Choose up to 4 days'
+                    ])
+                    /* or, you may use a checkbox list instead */
+                    /* ->checkboxList($categories) */
+                    ->hint('Choose two or more days.');?>
+                </div>
         </div>
     </div>
     

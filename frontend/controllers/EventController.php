@@ -332,6 +332,10 @@ class EventController extends Controller
             } else {
                 $model->end_dt = $model->start_dt;
             }
+
+            if ($model->repeat_interval == 5) {
+                $model->repeat_days = implode(',',$model->repeat_days);
+            }
             
             $model->user_id = $user_id;
             $model->pdfFile = UploadedFile::getInstance($model, 'pdfFile');
@@ -373,7 +377,8 @@ class EventController extends Controller
             return $this->renderAjax('create', [
                 'model' => $model,
                 'group'  => $this->getGroup(),
-                'repition' => Yii::$app->params['eventRepition']
+                'repition' => Yii::$app->params['eventRepition'],
+                'eventDays' => Yii::$app->params['eventDays'],
             ]);
         }
 
@@ -394,7 +399,7 @@ class EventController extends Controller
 
         //make sure only owner or site admin can edit
         $user_id = Yii::$app->user->identity->id;
-        if ($user_id != $model->user_id && $user_id != 1) {
+        if ($user_id != $model->user_id && $user_id != 1 && $model->user_id != 1) {
             Yii::$app->session->setFlash('error', "It does not appear you are the owner of this event. Edit request rejected.");
             return $this->goBack(Yii::$app->request->referrer);
         }
@@ -415,6 +420,10 @@ class EventController extends Controller
                 $model->end_dt = date("Y-m-d H:i:s", strtotime($model->end_dt));
             } else {
                 $model->end_dt = $model->start_dt;
+            }
+
+            if ($model->repeat_interval == 5) {
+                $model->repeat_days = implode(',',$model->repeat_days);
             }
 
             $model->pdfFile = UploadedFile::getInstance($model, 'pdfFile');
@@ -460,7 +469,8 @@ class EventController extends Controller
             return $this->renderAjax('update', [
                 'model' => $model,
                 'group'  => $this->getGroup(),
-                'repition' => Yii::$app->params['eventRepition']
+                'repition' => Yii::$app->params['eventRepition'],
+                'eventDays' => Yii::$app->params['eventDays'],
             ]);
         }    
     }

@@ -8,6 +8,9 @@ use yii\helpers\Url;
 use frontend\assets\CalendarAdminAsset;
 use frontend\assets\CalendarStandardAsset;
 use frontend\assets\IcsAsset;
+use frontend\assets\BootstrapSelectAsset;
+
+BootstrapSelectAsset::register($this);
 
 $siteRoot = ''; //Url::to('@web');
 IcsAsset::register($this);

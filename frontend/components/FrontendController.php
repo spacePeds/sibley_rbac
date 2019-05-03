@@ -67,6 +67,12 @@ class FrontendController extends \yii\web\Controller
                         $eventList[] = $newEvent;
                     }
                     break;
+                case 5: //multi per week
+                    $newEvents =  $this->buildMultiPerWeekEvents($event);
+                    foreach ($newEvents as $newEvent) {
+                        $eventList[] = $newEvent;
+                    }
+                    break;
                 default:
                     
                 if (isset($event['group']) && isset(Yii::$app->params['eventGroups'][$event['group']])) {
@@ -126,6 +132,43 @@ class FrontendController extends \yii\web\Controller
                     'start_dt' => $date->format("Y-m-d H:i:s"),
                 ];
                 $cnt++;
+            }
+        }
+
+        return $eventList;
+    }
+    /**
+     * Create an array of repeating events
+     *  @param array $event
+     */
+    protected function buildMultiPerWeekEvents($event) {
+        $eventList = [];
+        $begin = new \DateTime( $event['start_dt'] );
+        $end = new \DateTime( $event['end_dt'] );
+
+        $interval = new \DateInterval('P1D');   //Period - 1 day
+        $daterange = new \DatePeriod($begin, $interval ,$end);
+        $dayAbvToDayIds = Yii::$app->params['dayIds'];
+
+        $eventDays = explode(',',$event['repeat_days']);
+
+        //loop through all days in event date range
+        foreach($daterange as $date){
+            $dayOfWeek = $date->format('N');
+            $dayAbv = $dayAbvToDayIds[$dayOfWeek];
+            //does current day match a specified day for event
+            if (in_array($dayAbv, $eventDays)) {
+                $eventList[] = [
+                    'id' => $event['id'],
+                    'subject' => $event['subject'],
+                    'description' => $event['description'],
+                    'group' => $event['group'],
+                    'groupDesc' => Yii::$app->params['eventGroups'][$event['group']],
+                    'color' => Yii::$app->params['eventGroupColor'][$event['group']],
+                    'icon' => Yii::$app->params['eventGroupIcon'][$event['group']],
+                    'all_day' => $event['all_day'],
+                    'start_dt' => $date->format("Y-m-d H:i:s"),
+                ];
             }
         }
 
