@@ -67,7 +67,11 @@ class GoogleController extends Controller
 
             $today = date('Y-m-d');
             $oneYrFut = date('Y-m-d', mktime(0, 0, 0, date('m'), date('d'), date('Y')+1));
-            $existingEvents = Event::find()->where(['>=', 'start_dt', $today])->andWhere(['<=','start_dt', $oneYrFut])->asArray()->all();
+            $existingEvents = Event::find()
+                ->where(['>=', 'start_dt', $today])
+                ->andWhere(['<=','start_dt', $oneYrFut])
+                ->andWhere(['group' => 'hol'])
+                ->asArray()->all();
             print_r($existingEvents);
 
             //loop through google holidays

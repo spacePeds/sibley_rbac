@@ -1,6 +1,6 @@
 /*Notes*/
 cp -r /home/cityofsi/sibley_rbac2/frontend/public_html/js/* /home/cityofsi/www/js
-cp -r /home/cityofsi/sibley_rba2c/frontend/public_html/css/* /home/cityofsi/www/css
+cp -r /home/cityofsi/sibley_rbac2/frontend/public_html/css/* /home/cityofsi/www/css
 
 /*rbac migrations*/
 yii migrate --migrationPath=@yii/rbac/migrations/
