@@ -49,7 +49,7 @@ class Event extends \yii\db\ActiveRecord
         return [
             [['subject', 'group', 'start_dt'], 'required'],
             [['description', 'group','location'], 'string'],
-            [['start_dt', 'end_dt', 'last_edit_dt','repeat_days','googleId'], 'safe'],
+            [['start_dt', 'end_dt', 'last_edit_dt','googleId'], 'safe'],
             [['user_id', 'all_day','repeat_interval'], 'integer'],
             [['subject'], 'string', 'max' => 200],
             [['location'], 'string', 'max' => 255],
@@ -57,6 +57,23 @@ class Event extends \yii\db\ActiveRecord
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['end_dt'], 'compareDates'],
             [['repeat_interval'], 'intervalTest'],
+            //[['repeat_days'], 'requiredWhenMulti'],
+            ['repeat_days',function ($attribute, $params) {
+                
+                if (count($this->repeat_days) < 1) {
+                    $this->addError('repeat_days','empty array');
+                } 
+                //else {
+                //    $this->addError('repeat_days','I is triggered!' . implode(',',$this->repeat_days) . ',Cnt: ' . count($this->repeat_days));
+                //}
+                
+                
+            }],
+            ['repeat_days', 'required', 'message' => 'Please select days to repeat.', 'when' => function($model){
+                return ($model->repeat_interval == 5 ? true : false);
+            }, 'whenClient' => "function (attribute, value) {
+                    return $('#event-repeat_interval').val() == 5;
+            }"],
         ];
     }
 
@@ -75,7 +92,7 @@ class Event extends \yii\db\ActiveRecord
             'end_dt' => Yii::t('app', 'End Date (optional)'),
             'all_day' => Yii::t('app', 'All Day (optional)'),
             'repeat_interval' => Yii::t('app', 'Repeat Interval (optional)'),
-            'repeat_days' => Yii::t('app', 'Repeat Days'),
+            'repeat_days' => Yii::t('app', 'Repeat Days (required)'),
             'pdfFile'  => Yii::t('app', 'Attach a PDF (optional)'),
         ];
     }
@@ -161,6 +178,25 @@ class Event extends \yii\db\ActiveRecord
                 $this->addError('repeat_interval', "End date must be further in the future to use this interval.");
             }
         }
+        //if ($this->repeat_interval == 5 && count($this->repeat_days) < 1) { 
+        //    if (!$this->hasErrors()) {
+        //        $this->addError('repeat_days', "Please specify the days / week. ");
+        //    }
+        //}
+
+    }
+    /**
+     * Custom VAlidator
+     * Make sure repeat days is specified when repeat interval is 5 (multi/week)
+     */
+    public function requiredWhenMulti() {
+                
+        //if ($this->repeat_interval == 5) {
+        //    if (!$this->hasErrors()) {
+        //        $this->addError('repeat_days', "Please specify the days / week.");
+        //    }
+            $this->addError('repeat_days', "Please specify the days / week." . $this->repeat_interval);
+        //}
 
     }
 }

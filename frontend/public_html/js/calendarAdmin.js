@@ -44,6 +44,9 @@ var Cal = new function() {
                 {"BootstrapVersion":4}
             );
 
+            if ($('#event-repeat_interval').val() == 5) {
+                $('.repeatDaysContainer').show();
+            }
             $('#event-repeat_interval').on('change',function() {
                 if ($(this).val() == 5) {
                     $('.repeatDaysContainer').show();
@@ -97,7 +100,7 @@ var Cal = new function() {
             dataType: "json"
         }).done(function(data) {
             if (data.status !== 'success') {
-                alert('An error occured during time shift.');
+                alert('An error occured during time shift. If the event occurs at specific intervals, you will need to edit the event directly.');
                 revertFunc();
             }
             //$.parseJSON()

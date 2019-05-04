@@ -22,7 +22,7 @@ return [
         5 => 'Repeat Multi / Week',
     ],
     'eventDays' => [
-        '' => '',
+        
         'SU' => 'Sunday',
         'MO' => 'Monday',
         'TU' => 'Tuesday',

@@ -47,7 +47,8 @@ $this->registerJs($js);
 
     <?= $form->field($model, 'subject')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'description')->widget(CKEditor::className(), [
+    <div class="invalidFix">
+        <?= $form->field($model, 'description')->widget(CKEditor::className(), [
         'options' => ['rows' => '6'],
         'preset' => 'custom',
         'clientOptions' => [
@@ -63,6 +64,7 @@ $this->registerJs($js);
         ]
         
     ]) ?>
+    </div>
 
 <?= $form->field($model, 'location')->textInput(['maxlength' => true]) ?>
 
@@ -100,7 +102,7 @@ $this->registerJs($js);
         <div class="col-md-4">
             <?= $form->field($model, 'repeat_interval')->dropDownList($repition,['default'=>0]) ?>
             
-            <div class="repeatDaysContainer" style="display:none;">
+            <div class="repeatDaysContainer invalidFix" style="display:none;">
                 <?= $form->field($model, 'repeat_days')
                     ->listBox($eventDays, [
                         'multiple' => true,
@@ -121,8 +123,8 @@ $this->registerJs($js);
 
     <?php
         if ($model->pdfFile) {
-            echo 'document exists';
-            echo $model->pdfFile;
+            //echo 'document exists';
+            echo '<i class="far fa-file-pdf"></i> ' . $model->pdfFile;
         }
     ?>
 

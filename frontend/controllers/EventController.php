@@ -422,7 +422,7 @@ class EventController extends Controller
                 $model->end_dt = $model->start_dt;
             }
 
-            if ($model->repeat_interval == 5) {
+            if (!empty($model->repeat_days)) {
                 $model->repeat_days = implode(',',$model->repeat_days);
             }
 
@@ -465,6 +465,11 @@ class EventController extends Controller
             }
             $model->start_dt = date("m/d/Y H:i A", strtotime($model->start_dt));
             $model->end_dt = date("m/d/Y H:i A", strtotime($model->end_dt));
+
+            //convert repeat days to array
+            if ($model->repeat_interval == 5) {
+                $model->repeat_days = explode(',',$model->repeat_days);
+            }
             
             return $this->renderAjax('update', [
                 'model' => $model,
