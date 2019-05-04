@@ -149,11 +149,11 @@ class GoogleController extends Controller
         }
 
         //load possible existing clashing events
-        $twoMoAgo = date('Y-m-d', mktime(0, 0, 0, date('m')-1, date('d'), date('Y')));
-        $oneYrFut = date('Y-m-d', mktime(0, 0, 0, date('m')+2, date('d'), date('Y')));
+        $timeMin = $this->getStartRange();
+        $timeMax = $this->getEndRange();
         $existingEvents = Event::find()
-            ->where(['>=', 'start_dt', $twoMoAgo])
-            ->andWhere(['<=','start_dt', $oneYrFut])
+            ->where(['>=', 'start_dt', $timeMin])
+            ->andWhere(['<=','start_dt', $timeMax])
             ->andWhere(['group' => 'rec'])
             ->andWhere(['not', ['googleId' => null]])
             ->asArray()->all();
@@ -319,7 +319,7 @@ class GoogleController extends Controller
         $allDay = 1;
         $repeatDays = '';
 
-        //printf("%s (%s - %s), Desc: %s, Loc: %s\n", $event->getSummary(), $start, $end, $description, $location);
+        printf("%s (%s - %s), Desc: %s, Loc: %s\n", $event->getSummary(), $start, $end, $description, $location);
         if (!empty($rules)) {
             print_r($rules);
             /*
@@ -344,9 +344,29 @@ class GoogleController extends Controller
                         $repeatInterval = 5;
                     }
                 }
+                //find end date, NOTE @TODO - This will bust end durantion timestamp!!
+                $search_text = 'UNTIL';
+                $untilDt = array_filter($ruleSet, function($el) use ($search_text) {
+                    return ( strpos($el, $search_text) !== false ); 
+                    //if ( strpos($el, $search_text) !== false ) {
+                    //    $endDt = explode('=',$el)[1];
+                    //    echo "Found $endDt \n";
+                    //    return $endDt;
+                    //}
+                });
+                //print_r($untilDt);
+                $endDt = explode('=', $untilDt[key($untilDt)])[1]; 
+                echo "Real end DT: $endDt\n";
+                if (!empty($endDt)) {
+                    $end = $endDt;
+                }
+                //fix duration timestamp
+                
             }
+            
         }
 
+        //check time stamp
         if ( date("Y-m-d H:i:s", strtotime($start)) > date("Y-m-d 00:00:00", strtotime($start)) ) {
             $allDay = 0;
         }
