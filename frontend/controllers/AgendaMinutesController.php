@@ -5,6 +5,7 @@ namespace frontend\controllers;
 use Yii;
 use frontend\models\AgendaMinutes;
 use yii\web\Controller;
+use yii\web\UploadedFile;
 use yii\web\NotFoundHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\bootstrap4\ActiveForm;
@@ -62,7 +63,8 @@ class AgendaMinutesController extends Controller
             if ($model->load(Yii::$app->request->post())) {
 
                 $model->create_dt = date('Y-m-d');
-                
+                $model->pdfFile = UploadedFile::getInstance($model, 'pdfFile');
+
                 if ($model->save()) {
                     $audit = new Audit();
                     $audit->table = 'minutes';
@@ -70,7 +72,16 @@ class AgendaMinutesController extends Controller
                     $audit->field = 'Create';
                     $audit->update_user = Yii::$app->user->identity->id;
                     $audit->save(false);
-                    Yii::$app->session->setFlash('success', "Minutes successfully posted for meeting.");
+                    if ($model->pdfFile) {
+                        if ($model->upload($model->id)) { 
+                            Yii::$app->session->setFlash('success', "Minutes created successfully with attachment: " . $model->pdfFile->name);
+                        } else {
+                            Yii::$app->session->setFlash('error', "Minutes created successfully but PDF failed to attach.");
+                        }
+                    } else {
+                        Yii::$app->session->setFlash('success', "Minutes successfully posted for meeting.");
+                    }
+                    
                 } else {
                     Yii::$app->session->setFlash('error', "Failed to post minutes. Error: " . Html::error($model,'date'));
                 }
@@ -102,6 +113,8 @@ class AgendaMinutesController extends Controller
 
             if ($model->load(Yii::$app->request->post())) {
                 
+                $model->pdfFile = UploadedFile::getInstance($model, 'pdfFile');
+
                 if ($model->save()) {
                     $audit = new Audit();
                     $audit->table = 'minutes';
@@ -109,11 +122,26 @@ class AgendaMinutesController extends Controller
                     $audit->field = 'Update';
                     $audit->update_user = Yii::$app->user->identity->id;
                     $audit->save(false);
-                    Yii::$app->session->setFlash('success', "Minutes successfully updated.");
+                    if ($model->pdfFile) {
+                        if ($model->upload($model->id)) { 
+                            Yii::$app->session->setFlash('success', "Minutes updated successfully with attachment: " . $model->pdfFile->name);
+                        } else {
+                            Yii::$app->session->setFlash('error', "Minutes updated successfully but PDF failed to attach.");
+                        }
+                    } else {
+                        Yii::$app->session->setFlash('success', "Minutes successfully updated.");
+                    }
                 } else {
                     Yii::$app->session->setFlash('error', "An error occured while updating minutes. Your modifications were not saved.");
                 }
                 return $this->redirect(['sibley/council', 'id' => $model->agenda_id]);
+            }
+
+            //find document if exists
+            $pdfFileInfo = $model->getAttachment($id);
+            if (!empty($pdfFileInfo)) {
+                $model->pdfFileDetails = $pdfFileInfo;
+                $model->pdfFile = Yii::getAlias('@web') .'/'. $pdfFileInfo['path'] . $pdfFileInfo['name'];
             }
 
             return $this->renderAjax('update', [
@@ -142,6 +170,21 @@ class AgendaMinutesController extends Controller
                 $audit->field = 'Delete';
                 $audit->update_user = Yii::$app->user->identity->id;
                 $audit->save(false);
+
+                $pdfFileInfo = $model->getAttachment($id);
+                if (!empty($pdfFileInfo)) {
+                    $document = Document::find()->where(['id' => $pdfFileInfo['id']])->one();
+                    if ($document) {
+                        $sysPath = Url::to('@webroot') . '/' . $document->path . $document->name;
+                        if ($document->delete()) {
+                            $jResult['status'] = 'success';
+                            $jResult['message'] = 'Document Record deleted.';
+                            if(file_exists($sysPath)) {
+                                unlink($sysPath);
+                            } 
+                        }
+                    }
+                }
                 Yii::$app->session->setFlash('success', "Minutes successfully deleted.");
             } else {
                 Yii::$app->session->setFlash('error', "The minutes were not deleted due to an error.");

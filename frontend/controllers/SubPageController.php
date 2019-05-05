@@ -253,14 +253,14 @@ class SubPageController extends Controller
         if (Yii::$app->request->isAjax) {
             $data = Yii::$app->request->post();
             $document = Document::find()->where(['id' => $data['docId']])->one();
-            $sysPath = Url::to('@frontend/web/') . $document->path . $document->name;
+            $sysPath = Url::to('@webroot') . '/' . $document->path . $document->name;
             $jResult['status'] = 'error';
             $jResult['message'] = '';
             $jResult = [];
             if ($document) {
                 if ($document->delete()) {
                     $jResult['status'] = 'success';
-                    $jResult['message'] = 'Document Record deleted.';
+                    $jResult['message'] = 'Document Record deleted. ('.$sysPath.')';
                     if(file_exists($sysPath)) {
                         unlink($sysPath);
                     } 

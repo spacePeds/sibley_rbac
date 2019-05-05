@@ -21,6 +21,7 @@ var MeetingAdmin = new function() {
                 console.log(jqXHR);
             });
         });
+
     };
 
     /**
@@ -82,6 +83,39 @@ var MeetingAdmin = new function() {
             //console.log(data);
             $('#formModal').modal('show').find('#modalContent').html(data);
             $('#formModal').find('.modal-title').html('Updating Minutes for "<i>' + agendaDate + '</i>" meeting.');
+
+            //handle pdf delete
+            $('a.doDelete').on('click',function(e){
+                e.preventDefault();
+                if (confirm("Are you sure you wish to delete this PDF?")) {
+                    var url="/sub-page/ajax-delete";
+                    var id = $(this).data('id');
+                    //console.log('delete clicked',url,id);
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        data: {'docId':id},
+                        datatype: 'json'
+                    }).done(function(data ) {
+                        if (data.status == 'success') {
+                            //console.log('fadeing out', $('div').find('[data-id="'+id+'"]').length);
+                            $('div').find('[data-id="'+id+'"]').remove();
+                        } else {
+                            $(this).closest('div').append(data.message);
+                        }
+                        //console.log(data);
+                    }).fail(function( jqXHR, textStatus, errorThrown ) {
+                        //console.log(jqXHR, textStatus, errorThrown);
+                        alert(errorThrown);
+                    }).always(function( data, textStatus, errorThrown ) { 
+                        //console.log(data, textStatus, errorThrown);
+                    });
+                }
+                
+                
+                
+            }); 
+
         }).fail(function( jqXHR, textStatus ) {
             alert( "Request failed: " + textStatus );
             console.log(jqXHR);

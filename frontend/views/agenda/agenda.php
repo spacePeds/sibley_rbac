@@ -7,6 +7,10 @@ use yii\helpers\Url;
 /* @var $model common\models\Agenda */
 //echo '<pre>' . print_r($agenda,true) . '</pre>';
 
+$this->render('/page/_helperFormatFileSize', []);
+
+//echo print_r($pdf,true);
+
 ?>
 <div class="tabs">
     <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -30,7 +34,9 @@ use yii\helpers\Url;
                     <div>Uploaded By: <?=$agenda['uFname']?> <?=$agenda['uLname']?></div>
                     <?php if (!empty($agenda['mId'])): ?>
                         <div>
+                        
                             <a class="btn btn-outline-secondary" id="minutesButn" href="#minutes">View Minutes</a>
+                       
                         </div>
                     <?php endif; ?>
                 </span>
@@ -78,11 +84,17 @@ use yii\helpers\Url;
                         
                         <?php if (!empty($agenda['mVideo'])): ?>
                             <div class="embed-responsive embed-responsive-16by9">
-                                <iframe class="embed-responsive-item" src="<?=$agenda['mVideo']?>" allowfullscreen></iframe>
+                                <iframe class="embed-responsive-item" type="text/html" src="https://www.youtube.com/embed/<?=$agenda['mVideo']?>" allow="autoplay; encrypted-media" allowfullscreen></iframe>
                             </div>
                         <?php endif; ?>
-
-                        <div class="card-text"><?=$agenda['mBody']?></div>
+                        <?php if (!empty($pdf['pdfFile'])): ?>
+                            <div class="jumbotron">
+                                <p class="lead">Minutes available for <?=date('l F jS Y',strtotime($agenda['date']))?> meeting as a downloadable PDF</p>
+                                <a href="<?=$pdf['pdfFile']?>" class="btn btn-lg btn-outline-primary" target="_blank"><i class="far fa-file-pdf"></i> View Minutes (<?=formatSizeUnits($pdf['details']['size'])?>)</a>
+                            </div>
+                        <?php else: ?>
+                            <div class="card-text"><?=$agenda['mBody']?></div>
+                        <?php endif; ?>
                     </div>
 
                     <?php if (Yii::$app->user->can('update_agenda')) : ?>

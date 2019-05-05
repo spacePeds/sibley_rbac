@@ -55,7 +55,7 @@ Html::encode($adminScript);
     <div class="row">
         <div class="col-lg-3 mb-4">
 
-            <div id="meetingMenuContainer">
+            <div id="meetingMenuContainer" class="mt-2">
                 
                 <div class="row">
                     <div class="col-3 m-0">
@@ -89,7 +89,7 @@ Html::encode($adminScript);
 
             <div id="meetingContainer">
             
-                <div class="alert alert-info" role="alert" id="instructionsContainer">
+                <div class="alert alert-info py-3 my-3" id="instructionsContainer">
                     <h5 class="alert-heading">Please choose a meeting from the provided menu.</h5>
                 </div>
 

@@ -1,9 +1,16 @@
 <?php
+/**
+ * Console application to load Events
+ * https://developers.google.com/calendar/v3/reference/events
+ * ./yii google
+ */
+
 // commands/GoogleController.php DEMO
 namespace console\controllers;
 
 use Yii;
 use yii\console\Controller;
+use yii\base\Exception;
 use Google_Client;
 use Google_Service_Calendar;
 use frontend\models\Event;

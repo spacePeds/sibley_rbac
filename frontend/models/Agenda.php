@@ -21,6 +21,8 @@ class Agenda extends \yii\db\ActiveRecord
     public $yearToggle = '';
     public $yearList = [];
     public $dfltAgenda = 0;
+    public $pdfFile;
+    public $pdfFileDetails = [];
   
     const SCENARIO_CREATE = 'create';
 
@@ -91,6 +93,8 @@ class Agenda extends \yii\db\ActiveRecord
     {
         return $this->hasMany(AgendaMinutes::className(), ['agenda_id' => 'id']);
     }
+
+    
 
     /**
      * Custom Validator

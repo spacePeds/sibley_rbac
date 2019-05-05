@@ -27,10 +27,15 @@ Yii::$app->assetManager->bundles = [
 
     <?= $form->field($model, 'agenda_id')->hiddenInput()->label(false); ?>
     
-    <?= $form->field($model, 'attend') ?>
-
-    <?= $form->field($model, 'absent') ?>
-
+    <div class="row">
+        <div class="col-md-6">
+            <?= $form->field($model, 'attend') ?>
+        </div>
+        <div class="col-md-6">
+            <?= $form->field($model, 'absent') ?>
+        </div>
+    </div>
+    
     <div class="invalidFix"> 
     <?= $form->field($model, 'body')->widget(CKEditor::className(), [
         'options' => ['rows' => '6'],
@@ -47,10 +52,23 @@ Yii::$app->assetManager->bundles = [
             'removeButtons' => 'Flash,Iframe,Language,Save,NewPage'
         ]
         
-    ]) ?>
+    ])->hint('If you are going to include a PDF of the minutes please also include a text representation here for searching purposes.') ?>
     </div>
 
-    <?= $form->field($model, 'video') ?>
+    <?= $form->field($model, 'pdfFile')->fileInput(); ?>
+
+    
+    <?php
+        if ($model->pdfFile) {
+            echo '<div data-id="'.$model->pdfFileDetails['id'].'" class="border border-light rounded p-2">';
+            echo '<a href="'.$model->pdfFile.'"><i class="far fa-file-pdf"></i> Minutes as PDF</a>';
+            echo '<a data-id="'.$model->pdfFileDetails['id'].'" class="btn btn-sm btn-danger ml-3 doDelete" href="#">Delete</a>';
+            echo '</div>';
+        }
+    ?>
+    
+
+    <?= $form->field($model, 'video')->hint('Video IDs look simular to, "aDlcUvvbGQI&t=14s"') ?>
 
     <div class="form-group text-right">
         <button type="button" class="btn btn-link" data-dismiss="modal" aria-label="Close">Cancel</button>

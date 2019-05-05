@@ -88,17 +88,23 @@ class AgendaController extends Controller
             ->leftJoin('agenda_minutes', '`agenda_minutes`.`agenda_id` = `agenda`.`id`')
             ->leftJoin('user', '`user`.`id` = `agenda`.`created_by`')
             ->where(['agenda.id'=>$id])->asArray()->one();
-            //$model = AgendaMinutes::find()->select([
-        //        'agenda_minutes.*', 'agenda.*'
-        //    ])->
-        //    joinWith('agenda',true,'RIGHT JOIN')->where(['agenda.id'=>$id])->one();
-        //foreach($model as $agenda) {
-        //    $agenda['createDt'] = date('m/d/Y',$agenda->create_dt);
-        //}
-        //['agenda.id','agenda.type','agenda.date','agenda.body AS bananna','agenda.create_dt','agenda_minutes.id','agenda_minutes.attend','agenda_minutes.absent','agenda_minutes.body AS cheeseburger','agenda_minutes.create_dt']
+            
+        //find document if exists
+        $pdfFile = '';
+        $pdfFileDetails = [];
+        $minutesModel = new AgendaMinutes();
+        $pdfFileInfo = $minutesModel->getAttachment($model['mId']);
+        if (!empty($pdfFileInfo)) {
+            $pdfFileDetails = $pdfFileInfo;
+            $pdfFile = Yii::getAlias('@web') .'/'. $pdfFileInfo['path'] . $pdfFileInfo['name'];
+        }
 
         return $this->renderAjax('agenda', [
-            'agenda' => $model
+            'agenda' => $model,
+            'pdf' => [
+                'pdfFile' => $pdfFile,
+                'details' => $pdfFileDetails,
+            ]
         ]);
     }
     /**
@@ -222,22 +228,55 @@ class AgendaController extends Controller
 
             //make sure only owner or site admin can update
             $user_id = Yii::$app->user->identity->id;
-            $model = $this->findModel($id);
-            if ($user_id != $model->created_by && $user_id != 1) {
-                Yii::$app->session->setFlash('error', "It does not appear you created this agenda. Delete request rejected.");
-                return $this->goBack(Yii::$app->request->referrer);
-            }
-        
-            if ($this->findModel($id)->delete()) {
-                $audit = new Audit();
-                $audit->table = 'agenda';
-                $audit->record_id = $id;
-                $audit->field = 'Delete';
-                $audit->update_user = Yii::$app->user->identity->id;
-                $audit->save(false);
-                Yii::$app->session->setFlash('success', "Agenda successfully deleted. Any associated minutes have also been deleted.");
+            
+            $model = Agenda::findOne($id);
+            if ($model !== null) {
+
+                if ($user_id != $model->created_by && $user_id != 1) {
+                    Yii::$app->session->setFlash('error', "It does not appear you created this agenda. Delete request rejected.");
+                    return $this->goBack(Yii::$app->request->referrer);
+                }
+
+                if ($model->agendaMinutes) {
+                    //print_r($model->agendaMinutes);
+                    $model->agendaMinutes[0]->id;
+                    
+                    $pdfFileInfo = $model->getAttachment($id);
+                    if (!empty($pdfFileInfo)) {
+                        $document = Document::find()->where(['id' => $pdfFileInfo['id']])->one();
+                        if ($document) {
+                            $sysPath = Url::to('@webroot') . '/' . $document->path . $document->name;
+                            if ($document->delete()) {
+                                
+                                $audit = new Audit();
+                                $audit->table = 'document';
+                                $audit->record_id = $pdfFileInfo['id'];
+                                $audit->field = 'Delete';
+                                $audit->update_user = Yii::$app->user->identity->id;
+                                $audit->save(false);
+
+                                if(file_exists($sysPath)) {
+                                    unlink($sysPath);
+                                } 
+                            }
+                        }
+                    }
+                }
+                if ($model->delete()) {
+                    $audit = new Audit();
+                    $audit->table = 'agenda';
+                    $audit->record_id = $id;
+                    $audit->field = 'Delete';
+                    $audit->update_user = Yii::$app->user->identity->id;
+                    $audit->save(false);
+                           
+                    Yii::$app->session->setFlash('success', "Agenda successfully deleted. Any associated minutes have also been deleted.");
+
+                } else {
+                    Yii::$app->session->setFlash('error', "An error occured while deleting this agenda");
+                }
             } else {
-                Yii::$app->session->setFlash('error', "An error occured while deleting this agenda");
+                Yii::$app->session->setFlash('error', "Agenda record not found");
             }
 
             return $this->redirect(['sibley/council']);
