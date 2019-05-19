@@ -79,7 +79,7 @@ $(function(){
             route = 'update/'+imageId;
             pageTitle = pageTitle + ":" + imageId;
         }
-        console.log(route);
+        //console.log(route);
         $('#genericModal').modal('show')
             .find('#modalContent')
             .load('/header-image/'+route, function() {
@@ -106,7 +106,7 @@ $(function(){
                     $('#genericModal').find('.im_progress').show();
                     var url="/header-image/"+route;
                     ajaxFormSubmit(url,'#header_image_form',function(data){
-                        console.log('submit result:',data);
+                        //console.log('submit result:',data);
                         if(data.status=='success'){
                             $('.im_progress').fadeOut();
                             var imgSrc = $('#img_preview').attr('src');
@@ -159,7 +159,7 @@ $(function(){
                 // do some loading options
             },
             success: function(data) {
-                console.log('callback:',data);
+                //console.log('callback:',data);
                 callback(data);
             },
             complete: function() {
@@ -178,11 +178,11 @@ $(function(){
     });
 
     function DisplayImagePreview(input){
-        console.log('image preview:',input.files);
+        //console.log('image preview:',input.files);
         if (input.files && input.files[0]) {
             var reader = new FileReader();
             reader.onload = function (e) {
-                console.log('onload:',e);    
+                //console.log('onload:',e);    
                 $('#img_preview').attr('src', e.target.result);
             }
             reader.readAsDataURL(input.files[0]);

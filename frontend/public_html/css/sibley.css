@@ -37,6 +37,7 @@ body {
 #myCarousel .carousel-image-1 {
     background:url('../img/carousel/courthouse.jpg');
     background-size: cover;
+    margin:auto;
 }
 #myCarousel .carousel-image-2 {
     background:url('../img/carousel/downtown.jpg');
@@ -78,6 +79,10 @@ body {
 #myCarousel .carousel-caption:hover {
     background-color:rgba(0,0,0,0);
 }
+
+#myCarousel .carousel-inner img {
+    margin: auto;
+  }
 
 /*4up carousel*/
 /*
@@ -430,6 +435,11 @@ img#img_preview {
 /*Sortable*/
 .ui-state-highlight { height: 2em; line-height: 1.7em; }
 
+/*pagination
+.pagination {
+    text-align:center;
+}
+*/
 /*
   .Container {
     padding: 0 15px;

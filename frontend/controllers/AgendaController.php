@@ -8,10 +8,12 @@ use frontend\models\AgendaMinutes;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\ForbiddenHttpException;
+use yii\web\BadRequestHttpException;
 use yii\bootstrap4\ActiveForm;
 use yii\filters\VerbFilter;
 use yii\helpers\Html;
 use frontend\models\Audit;
+use yii\data\Pagination;
 
 /**
  * AgendaController implements the CRUD actions for Agenda model.
@@ -303,6 +305,130 @@ class AgendaController extends Controller
             return ActiveForm::validate($model);
         }
     }
+
+    /**
+     * Search City council meetings
+     * return mixed
+     */
+    public function actionSearch() {
+        if (Yii::$app->request->get()) {
+            $search = Yii::$app->request->get();
+
+            if (!isset($search['searchTerm'])) {
+                throw new BadRequestHttpException('Invalid search term.');
+            }
+
+            $searchTerm = $search['searchTerm'];
+            //cleanse the term
+            $searchTerm = preg_replace("/[^a-zA-Z0-9 \&\/ ]+/", "", $searchTerm);
+
+            //if(!preg_match("/^[a-zA-Z0-9\&\/ ]+$/", $searchTerm) == 1) {
+            //    $searchTerm = '';
+            //} 
+            $query = Agenda::find()
+            ->select([
+                'agenda.id AS aId',
+                'agenda.type',
+                'agenda.date',
+                'agenda.body AS aBody',
+                'agenda.create_dt AS aCreateDt',
+                'agenda.created_by AS aCreatedBy',
+                'user.first_name As uFname',
+                'user.last_name As uLname',
+                'agenda_minutes.id AS mId',
+                'agenda_minutes.attend',
+                'agenda_minutes.absent',
+                'agenda_minutes.body AS mBody',
+                'agenda_minutes.video AS mVideo',
+                'agenda_minutes.create_dt AS mCreateDt'
+            ])
+            ->leftJoin('agenda_minutes', '`agenda_minutes`.`agenda_id` = `agenda`.`id`')
+            ->leftJoin('user', '`user`.`id` = `agenda`.`created_by`')
+            ->andFilterWhere(['or',
+                ['like', 'agenda.body', $searchTerm ],
+                ['like', 'agenda_minutes.body', $searchTerm ]
+            ]);
+
+            $countQuery = clone $query;
+            $pages = new Pagination([
+                'totalCount' => $countQuery->count(),
+                'defaultPageSize' => 15
+            ]);
+            $models = $query->offset($pages->offset)
+                ->limit($pages->limit)
+                ->orderBy('date')->asArray()
+                ->all();
+        
+            return $this->render('search', [
+                    'models' => $models,
+                    'pages' => $pages,
+            ]);      
+        }
+    }
+
+    /**
+     * 
+     $boolean = FALSE;
+		
+		if (preg_match("/AND|and|And/",$criteria,$matches)) {
+			$burst = $matches[0];
+			$terms = explode($burst,$criteria);
+			$boolean = TRUE;
+			$split = "AND";
+		} else if (preg_match("/OR|or|Or/",$criteria, $matches)) {
+			$burst = $matches[0];
+			$terms = explode($burst,$criteria);
+			$boolean = TRUE;
+			$split = "OR";
+		}
+		
+		$strFmt = "LIKE \"%$criteria%\"";
+		
+		if (($boolean == TRUE) && ($split == "OR")) {
+			$query = "SELECT agenda.agenda_type, agenda.agenda_date, agenda.agenda_detail, 
+						minute.minute_title, minute.minute_detail, agenda.agenda_id,
+						DATE_FORMAT(agenda.agenda_date, '%m/%d/%Y') AS agenda_date_mdy,
+						DATE_FORMAT(agenda.agenda_date, '%Y') AS agenda_year,
+						agenda.agenda_region_id
+					  FROM agenda
+					  LEFT JOIN minute
+				  	  ON (minute.agenda_id = agenda.agenda_id)
+					  WHERE $legBody
+					  MATCH(".implode(',',$fields).") 
+					  AGAINST ('$terms[0] $terms[1] $terms[2] $terms[3]' IN BOOLEAN MODE)
+					  ORDER BY agenda.agenda_date".$limitPart;
+		} elseif (($boolean == TRUE) && ($split == "AND")) {
+			$query = "SELECT agenda.agenda_type, agenda.agenda_date, agenda.agenda_detail, 
+						minute.minute_title, minute.minute_detail, agenda.agenda_id,
+						DATE_FORMAT(agenda.agenda_date, '%m/%d/%Y') AS agenda_date_mdy,
+						DATE_FORMAT(agenda.agenda_date, '%Y') AS agenda_year,
+						agenda.agenda_region_id
+					  FROM agenda
+					  LEFT JOIN minute
+				  	  ON (minute.agenda_id = agenda.agenda_id)
+					  WHERE $legBody
+					  MATCH(".implode(',',$fields).") AGAINST ('+$terms[0] +$terms[1] +$terms[2] +$terms[3]' IN BOOLEAN MODE)
+					  ORDER BY agenda.agenda_date".$limitPart;
+		} else {
+			$likeString = '';
+			for($i=0; $i < count($fields); $i++){ 
+				$likeString .= ($i==0 ? 'AND (' : 'OR '). $fields[$i]." $strFmt "; 
+			}
+			$query = "SELECT agenda.agenda_id, agenda.agenda_type, agenda.agenda_date, agenda.agenda_detail, 
+						minute.minute_title, minute.minute_detail, agenda.agenda_id,
+						DATE_FORMAT(agenda.agenda_date, '%m/%d/%Y') AS agenda_date_mdy,
+						DATE_FORMAT(agenda.agenda_date, '%Y') AS agenda_year,
+						agenda.agenda_region_id
+					  FROM agenda
+					  LEFT JOIN minute
+				  	  ON (minute.agenda_id = agenda.agenda_id) 
+					  WHERE $legBody
+					  ".$likeString.")
+					  ORDER BY agenda.agenda_date ASC".$limitPart;
+					  
+					  
+		}
+     */
 
     /**
      * Finds the Agenda model based on its primary key value.

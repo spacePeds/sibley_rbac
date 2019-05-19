@@ -91,10 +91,10 @@ $this->title = 'Sibley: Highlight of Iowa!';
 
     <section class="container">
 
-        <div class="row">
+        <div class="row pt-1">
             <div class="col-lg-3">
                 <h3>Sibley Daily News</h3>
-                <ul class="list-group list-group-flush">
+                <ul class="list-group list-group-flush pt-1">
                     <li class="list-group-item">
                         <a href="http://www.osceolacountydailynews.com/" target="_blank">KIWA Sibley News</a>
                     </li>

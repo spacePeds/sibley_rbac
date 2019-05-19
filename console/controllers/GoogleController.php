@@ -2,6 +2,7 @@
 /**
  * Console application to load Events
  * https://developers.google.com/calendar/v3/reference/events
+ * https://www.googleapis.com/calendar/v3/calendars/sibley.rec@gmail.com/events?maxResults=100&key=AIzaSyABvb9K86PFYpyelJkhrwXP1VaxtcqrtXc&UpdatedMin=2019-01-01T00:00:00
  * ./yii google
  */
 
@@ -79,7 +80,7 @@ class GoogleController extends Controller
                 ->andWhere(['<=','start_dt', $oneYrFut])
                 ->andWhere(['group' => 'hol'])
                 ->asArray()->all();
-            print_r($existingEvents);
+            //print_r($existingEvents);
 
             //loop through google holidays
             foreach ($events as $event) {
@@ -208,7 +209,7 @@ class GoogleController extends Controller
                     $this->deleteEvent($sibleyEvents[$gIdx]['id']);
                 } else {
                     //nothing to update
-                    echo "Noting to update.\n";
+                    echo "Nothing to update.\n";
 
                 }
             } else {

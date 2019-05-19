@@ -85,7 +85,29 @@ Html::encode($adminScript);
         </div>
         
         <div class="col-lg-9 mb-4">
-            <h3><?= Html::encode($this->title) ?></h3>
+            <div class="row">
+                <div class="col-md-7">
+                    <h3><?= Html::encode($this->title) ?></h3>
+                </div>
+                <div class="col-md-5 mt-2">
+                    <?php $form = ActiveForm::begin([ 
+                        'id' => 'meetingSearchForm', 
+                        'action' => ['agenda/search'], 
+                        'method' => 'get'
+                    ]); ?>
+                    <div class="input-group mb-1">
+                        <input type="text" class="form-control searchTerm" placeholder="Search" name="searchTerm" aria-label="Search" aria-describedby="button-search">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-success" type="button" id="button-search">Search</button>
+                        </div>
+                    </div>
+                    <small id="searchHelpBlock" class="form-text text-muted"></small>
+                    <?php ActiveForm::end(); ?>
+                </div>
+            </div>
+                
+            
+            
 
             <div id="meetingContainer">
             

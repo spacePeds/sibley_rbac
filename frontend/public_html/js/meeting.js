@@ -35,6 +35,17 @@ var Meeting = new function() {
         $('#previousYear').on('click',function() {
             self.toggleYear('prev');
         });
+
+        //search
+        $('#button-search').on('click',function() {
+            var searchCriteria = $('#meetingSearchForm').find('.searchTerm').val();
+            //console.log(searchCriteria);
+            if (searchCriteria !== undefined) {
+                $('#meetingSearchForm').submit();
+            } else {
+                $('#searchHelpBlock').text('Please enter a search term or phrase');
+            }        
+        });
     };
     /**
      * Find previous and next month
