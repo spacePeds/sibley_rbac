@@ -9,9 +9,9 @@ $js = <<<EOF
 $(function () {
     $('[data-toggle="tooltip"]').tooltip();
 
-    $('#showcaseCarousel').carousel(
+    $('#showcaseCarousel').carousel({
         interval:6000
-    );
+    });
 })
 EOF;
 
