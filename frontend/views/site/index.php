@@ -7,7 +7,11 @@ use davidjeddy\RssFeed\RssReader;
 
 $js = <<<EOF
 $(function () {
-    $('[data-toggle="tooltip"]').tooltip()
+    $('[data-toggle="tooltip"]').tooltip();
+
+    $('#showcaseCarousel').carousel(
+        interval:6000
+    );
 })
 EOF;
 
@@ -15,103 +19,84 @@ $this->title = 'Sibley: Highlight of Iowa!';
 ?>
 <div class="site-index">
 
-    <section id="showcase">
-        <div id="myCarousel" class="carousel slide" data-ride="carousel">
-            <ol class="carousel-indicators">
-            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-            <li data-target="#myCarousel" data-slide-to="1" class=""></li>
-            <li data-target="#myCarousel" data-slide-to="2" class=""></li>
-            <li data-target="#myCarousel" data-slide-to="3" class=""></li>
-            <li data-target="#myCarousel" data-slide-to="4" class=""></li>
-            </ol>          
-
-            <div class="carousel-inner">
-
-                <div class="carousel-item carousel-image-1 active">
+    <div id="showcaseCarousel" class="carousel slide" data-ride="carousel" > <!--data-interval="false"-->
+        <ol class="carousel-indicators">
+            <li data-target="#showcaseCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#showcaseCarousel" data-slide-to="1" class=""></li>
+            <li data-target="#showcaseCarousel" data-slide-to="2" class=""></li>
+            <li data-target="#showcaseCarousel" data-slide-to="3" class=""></li>
+            <li data-target="#showcaseCarousel" data-slide-to="4" class=""></li>
+        </ol> 
+        <div class="carousel-inner">
+            <div class="carousel-item active carousel-image-1">
                 <div class="container">
-                <div class="carousel-caption d-none d-sm-block text-right pr-4">
-                <h1 class="display-4">Osceola County Courthouse</h1>
-                <p class="lead">Built in 1902, this landmark dominates Sibley's center.</p>
-                <a target="blank" href="http://www.osceolacountyia.org/" class="btn btn-success">Visit Courthouse</a>
+                    <div class="carousel-caption d-none d-md-block text-right" style="text-shadow: 2px 2px 4px #6c6c6c;">
+                    <div class="mr-4">
+                    <h1 class="display-4">Osceola County Courthouse</h1>
+                    <p class="lead">Built in 1902, this landmark dominates Sibley's center.</p>
+                    <a target="blank" href="http://www.osceolacountyia.org/" class="btn btn-success">Visit Courthouse</a>
+                    </div>
+                    </div>
                 </div>
-                </div>
-                </div>
-
-                <div class="carousel-item carousel-image-2">
-                <div class="container">
-                <div class="carousel-caption d-none d-sm-block text-left pl-4">
-                <h1 class="display-4">Downtown Sibley</h1>
-                <p class="lead">Several unique storefronts dot Sibley's downtown.</p>
-                </div>
-                </div>
-                </div>
-
-                <div class="carousel-item carousel-image-3">
-                <div class="container">
-                <div class="carousel-caption d-none d-sm-block text-left pl-4">
-                <h1 class="display-4">Sibley Golf and Country Club</h1>
-                <p class="lead">Spend several hours relaxing at our beautiful golf course.</p>
-                <a href="https://www.facebook.com/SibleyGolfCountryClub/" class="btn btn-success btn-lg">Learn More</a>
-                </div>
-                </div>
-                </div>
-
-                
-                <div class="carousel-item carousel-image-4">
-                <div class="container">
-                <div class="carousel-caption d-none d-sm-block text-right pr-4">
-                <h1 class="display-4">Sibley-Ocheyedan Campus</h1>
-                <p class="lead">Sibley takes great pride in its schools.</p>
-                <a href="http://thegenerals2.socsdit.org/" class="btn btn-success btn-lg">Learn More</a>
-                </div>
-                </div>
-                </div>
-
-                <div class="carousel-item carousel-image-5">
-                <div class="container">
-                <div class="carousel-caption d-none d-sm-block text-right pr-4">
-                <h1 class="display-4">Why not stay a while?</h1>
-                <p class="lead">Learn more about housing and employment options.</p>
-                <a href="https://www.osceolacountyia.com/" class="btn btn-success btn-lg">Learn More</a>
-                </div>
-                </div>
-                </div>
-
+                <img class="d-block w-100" src="<?= Url::to(['img/carousel/resized/courthouse.jpg']) ?>" alt="First slide">
             </div>
-<!--
-            <a href="#myCarousel" class="carousel-control-prev" data-slide="prev" >
-            <span class="carousel-control-prev-icon"></span>
-            </a>
-            <a href="#myCarousel" class="carousel-control-next" data-slide="next" >
-            <span class="carousel-control-next-icon"></span>
-            </a>
--->
+            <div class="carousel-item carousel-image-2">
+                <div class="container">
+                    <div class="carousel-caption d-none d-md-block text-left">
+                        <div class="ml-4">
+                            <h1 class="display-4">Downtown Sibley</h1>
+                            <p class="lead">Several unique storefronts dot Sibley's downtown.</p>
+                        </div>
+                    </div>
+                </div>
+                <img class="d-block w-100" src="<?= Url::to(['img/carousel/resized/downtown.jpg']) ?>" alt="Second slide">
+            </div>
+            <div class="carousel-item carousel-image-3">
+                <div class="container">
+                    <div class="carousel-caption d-none d-md-block text-left">
+                        <div class="ml-4">
+                            <h1 class="display-4">Sibley Golf and Country Club</h1>
+                            <p class="lead">Spend several hours relaxing at our beautiful golf course.</p>
+                            <a href="https://www.facebook.com/SibleyGolfCountryClub/" class="btn btn-success btn-lg">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+                <img class="d-block w-100" src="<?= Url::to(['img/carousel/resized/golfCourse.jpg']) ?>" alt="Third slide">
+            </div>
+            <div class="carousel-item carousel-image-4">
+                <div class="container">
+                    <div class="carousel-caption d-none d-md-block text-right">
+                        <div class="mr-4">
+                            <h1 class="display-4">Sibley-Ocheyedan Campus</h1>
+                            <p class="lead">Sibley takes great pride in its schools.</p>
+                            <a href="http://thegenerals2.socsdit.org/" class="btn btn-success btn-lg">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+                <img class="d-block w-100" src="<?= Url::to(['img/carousel/resized/schools.jpg']) ?>" alt="Fourth slide">
+            </div>
+            <div class="carousel-item carousel-image-5">
+                <div class="container">
+                    <div class="carousel-caption d-none d-md-block text-right">
+                        <div class="mr-4">
+                            <h1 class="display-4">Why not stay a while?</h1>
+                            <p class="lead">Learn more about housing and employment options.</p>
+                            <a href="https://www.osceolacountyia.com/" class="btn btn-success btn-lg">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+                <img class="d-block w-100" src="<?= Url::to(['img/carousel/resized/golf.jpg']) ?>" alt="Fifth slide">
+            </div>
         </div>
-    </section>
+    </div>
+
+    
 
     <section class="container">
 
         <div class="row pt-1">
-            <div class="col-lg-3">
-                <h3>Sibley Daily News</h3>
-                <ul class="list-group list-group-flush pt-1">
-                    <li class="list-group-item">
-                        <a href="http://www.osceolacountydailynews.com/" target="_blank">KIWA Sibley News</a>
-                    </li>
-                </ul>
-                
-                <h3>KIWA Regional News</h3>
-                <ul class="list-group list-group-flush">
-                <?php foreach($feed['entries'] as $record): ?>
-                    <li class="list-group-item small">
-                        <a href="<?=$record['link']?>" target="_blank"><?=$record['title']?></a>
-                    </li>
-                <?php endforeach; ?>
-                </ul>
-                <?php //echo '<pre>' . print_r($feed,true) . '</pre>'; ?>
-                
-            </div>
-            <div class="col-lg-6">
+
+            <div class="col-12 col-md-6 order-md-2">
                 
                 <p class="lead p-2">Sibley's real pride is in its people. The dedicated, professional, caring individuals who create the growth and spirit of opportunity make the community a great place to live</p>
                 
@@ -153,7 +138,28 @@ $this->title = 'Sibley: Highlight of Iowa!';
                    
             
             </div>
-            <div class="col-lg-3">
+
+            <div class="col-12 col-md-3 order-md-1">
+                <h3>Sibley Daily News</h3>
+                <ul class="list-group list-group-flush pt-1">
+                    <li class="list-group-item">
+                        <a href="http://www.osceolacountydailynews.com/" target="_blank">KIWA Sibley News</a>
+                    </li>
+                </ul>
+                
+                <h3>KIWA Regional News</h3>
+                <ul class="list-group list-group-flush">
+                <?php foreach($feed['entries'] as $record): ?>
+                    <li class="list-group-item small">
+                        <a href="<?=$record['link']?>" target="_blank"><?=$record['title']?></a>
+                    </li>
+                <?php endforeach; ?>
+                </ul>
+                <?php //echo '<pre>' . print_r($feed,true) . '</pre>'; ?>
+                
+            </div>
+
+            <div class="col-12 col-md-3 order-md-3">
                 
                 <?php //echo '<pre>' . print_r($localInterest,true) . '</pre>'; ?>
                 <?php foreach($localInterest as $group => $links): ?>
