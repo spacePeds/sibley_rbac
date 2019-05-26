@@ -26,19 +26,12 @@ $this->title = 'Sibley: Highlight of Iowa!';
             <li data-target="#showcaseCarousel" data-slide-to="2" class=""></li>
             <li data-target="#showcaseCarousel" data-slide-to="3" class=""></li>
             <li data-target="#showcaseCarousel" data-slide-to="4" class=""></li>
+            <li data-target="#showcaseCarousel" data-slide-to="5" class=""></li>
         </ol> 
         <div class="carousel-inner">
             <div class="carousel-item active carousel-image-1">
-                <div class="container">
-                    <div class="carousel-caption d-none d-md-block text-right" style="text-shadow: 2px 2px 4px #6c6c6c;">
-                    <div class="mr-4">
-                    <h1 class="display-4">Osceola County Courthouse</h1>
-                    <p class="lead">Built in 1902, this landmark dominates Sibley's center.</p>
-                    <a target="blank" href="http://www.osceolacountyia.org/" class="btn btn-success">Visit Courthouse</a>
-                    </div>
-                    </div>
-                </div>
-                <img class="d-block w-100" src="<?= Url::to(['img/carousel/resized/courthouse.jpg']) ?>" alt="First slide">
+                
+                <img class="d-block w-100" src="<?= Url::to(['img/carousel/resized/liveShopPlay.jpg']) ?>" alt="Live, Shop, Play!">
             </div>
             <div class="carousel-item carousel-image-2">
                 <div class="container">
@@ -87,6 +80,18 @@ $this->title = 'Sibley: Highlight of Iowa!';
                 </div>
                 <img class="d-block w-100" src="<?= Url::to(['img/carousel/resized/golf.jpg']) ?>" alt="Fifth slide">
             </div>
+            <div class="carousel-item carousel-image-6">
+                <div class="container">
+                    <div class="carousel-caption d-none d-md-block text-right" style="text-shadow: 2px 2px 4px #6c6c6c;">
+                    <div class="mr-4">
+                    <h1 class="display-4">Osceola County Courthouse</h1>
+                    <p class="lead">Built in 1902, this landmark dominates Sibley's center.</p>
+                    <a target="blank" href="http://www.osceolacountyia.org/" class="btn btn-success">Visit Courthouse</a>
+                    </div>
+                    </div>
+                </div>
+                <img class="d-block w-100" src="<?= Url::to(['img/carousel/resized/courthouse.jpg']) ?>" alt="Osceola County Courthouse">
+            </div>
         </div>
     </div>
 
@@ -94,7 +99,7 @@ $this->title = 'Sibley: Highlight of Iowa!';
 
     <section class="container">
 
-        <div class="row pt-1">
+        <div class="row">
 
             <div class="col-12 col-md-6 order-md-2">
                 
@@ -140,30 +145,35 @@ $this->title = 'Sibley: Highlight of Iowa!';
             </div>
 
             <div class="col-12 col-md-3 order-md-1">
-                <h3>Sibley Daily News</h3>
-                <ul class="list-group list-group-flush pt-1">
-                    <li class="list-group-item">
-                        <a href="http://www.osceolacountydailynews.com/" target="_blank">KIWA Sibley News</a>
-                    </li>
-                </ul>
-                
-                <h3>KIWA Regional News</h3>
-                <ul class="list-group list-group-flush">
-                <?php foreach($feed['entries'] as $record): ?>
-                    <li class="list-group-item small">
-                        <a href="<?=$record['link']?>" target="_blank"><?=$record['title']?></a>
-                    </li>
-                <?php endforeach; ?>
-                </ul>
+                <div class="mt-2">
+                    <h3 class="pl-2">Sibley Daily News</h3>
+                    <ul class="list-group list-group-flush pt-1">
+                        <li class="list-group-item">
+                            <a href="http://www.osceolacountydailynews.com/" target="_blank">KIWA Sibley News</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="mt-2">
+                    <h3 class="pl-2">KIWA Regional News</h3>
+                    <ul class="list-group list-group-flush">
+                    <?php foreach($feed['entries'] as $record): ?>
+                        <li class="list-group-item small">
+                            <a href="<?=$record['link']?>" target="_blank"><?=$record['title']?></a>
+                        </li>
+                    <?php endforeach; ?>
+                    </ul>
+                </div>
                 <?php //echo '<pre>' . print_r($feed,true) . '</pre>'; ?>
                 
             </div>
 
-            <div class="col-12 col-md-3 order-md-3">
+            <div class="col-12 col-md-3 order-md-3" style="background-color:#385c65;">
                 
                 <?php //echo '<pre>' . print_r($localInterest,true) . '</pre>'; ?>
                 <?php foreach($localInterest as $group => $links): ?>
-                    <h3><?=$group?></h3>
+                <div class="mt-2">
+                    <h3 class="pl-1 text-white"><?=$group?></h3>
                     <ul class="list-group list-group-flush">
                         <?php foreach ($links as $link): ?>
                         <li class="list-group-item">
@@ -197,6 +207,7 @@ $this->title = 'Sibley: Highlight of Iowa!';
                         <?php endforeach; ?>
                         
                     </ul>
+                        </div>
                 <?php endforeach; ?> 
                 <?php if (Yii::$app->user->can('create_link')) : ?>
                     <div class="card">
@@ -204,17 +215,19 @@ $this->title = 'Sibley: Highlight of Iowa!';
                     </div>                  
                 <?php endif;?>
                 
-                <h3>Upcoming City Council Meetings</h3>
-                <ul class="list-group list-group-flush">
-                    <?php if (count($meetings) < 1): ?>
-                        <li class="list-group-item small text-muted">There are currently no meetings scheduled.</li>
-                    <?php endif; ?>
-                    <?php foreach ($meetings as $meeting): ?>
-                        <li class="list-group-item small text-muted">
-                            <a href="<?= Url::to(['/sibley/council']) ?>/<?=$meeting['id']?>">Agenda: <?=$meeting['fmtdDt']?></a>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
+                <div class="mt-2">
+                    <h3 class="pl-1 text-white">Upcoming City Council Meetings</h3>
+                    <ul class="list-group list-group-flush">
+                        <?php if (count($meetings) < 1): ?>
+                            <li class="list-group-item small text-muted">There are currently no meetings scheduled.</li>
+                        <?php endif; ?>
+                        <?php foreach ($meetings as $meeting): ?>
+                            <li class="list-group-item small text-muted">
+                                <a href="<?= Url::to(['/sibley/council']) ?>/<?=$meeting['id']?>">Agenda: <?=$meeting['fmtdDt']?></a>
+                            </li>
+                        <?php endforeach; ?>
+                        </ul>
+                    </div>
                 <?php //echo '<pre>' . print_r($meetings, true) . '</pre>'; ?>
             </div>
         </div>
