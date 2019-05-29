@@ -29,11 +29,8 @@ $this->title = 'Sibley: Highlight of Iowa!';
             <li data-target="#showcaseCarousel" data-slide-to="5" class=""></li>
         </ol> 
         <div class="carousel-inner">
+            
             <div class="carousel-item active carousel-image-1">
-                
-                <img class="d-block w-100" src="<?= Url::to(['img/carousel/resized/liveShopPlay.jpg']) ?>" alt="Live, Shop, Play!">
-            </div>
-            <div class="carousel-item carousel-image-2">
                 <div class="container">
                     <div class="carousel-caption d-none d-md-block text-left">
                         <div class="ml-4">
@@ -42,9 +39,9 @@ $this->title = 'Sibley: Highlight of Iowa!';
                         </div>
                     </div>
                 </div>
-                <img class="d-block w-100" src="<?= Url::to(['img/carousel/resized/downtown.jpg']) ?>" alt="Second slide">
+                <img class="d-block w-100" src="<?= Url::to(['img/carousel/resized/downtown.jpg']) ?>" alt="Downtown Sibley">
             </div>
-            <div class="carousel-item carousel-image-3">
+            <div class="carousel-item carousel-image-2">
                 <div class="container">
                     <div class="carousel-caption d-none d-md-block text-left">
                         <div class="ml-4">
@@ -54,9 +51,9 @@ $this->title = 'Sibley: Highlight of Iowa!';
                         </div>
                     </div>
                 </div>
-                <img class="d-block w-100" src="<?= Url::to(['img/carousel/resized/golfCourse.jpg']) ?>" alt="Third slide">
+                <img class="d-block w-100" src="<?= Url::to(['img/carousel/resized/golfCourse.jpg']) ?>" alt="Sibley Golf Course">
             </div>
-            <div class="carousel-item carousel-image-4">
+            <div class="carousel-item carousel-image-3">
                 <div class="container">
                     <div class="carousel-caption d-none d-md-block text-right">
                         <div class="mr-4">
@@ -66,9 +63,9 @@ $this->title = 'Sibley: Highlight of Iowa!';
                         </div>
                     </div>
                 </div>
-                <img class="d-block w-100" src="<?= Url::to(['img/carousel/resized/schools.jpg']) ?>" alt="Fourth slide">
+                <img class="d-block w-100" src="<?= Url::to(['img/carousel/resized/schools.jpg']) ?>" alt="Sibley-Ocheyedan Schools">
             </div>
-            <div class="carousel-item carousel-image-5">
+            <div class="carousel-item carousel-image-4">
                 <div class="container">
                     <div class="carousel-caption d-none d-md-block text-right">
                         <div class="mr-4">
@@ -78,9 +75,9 @@ $this->title = 'Sibley: Highlight of Iowa!';
                         </div>
                     </div>
                 </div>
-                <img class="d-block w-100" src="<?= Url::to(['img/carousel/resized/golf.jpg']) ?>" alt="Fifth slide">
+                <img class="d-block w-100" src="<?= Url::to(['img/carousel/resized/golf.jpg']) ?>" alt="Housing">
             </div>
-            <div class="carousel-item carousel-image-6">
+            <div class="carousel-item carousel-image-5">
                 <div class="container">
                     <div class="carousel-caption d-none d-md-block text-right" style="text-shadow: 2px 2px 4px #6c6c6c;">
                     <div class="mr-4">
@@ -91,6 +88,10 @@ $this->title = 'Sibley: Highlight of Iowa!';
                     </div>
                 </div>
                 <img class="d-block w-100" src="<?= Url::to(['img/carousel/resized/courthouse.jpg']) ?>" alt="Osceola County Courthouse">
+            </div>
+            <div class="carousel-item carousel-image-6">
+                
+                <img class="d-block w-100" src="<?= Url::to(['img/carousel/resized/liveShopPlay.jpg']) ?>" alt="Live, Shop, Play!">
             </div>
         </div>
     </div>
