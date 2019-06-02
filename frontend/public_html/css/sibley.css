@@ -17,10 +17,13 @@ body {
 .navbarB {
     z-index: 19;
 }
-.navbar-brand img {
+.navLogo {
     position: absolute;
     top: -1px;
-    left: 20px;
+    
+}
+.navbar-brand img {
+    
 }
 .nav-link {
     color: #000;

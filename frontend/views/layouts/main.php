@@ -49,11 +49,13 @@ SlickCarouselAsset::register($this);
 
 <div class="wrap">
     <nav class="navbar navbarA navbar-expand-md fixed-top-sm justify-content-start flex-nowrap navbar-dark bg-success">
-        <div class="container">
+        
+        <div class="container pl-0">
+            <img class="d-lg-block d-none navLogo" src="<?= Url::to(['/']) ?>img/logo4.png" alt="" width="395" height="105">
         <a href="#" class="navbar-brand">
             <!--https://fonts.google.com/?category=Handwriting&selection.family=Great+Vibes-->
-            <img class="d-lg-block d-md-block d-none" src="<?php //echo $bundle->baseUrl; ?><?= Url::to(['/']) ?>img/logo4.png" alt="" width="395" height="105">
-            <img class="d-lg-none d-md-none d-sm-block" src="<?= Url::to(['/']) ?>img/logo-small.png" alt="" width="254" height="53">
+            
+            <img class="d-lg-none d-md-block" src="<?= Url::to(['/']) ?>img/logo-small.png" alt="" width="254" height="53">
         </a>
         <div class="navbar-collapse collapse pt-2 pt-md-0" id="navbar1">
             <ul class="navbar-nav flex-row ml-auto">
