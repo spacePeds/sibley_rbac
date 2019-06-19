@@ -48,7 +48,7 @@ class BusinessSearch extends Business
         if (Yii::$app->user->can('update_business')) {
             $query = Business::find()->with('contactMethods');
         } else {
-            $query = Business::find()->leftJoin('contact_method', '`contact_method`.`business_id` = `business`.`id`')->where(['member'=> 1]);
+            $query = Business::find()->leftJoin('contact_method', '`contact_method`.`business_id` = `business`.`id`')->where(['member'=> 1])->orderBy(['name' => SORT_ASC]);
         }
         
 
