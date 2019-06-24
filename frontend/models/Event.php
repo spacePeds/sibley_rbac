@@ -143,6 +143,7 @@ class Event extends \yii\db\ActiveRecord
             $document->table_record = $tableRecord;
             $document->type = $this->pdfFile->type;
             $document->size = $this->pdfFile->size;
+            $document->label = 'Event Details';
             $document->sort_order = 1;
             $document->save();
             $this->pdfFile->saveAs($documentPath);
