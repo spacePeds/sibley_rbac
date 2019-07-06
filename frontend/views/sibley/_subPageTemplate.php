@@ -37,15 +37,16 @@ if (isset($page['headerImages']['parallax'])) {
                     <?= $subSection['title']?>
                     <?php if(Yii::$app->user->can('update_page'.$page['adminKey'])): ?>
                         <span class="badge badge-light float-right handle border border-secondary"><i class="fas fa-bars"></i></span>
-                        <span class="sr-only">Sort <?=$subSection['sort_order']?></span></a>
-                    <?php endif ?>
+                        <span class="sr-only">Sort <?=$subSection['sort_order']?></span>
+                    <?php endif; ?>
+                    </a>
                 <?php else: ?>
                     <a href="<?= $subSection['path']?>" id="<?=$subSection['id']?>_<?=$subSection['sort_order']?>" class="list-group-item list-group-item-action">
                     <?= $subSection['title']?>
                     <?php if(Yii::$app->user->can('update_page'.$page['adminKey'])): ?>
                         <span class="badge badge-light float-right handle border border-secondary"><i class="fas fa-bars"></i></span>
-                        <span class="sr-only">Sort <?=$subSection['sort_order']?></span></a>
-                    <?php endif ?>
+                        <span class="sr-only">Sort <?=$subSection['sort_order']?></span>
+                    <?php endif; ?>
                     </a>
                 <?php endif; ?>
             <?php endforeach; ?>

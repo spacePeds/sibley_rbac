@@ -1,6 +1,29 @@
 <?php
 use yii\helpers\Html;
 use yii\helpers\Url;
+
+/**
+ * Get Youtube video ID from URL
+ *
+ * @param string $url
+ * @return mixed Youtube video ID or FALSE if not found
+ */
+function getYoutubeIdFromUrl($url) {
+    $parts = parse_url($url);
+    if(isset($parts['query'])){
+        parse_str($parts['query'], $qs);
+        if(isset($qs['v'])){
+            return $qs['v'];
+        }else if(isset($qs['vi'])){
+            return $qs['vi'];
+        }
+    }
+    if(isset($parts['path'])){
+        $path = explode('/', trim($parts['path'], '/'));
+        return $path[count($path)-1];
+    }
+    return false;
+}
 ?>
 
 <?php foreach ($subSections as $subSection): ?>
@@ -19,10 +42,30 @@ use yii\helpers\Url;
                 ],
             ]) ?>
             <?php if ($subSection['type'] == 'xlink'): ?>
-                <h4><?= $subSection['title'] ?></h4>
+                <?php if(Yii::$app->user->can('update_page'.$adminGroup)): ?>
+                    <h4><?= $subSection['title'] ?></h4>
+                <?php endif; ?>
             <?php endif; ?>
+            
         <?php endif; ?>
         
+        <?php if ($subSection['type'] == 'xlink'): ?>
+            <?php if ($subSection['path'] != '' && strpos($subSection['path'], 'https://youtu') !== false): ?>
+                <?php
+                //extract unique identifier and embed on page
+                $videoId = getYoutubeIdFromUrl($subSection['path']);
+                if ($videoId !== false) {
+                    ?>
+                    <h4><?= $subSection['title'] ?></h4>
+                    <div class="embed-responsive embed-responsive-16by9">
+                    <iframe width="560" height="315" class="embed-responsive-item" src="https://www.youtube.com/embed/<?=$videoId?>" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <?php
+                }
+                ?>
+            <?php endif; ?>
+        <?php endif; ?>
+
         <?php if ($subSection['type'] == 'section'): ?>
             <h4><?= $subSection['title'] ?></h4>
             <?= $subSection['body'] ?>
