@@ -131,10 +131,11 @@ class GoogleController extends Controller
         $fmtdEvents = [];
 
         $calendarId = 'sibley.rec@gmail.com';
+        //$calendarId = 'riestkpvfstie9htqo9ndqlo8o@group.calendar.google.com';
         $optParams = array(
             'maxResults' => 50,
             'orderBy' => 'updated',
-            'timeMin' => date('c', mktime(0, 0, 0, date('m')-1, date('d'), date('Y'))),
+            'timeMin' => date('c', mktime(0, 0, 0, date('m'), date('d'), date('Y'))),
             'timeMax' => date('c', mktime(0, 0, 0, date('m')+2, date('d'), date('Y')))
         );
         $results = $service->events->listEvents($calendarId, $optParams);
@@ -166,7 +167,7 @@ class GoogleController extends Controller
             ->andWhere(['not', ['googleId' => null]])
             ->asArray()->all();
         
-        //echo "existing Events:\n";
+        //echo "Date range: $timeMin - $timeMax\n";
         //print_r($existingEvents);
 
         //echo "google events:\n";
@@ -191,7 +192,7 @@ class GoogleController extends Controller
                 continue;
             }
 
-            echo $googleEvent['googleId'] . "\n";
+            echo "Reviewing: " . $googleEvent['googleId'] .', ' . $googleEvent['subject'] . "\n";
             //match on google id
             $gIdx = array_search($googleEvent['googleId'], array_column($sibleyEvents, 'googleId'));
             if ($gIdx !== false) {
