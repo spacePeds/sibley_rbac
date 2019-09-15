@@ -190,7 +190,7 @@ class SibleyController extends FrontendController
         $twoYrsAgo = date('Y-m-d', mktime(0, 0, 0, date('m'), date('d'), date('Y')-2));
         $twoYrsFut = date('Y-m-d', mktime(0, 0, 0, date('m'), date('d'), date('Y')+2));
         $events = Event::find()->where(['>=', 'start_dt', $twoYrsAgo])->andWhere(['<=','start_dt', $twoYrsFut])->all();
-        $enhancedEvents = $this->injectRepeatingEvents(ArrayHelper::toArray($events));
+        $enhancedEvents = $this->injectRepeatingEvents(ArrayHelper::toArray($events),0);
         $eventArr = [];
         //echo '<pre>' . print_r($enhancedEvents,true) . '</pre>';
         foreach ($enhancedEvents as $event) 
@@ -484,10 +484,13 @@ class SibleyController extends FrontendController
         $recEvents = Event::find()
             ->orderBy(['start_dt' => SORT_ASC])
             ->where(['group' => 'rec'])
-            ->andWhere(['>=', 'start_dt', strftime('%Y-%m-%d', $sunday)])
-            ->andWhere(['<=','start_dt', strftime('%Y-%m-%d', $saturday)])
+            ->andWhere(['>=', 'end_dt', strftime('%Y-%m-%d', $saturday)])
+            ->andWhere(['<=','start_dt', strftime('%Y-%m-%d', $sunday)])
+            //->andWhere(['>=', 'start_dt', strftime('%Y-%m-%d', $sunday)])
+            //->andWhere(['<=','start_dt', strftime('%Y-%m-%d', $saturday)])
             ->asArray()->all();
-        $enhancedEvents = $this->injectRepeatingEvents($recEvents);
+        //return $recEvents;
+        $enhancedEvents = $this->injectRepeatingEvents($recEvents,1);
         return $enhancedEvents;
     }
     /** 

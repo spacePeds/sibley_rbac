@@ -24,9 +24,10 @@ class FrontendController extends \yii\web\Controller
     /**
      * Generate additional events based on repeating parameter
      * @param array $events
+     * @param integer $limit
      * @return array
      */
-    public function injectRepeatingEvents($events) {
+    public function injectRepeatingEvents($events,$limit) {
         $eventList = [];
         foreach ($events as $event) 
         {
@@ -43,13 +44,13 @@ class FrontendController extends \yii\web\Controller
 
             switch ($event['repeat_interval']) {
                 case 1: //weekly
-                    $newEvents =  $this->buildWeeklyEvents($event);
+                    $newEvents =  $this->buildWeeklyEvents($event, false, $limit);
                     foreach ($newEvents as $newEvent) {
                         $eventList[] = $newEvent;
                     }
                     break;
                 case 2: //bi-weekly
-                    $newEvents =  $this->buildWeeklyEvents($event,true);
+                    $newEvents =  $this->buildWeeklyEvents($event, true, $limit);
                     foreach ($newEvents as $newEvent) {
                         $eventList[] = $newEvent;
                     }
@@ -68,7 +69,7 @@ class FrontendController extends \yii\web\Controller
                     }
                     break;
                 case 5: //multi per week
-                    $newEvents =  $this->buildMultiPerWeekEvents($event);
+                    $newEvents =  $this->buildMultiPerWeekEvents($event, $limit);
                     foreach ($newEvents as $newEvent) {
                         $eventList[] = $newEvent;
                     }
@@ -89,9 +90,10 @@ class FrontendController extends \yii\web\Controller
      * Create array of weekly events
      * @param array event
      * @param boolean $isBi
+     * @param integer $limit
      * @return array
      */
-    protected function buildWeeklyEvents($event,$isBi=false) {
+    protected function buildWeeklyEvents($event,$isBi, $limit) {
         $eventList = [];
         $dayOfWeek = date("N", strtotime($event['start_dt']));
         $begin = new \DateTime( $event['start_dt'] );
@@ -101,6 +103,19 @@ class FrontendController extends \yii\web\Controller
         //http://php.net/manual/en/dateinterval.construct.php
         $interval = new \DateInterval('P1D');   //Period - 1 day
         $daterange = new \DatePeriod($begin, $interval ,$end);
+
+        //week limit, if $limit
+        $limitDayOfWeek = date('w');
+        if ($limitDayOfWeek == 0) {
+            $sunday = strtotime("today");
+            $saturday = strtotime("next Saturday");
+        } else if ($limitDayOfWeek == 6){    
+            $sunday = strtotime("last sunday");
+            $saturday = strtotime("today");
+        } else {
+            $sunday = strtotime("last sunday");
+            $saturday = strtotime("next saturday");
+        }
         
         $cnt = 1;
         foreach($daterange as $date){
@@ -119,6 +134,13 @@ class FrontendController extends \yii\web\Controller
                 //$e->all_day = $event->all_day;
                 //$e->start_dt = $date->format("Y-m-d H:i:s");
                 //$eventList[] = ArrayHelper::toArray($e);
+
+                if ($limit && (strftime('%Y-%m-%d', $saturday) < $date->format("Y-m-d H:i:s"))) {
+                    continue;
+                }
+                if ($limit && (strftime('%Y-%m-%d', $sunday) > $date->format("Y-m-d H:i:s"))) {
+                    continue;
+                }
 
                 $eventList[] = [
                     'id' => $event['id'],
@@ -139,9 +161,10 @@ class FrontendController extends \yii\web\Controller
     }
     /**
      * Create an array of repeating events
-     *  @param array $event
+     * @param array $event
+     * @param integer $limit
      */
-    protected function buildMultiPerWeekEvents($event) {
+    protected function buildMultiPerWeekEvents($event, $limit) {
         $eventList = [];
         $begin = new \DateTime( $event['start_dt'] );
         $end = new \DateTime( $event['end_dt'] );
@@ -152,8 +175,28 @@ class FrontendController extends \yii\web\Controller
 
         $eventDays = explode(',',$event['repeat_days']);
 
+        $limitDayOfWeek = date('w');
+        if ($limitDayOfWeek == 0) {
+            $sunday = strtotime("today");
+            $saturday = strtotime("next Saturday");
+        } else if ($limitDayOfWeek == 6){    
+            $sunday = strtotime("last sunday");
+            $saturday = strtotime("today");
+        } else {
+            $sunday = strtotime("last sunday");
+            $saturday = strtotime("next saturday");
+        }
+
         //loop through all days in event date range
         foreach($daterange as $date){
+
+            if ($limit && (strftime('%Y-%m-%d', $saturday) < $date->format("Y-m-d H:i:s"))) {
+                continue;
+            }
+            if ($limit && (strftime('%Y-%m-%d', $sunday) > $date->format("Y-m-d H:i:s"))) {
+                continue;
+            }
+
             $dayOfWeek = $date->format('N');
             $dayAbv = $dayAbvToDayIds[$dayOfWeek];
             //does current day match a specified day for event
