@@ -27,7 +27,7 @@ class FrontendController extends \yii\web\Controller
      * @param integer $limit
      * @return array
      */
-    public function injectRepeatingEvents($events,$limit) {
+    public function injectRepeatingEvents($events,$limit=0) {
         $eventList = [];
         foreach ($events as $event) 
         {

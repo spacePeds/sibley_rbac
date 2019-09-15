@@ -165,7 +165,7 @@ class SiteController extends FrontendController
         //    ['between', 'start_dt', 'NOW()', 'date_add(NOW(), INTERVAL 30 DAY)']
         //)->
         asArray()->all();
-        $enhancedEvents = $this->injectRepeatingEvents($events);
+        $enhancedEvents = $this->injectRepeatingEvents($events,0);
         //print_r($enhancedEvents);
         $orderedEvents = $this->groupEventsByDate($enhancedEvents);
         ksort($orderedEvents);
