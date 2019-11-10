@@ -137,4 +137,25 @@ class RecreationController extends FrontendController
             
         ]);
     }
+
+    /**
+     * Load all pool events for the current month
+     * @return array
+     */
+    protected function loadPoolEvents() {
+        $date = new \DateTime();
+        $date->modify("+30 day");
+        $futureDt = $date->format("Y-m-d");
+        $today = date('Y-m-d');
+
+        $recEvents = Event::find()
+            ->orderBy(['start_dt' => SORT_ASC])
+            ->where(['group' => 'pool'])
+            ->andWhere(['>=', 'start_dt', $today])
+            ->andWhere(['<=','start_dt', $futureDt])
+            ->asArray()->all();
+        //return $recEvents;
+        $enhancedEvents = $this->injectRepeatingEvents($recEvents,1);
+        return $enhancedEvents;
+    }
 }

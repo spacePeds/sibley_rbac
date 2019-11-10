@@ -623,7 +623,7 @@ class EventController extends Controller
         } else if (isset($role['chamberAdmin'])) {
             $group = ['chamber'];
         } else if (isset($role['recAdmin'])) {
-            $group = ['rec'];
+            $group = ['rec','pool'];
         }
         return $group;
     }

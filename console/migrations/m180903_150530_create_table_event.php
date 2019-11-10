@@ -21,7 +21,7 @@ class m180903_150530_create_table_event extends Migration
             'subject' =>  $this->string(200)->notNull(),
             'description' =>  $this->text(),
             'location' =>  $this->string(255),
-            'group' =>  "ENUM('city', 'chamber', 'rec', 'hol') NOT NULL",
+            'group' =>  $this->string(30),
             'start_dt' =>  $this->dateTime()->notNull(),
             'end_dt' =>  $this->dateTime()->notNull(),
             'all_day' =>  $this->integer()->notNull(),

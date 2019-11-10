@@ -11,6 +11,7 @@ return [
         'city' => 'City of Sibley',
         'chamber' => 'Sibley Chamber of Commerce',
         'rec' => 'Sibley Recreation Department',
+        'pool' => 'Sibley Outdoor Aquatic Center',
         'hol' => 'Holiday'
     ],
     'eventRepition' => [
@@ -43,6 +44,7 @@ return [
     'eventGroupColor' => [
         'city' => '#e76b32', //orange
         'rec' => '#468847', //green
+        'pool' => '#62bd63', //lt green
         'chamber' => '#3a87ad', //blue
         'hol' => '#808080', //gray
     ],
@@ -51,6 +53,7 @@ return [
         'rec' => '<i class="fas fa-flag-checkered"></i>',
         'chamber' => '<i class="far fa-building"></i>',
         'hol' => '<i class="fas fa-calendar-alt"></i>',
+        'pool' => '<i class="fas fa-swimmer"></i>',
     ],
     'govPayNet' => [
         'rec' => [

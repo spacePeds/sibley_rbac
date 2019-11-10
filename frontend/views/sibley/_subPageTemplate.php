@@ -97,9 +97,39 @@ if (isset($page['headerImages']['parallax'])) {
 
         <?php endif; ?>
 
-        <?php if (strpos($page['route'],'city') !== false): ?>
-
+        <?php if (strpos($page['route'],'recreation/swimming') !== false): ?>
             
+            <div class="card text-center">
+                <div class="card-header bg-dark text-white">
+                    <h4>Pool Events</i></h4> 
+                </div>
+                <div class="card-body p-0">
+                    
+                    <ul class="list-group">
+                        <?php foreach ($page['events'] as $event ): ?>
+                        <li class="list-group-item">
+                            <?php //echo print_r($event);
+                                echo '<h5>' . date('M jS', strtotime($event['start_dt'])) .'</h5>';
+                                echo '<div class=""><i class="fas fa-check"></i> ' . $event['subject'] . '</div>';
+                                if (!$event['all_day'])  {                                      
+                                    echo '<div class="small muted">' . date('g:ia', strtotime($event['start_dt'])) . '</div>';
+                                } 
+                            ?>
+                        </li>
+                        <?php endforeach; ?>
+                    </ul>
+                    <!--<a href="#" class="btn btn-danger btn-block mt-2">Get It</a>-->
+                </div>
+                <div class="card-footer text-muted small">
+                    <a href="<?=Url::to('/sibley/calendar')?>">View Full Calendar</a>
+                </div>
+            </div>
+
+        <?php endif; ?>
+
+
+
+        <?php if (strpos($page['route'],'city') !== false): ?>
 
             <div class="card text-center">
                 <div class="card-header bg-dark text-white">

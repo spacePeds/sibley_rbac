@@ -398,6 +398,12 @@ class FrontendController extends \yii\web\Controller
             $page['govPayNet']['link'] = Yii::$app->params['govPayNet']['rec']['link'];
             $page['adminKey'] = '_rec';
         }
+
+        if (strpos($page['route'], '/recreation/swimming') !== false) {
+            //RecreationController
+            $page['events'] = $this->loadPoolEvents();
+            $page['adminKey'] = '_rec';
+        }
         
         //load city specific data
         $page['meetings'] = [];
