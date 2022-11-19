@@ -112,8 +112,8 @@ if (!empty($page['fb_token'])):
             <?php if (strpos($page['route'],'recreation') !== false): ?>
                 
                 <?= $this->render('_govPayNetWidget', [
-                    'text' => 'Click on the button below to pay program and rental fees, or to purchase a pool pass.', 
-                    'link' => 'https://www.govpaynow.com/gps/user/plc/a001y7'
+                    'text' => 'Click on the button below to pay program fees.', 
+                    'link' => 'https://www.govpaynow.com/gps/user/cyg/plc/a001y7'
                 ]) ?>
 
                 <div class="card text-center">
